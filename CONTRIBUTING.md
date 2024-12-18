@@ -38,7 +38,7 @@ When submitting a PR make sure that it:
 
 There are three major technical requirements to add a new Helm chart to our catalog:
 
-- The chart should use by default official Software AG based container images or dependend publicly available 3rd party images from Docker Hub. 
-- Follow the same structure/patterns that the rest of the Inno Container team charts (you can find a basic scaffolding in the [`template` directory](https://github.com/SoftwareAG/webmethods-helm-charts/template)).
+- The chart should use by default official IBM webMethods based container images or dependend publicly available 3rd party images from Docker Hub. 
+- Follow the same structure/patterns that the rest of the Inno Container team charts (you can find a basic scaffolding in the [`template` directory](https://github.com/IBM/webmethods-helm-charts/template)).
 - Use an [OSI approved license](https://opensource.org/licenses) for all the software.
 Please, note we will need to check internally and evaluate the feasibility of adding the new solution to the catalog. Due to limited resources this step could take some time.
