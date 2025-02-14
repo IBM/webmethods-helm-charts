@@ -173,6 +173,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `2.0.1` | Fix `revisionHistoryLimit` for Kibana. |
 | `2.1.0` | Added ability to use PodDisruptionBudget for API Gateway and updated Prometheus Elasticsearch Exporter to `6.6.0` |
 | `2.1.1` | Fixed metadata of PodDisruptionBudget for API Gateway |
+| `2.1.1` | Fixed metadata.name of PodDisruptionBudget for API Gateway |
 
 ## Chart Version `2.0.0`
 
@@ -180,7 +181,7 @@ The Chart version `2.0.0` uses the [Prometheus Elasticsearch Exporter](https://g
 
 ### Migrate from `1.x.x` to `2.0.0`
 
-If you want to migrate the Elasticsearch Exporter version `5.0.0`, you must delete the existing deployment. Over install is not working. You see the error ... 
+If you want to migrate the Elasticsearch Exporter version `5.0.0`, you must delete the existing deployment. Over install is not working. You see the error ...
 
 ```
 Error: UPGRADE FAILED: cannot patch "apigw-prometheus-elasticsearch-exporter" ...
