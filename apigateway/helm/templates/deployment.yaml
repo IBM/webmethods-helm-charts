@@ -60,6 +60,8 @@ spec:
       {{- end }}
       {{- if .Values.serviceAccount.create }}
       serviceAccountName: {{ include "common.names.serviceAccountName" . }}
+      {{- else }}
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}

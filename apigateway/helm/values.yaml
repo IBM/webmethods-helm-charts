@@ -9,7 +9,7 @@ image:
   # Change this for air-gapped installations or custom images.
   # For the IBM webMethods container repository you need to have a
   # valid access token stored as registry credentials
-  repository: sagcr.azurecr.io/apigateway-minimal
+  repository: ibmwebmethods.azurecr.io/apigateway-minimal
   pullPolicy: IfNotPresent
   # -- The image tag of the apigateway image default this will be the latest version.
   # For realworld scenarios SAG recommends to use a
@@ -810,16 +810,16 @@ prometheus-elasticsearch-exporter:
   # Adjust accordingly if your release name is different.
   extraEnvSecrets:
     ES_PASSWORD:
-      secret: apigw-apigateway-sag-user-es
+      secret: "{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"
       key: password
     ES_USER:
-      secret: apigw-apigateway-sag-user-es
+      secret: "{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"
       key: username
 
   es:
     # -- The uri of the elasticsearch service. By default this is null and the environment variable ES_URI is used instead.
     # Overwrite this if you are using an external Elasticsearch instance
-    uri: "http://$(ES_USER):$(ES_PASSWORD)@apigw-apigateway-es-http:9200"
+    uri: "http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"
 
   serviceMonitor:
     enabled: false
@@ -830,5 +830,38 @@ prometheus-elasticsearch-exporter:
     prometheus.io/scheme: http
     prometheus.io/scrape: "true"
 
+  serviceAccount:
+    name: ""
+  
+  podSecurityContext:
+    # -- Enter value {1000770001} from UID range of an OpenShift Project. 
+    runAsUser: 1000730001
+    runAsNonRoot: true
+
 # -- Import the content as license key and create a ConfigMap named by `licenseConfigMap` value. You can copy/past the content of your provided license key file here.
 license: |
+
+# -- Routes for admin, ui port for openshift
+routes:
+  # -- Route for API Gateway UI Port
+  ui:
+    enabled: false
+    # Enter route name
+    name: ""
+    # Do not change below value
+    portName: uiport
+    labels:
+    annotations:
+    # Enter hostname
+    hostName: ""
+  # -- Route for API Gateway Admin Port
+  admin:
+    enabled: false
+    # Enter route name
+    name: ""
+    # Do not change below value
+    portName: adminport
+    labels:
+    annotations:
+    # Enter hostname
+    hostName: ""

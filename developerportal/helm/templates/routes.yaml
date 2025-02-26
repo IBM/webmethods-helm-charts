@@ -1,0 +1,40 @@
+# /*
+#  * Copyright (c) 2025 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  *
+#  *   Licensed under the Apache License, Version 2.0 (the "License");
+#  *   you may not use this file except in compliance with the License.
+#  *   You may obtain a copy of the License at
+#  *
+#  *       http://www.apache.org/licenses/LICENSE-2.0
+#  *
+#  *   Unless required by applicable law or agreed to in writing, software
+#  *   distributed under the License is distributed on an "AS IS" BASIS,
+#  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  *   See the License for the specific language governing permissions and
+#  *   limitations under the License.
+#  *
+#  */
+---
+{{- if .Values.routes.portal.enabled }}
+
+{{- $fullName := include "common.names.fullname" . -}}
+
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{ .Values.routes.portal.name }}
+  labels: {{ .Values.routes.portal.labels }}
+  annotations:
+    {{- range $key, $value := .Values.routes.portal.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  host: {{ .Values.routes.portal.hostName }}
+  port:
+    targetPort: {{ .Values.routes.portal.portName }} 
+  to:
+    kind: Service
+    name: {{ $fullName }}
+{{- end }}
