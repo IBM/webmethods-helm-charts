@@ -285,7 +285,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | grpcService.type | string | `"LoadBalancer"` |  |
 | hostAliases | list | `[]` | Value to add extra host aliases to APIGW container. |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"sagcr.azurecr.io/apigateway-minimal"` | The repository for the image. By default, this points to the IBM webMethods container repository. Change this for air-gapped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
+| image.repository | string | `"ibmwebmethods.azurecr.io/apigateway-minimal"` | The repository for the image. By default, this points to the IBM webMethods container repository. Change this for air-gapped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | image.tag | string | `"10.15"` | The image tag of the apigateway image default this will be the latest version. For realworld scenarios SAG recommends to use a specific version to not accidently change production versions with newer images. |
 | imagePullSecrets | list | `[{"name":"regcred"}]` | Image pull secret reference. By default looks for `regcred`. |
 | ingress.defaultDomain | string | `"my-domain.com"` |  |
@@ -408,10 +408,11 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | podSecurityContext | object | `{}` |  |
 | priorityClassName | string | `""` | Set APIGW and Nginx Pods' Priority Class Name ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
 | prometheus | object | `{"interval":"10s","path":"/metrics","port":"5555","scheme":"http","scrape":"true","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via annotation or ServiceMonitor. |
-| prometheus-elasticsearch-exporter | object | `{"enabled":true,"es":{"uri":"http://$(ES_USER):$(ES_PASSWORD)@apigw-apigateway-es-http:9200"},"extraEnvSecrets":{"ES_PASSWORD":{"key":"password","secret":"apigw-apigateway-sag-user-es"},"ES_USER":{"key":"username","secret":"apigw-apigateway-sag-user-es"}},"podAnnotations":{"prometheus.io/path":"/metrics","prometheus.io/port":"9108","prometheus.io/scheme":"http","prometheus.io/scrape":"true"},"revisionHistoryLimit":10,"serviceMonitor":{"enabled":false}}` | Elasticsearch exporter settings. See https://github.com/prometheus-community/elasticsearch_exporter for details. |
+| prometheus-elasticsearch-exporter | object | `{"enabled":true,"es":{"uri":"http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"},"extraEnvSecrets":{"ES_PASSWORD":{"key":"password","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"},"ES_USER":{"key":"username","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"}},"podAnnotations":{"prometheus.io/path":"/metrics","prometheus.io/port":"9108","prometheus.io/scheme":"http","prometheus.io/scrape":"true"},"podSecurityContext":{"runAsNonRoot":true,"runAsUser":1000730001},"revisionHistoryLimit":10,"serviceAccount":{"name":""},"serviceMonitor":{"enabled":false}}` | Elasticsearch exporter settings. See https://github.com/prometheus-community/elasticsearch_exporter for details. |
 | prometheus-elasticsearch-exporter.enabled | bool | `true` | Deploy the prometheus exporter for elasticsearch |
-| prometheus-elasticsearch-exporter.es.uri | string | `"http://$(ES_USER):$(ES_PASSWORD)@apigw-apigateway-es-http:9200"` | The uri of the elasticsearch service. By default this is null and the environment variable ES_URI is used instead. Overwrite this if you are using an external Elasticsearch instance |
-| prometheus-elasticsearch-exporter.extraEnvSecrets | object | `{"ES_PASSWORD":{"key":"password","secret":"apigw-apigateway-sag-user-es"},"ES_USER":{"key":"username","secret":"apigw-apigateway-sag-user-es"}}` | secret for elasticsearch user. Will need to adjust the secret's name. By default the secret name is <releasename>-apigateway-sag-user-es. Adjust accordingly if your release name is different. |
+| prometheus-elasticsearch-exporter.es.uri | string | `"http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"` | The uri of the elasticsearch service. By default this is null and the environment variable ES_URI is used instead. Overwrite this if you are using an external Elasticsearch instance |
+| prometheus-elasticsearch-exporter.extraEnvSecrets | object | `{"ES_PASSWORD":{"key":"password","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"},"ES_USER":{"key":"username","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"}}` | secret for elasticsearch user. Will need to adjust the secret's name. By default the secret name is <releasename>-apigateway-sag-user-es. Adjust accordingly if your release name is different. |
+| prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project.  |
 | prometheus-elasticsearch-exporter.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
 | replicaCount | int | `1` |  |
 | resources.apigwContainer.limits.cpu | int | `8` |  |
@@ -423,6 +424,9 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | resources.apigwInitContainer.requests.cpu | string | `"100m"` |  |
 | resources.apigwInitContainer.requests.memory | string | `"50Mi"` |  |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
+| routes | object | `{"admin":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"adminport"},"ui":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"uiport"}}` | Routes for admin, ui port for openshift |
+| routes.admin | object | `{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"adminport"}` | Route for API Gateway Admin Port |
+| routes.ui | object | `{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"uiport"}` | Route for API Gateway UI Port |
 | secrets | object | `{"generateAdminSecret":true,"generateElasticSecrets":true}` | Controls if secrets should be generated automatically. |
 | securityContext | object | `{}` |  |
 | service.port | int | `80` |  |

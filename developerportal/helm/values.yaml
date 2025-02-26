@@ -6,7 +6,7 @@ image:
   # Change this for air-gapped installations or custom images.
   # For the IBM webMethods container repository you need to have a 
   # valid access token stored as registry credentials
-  repository: sagcr.azurecr.io/devportal
+  repository: ibmwebmethods.azurecr.io/devportal
   pullPolicy: IfNotPresent
   # -- The image tag of the apigateway image default this will be the latest version. 
   # For realworld scenarios SAG recommends to use a 
@@ -275,3 +275,23 @@ prometheus-elasticsearch-exporter:
     tag: v1.5.0
     pullPolicy: IfNotPresent
     pullSecret: ""
+  
+  serviceAccount:
+    name: ""
+  
+  podSecurityContext:
+    # -- Enter value {1000770001} from UID range of an OpenShift Project. 
+    runAsUser: 1000730001
+    runAsNonRoot: true
+
+# -- Route for Developer Portal
+routes:
+  portal:
+    enabled: false
+    # -- Enter route name
+    name: "api-developer-portal-route"
+    portName: http
+    labels:
+    annotations:
+    # -- Enter hostname
+    hostName: ""
