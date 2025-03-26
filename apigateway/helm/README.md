@@ -174,7 +174,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `2.1.0` | Added ability to use PodDisruptionBudget for API Gateway and updated Prometheus Elasticsearch Exporter to `6.6.0` |
 | `2.1.1` | Fixed metadata of PodDisruptionBudget for API Gateway |
 | `2.1.2` | Fixed metadata.name of PodDisruptionBudget for API Gateway |
-| `2.1.2` | Fixed proxy connect timeout annotation on all ingresses for API Gateway |
+| `2.1.3` | Fixed proxy connect timeout annotation on all ingresses for API Gateway |
 
 ## Chart Version `2.0.0`
 
