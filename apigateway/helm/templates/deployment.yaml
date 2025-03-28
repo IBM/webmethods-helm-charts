@@ -185,23 +185,11 @@ spec:
           {{- toYaml .Values.extraPorts | nindent 10 }}
           {{- end }}
           livenessProbe:
-            tcpSocket:
-              port: {{ int .Values.apigw.adminPort }}
-            failureThreshold: 3
-            initialDelaySeconds: 120
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 1
+            {{- toYaml .Values.apigw.livenessProbe | nindent 12 }}
+          startupProbe:
+            {{- toYaml .Values.apigw.startupProbe | nindent 12 }}
           readinessProbe:
-            httpGet:
-              path: /rest/apigateway/health
-              port: {{ int .Values.apigw.adminPort }}
-              scheme: {{ .Values.apigw.readinessProbe.scheme }}
-            failureThreshold: 3
-            initialDelaySeconds: 30
-            periodSeconds: 30
-            successThreshold: 1
-            timeoutSeconds: 1
+            {{- toYaml .Values.apigw.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources.apigwContainer | nindent 12 }}
           volumeMounts:

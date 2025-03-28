@@ -175,6 +175,18 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `2.1.1` | Fixed metadata of PodDisruptionBudget for API Gateway |
 | `2.1.2` | Fixed metadata.name of PodDisruptionBudget for API Gateway |
 | `2.1.3` | Fixed proxy connect timeout annotation on all ingresses for API Gateway |
+| `3.0.0` | Added functionality to define startup, liveness and readiness probes for API Gateway in the values file. |
+
+## Chart Version `3.0.0`
+
+Added functionality to define liveness and readiness probes for API Gateway in the values file.
+Added startup probe to the API Gateway deployment.
+This allows for for smaller timeouts in the liveness probe and thus an unresponsive API Gateway container will be recognized and restarted faster by Kubernetes.
+
+### Migrate from `2.x.x` to `3.0.0`
+
+Due to moving the definition of startup and readiness probes into the default values.yaml file, the path .Values.apigw.readinessProbe.scheme changed to .Values.apigw.readinessProbe.httpGet.scheme.
+If you have overwritten the values in your own values-file you have to change the path for the chart to work.
 
 ## Chart Version `2.0.0`
 
@@ -217,14 +229,16 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | apigw.initContainer | object | `{"enabled":true,"securityContext":{}}` | SecurityContext for apigw initContainer Deactivated by default. Usage example: securityContext:   runAsGroup: 1000   runAsUser: 1000   runAsNonRoot: true   allowPrivilegeEscalation: false   capabilities:     drop:       - ALL |
 | apigw.initContainer.enabled | bool | `true` | If apigw initContainer for ES should be enabled |
 | apigw.initMemory | string | `"1024Mi"` |  |
+| apigw.livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":10,"successThreshold":1,"tcpSocket":{"port":"admin-http"},"timeoutSeconds":1}` | livenessProbe configuration for API Gateway container. The liveness probe is used to determine if the container is still running. |
 | apigw.maxMemory | string | `"1024Mi"` |  |
-| apigw.readinessProbe.scheme | string | `"HTTP"` | The readinessprobe scheme (https or http). |
+| apigw.readinessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/rest/apigateway/health","port":"admin-http","scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"timeoutSeconds":1}` | readinessProbe configuration for API Gateway container. The readiness probe is used to determine if the container is ready to accept traffic. |
 | apigw.rtExternalService | string | `"apigw-rt-ext-svc"` |  |
 | apigw.rtService | string | `"apigw-rt-svc"` |  |
 | apigw.runtimeExternalPort | int | `6555` | External Runtime Port for Reverse Invoke Setups. This port must be manually setup after API Gateway was initizalized. |
 | apigw.runtimePort | int | `5556` | The API Gateway runtime port for API invocations. By default API Gateway images do not have this port setup. You must manually set up this port or create post init job that creates this port after API Gateway was initialized. |
 | apigw.sagIsConfigProperties | string | `"/config/application.properties"` | Specifies the location and name of the configuration variables template or the directory containing templates for use with Microservices Runtime or an Integration Server with licensed Microservices functionality. Use a comma-separated list to specify multiple templates and/or directories. See: https://documentation.softwareag.com/webmethods/integration_server/pie10-15/webhelp/pie-webhelp/index.html#page/pie-webhelp%2Fto-sag_environment_variables_2.html Note: should only be used for passing simple configurations such as extended settings. For all other configurations of API Gateway, use the official Admin REST API. |
 | apigw.serviceName | string | `"apigw"` |  |
+| apigw.startupProbe | object | `{"failureThreshold":12,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":"admin-http"},"timeoutSeconds":1}` | startupProbe configuration for API Gateway container. Runs before the livenessProbe. It is used to determine if the container has finished starting. |
 | apigw.uiPort | int | `9072` | The default API Administration UI port |
 | apigw.uiService | string | `"apigw-ui-svc"` |  |
 | autoscaling.enabled | bool | `false` |  |

@@ -102,7 +102,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | extraVolumes | list | `[]` | Exta volumes that should be mounted. |
 | fullnameOverride | string | `""` | Overwrites full workload name. As default, the workload name is release name + '-' + Chart name. |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.repository | string | `"sagcr.azurecr.io/devportal"` | The repository for the image. By default,  this points to the IBM webMethods container repository.  Change this for air-gapped installations or custom images. For the IBM webMethods container repository you need to have a  valid access token stored as registry credentials |
+| image.repository | string | `"ibmwebmethods.azurecr.io/devportal"` | The repository for the image. By default,  this points to the IBM webMethods container repository.  Change this for air-gapped installations or custom images. For the IBM webMethods container repository you need to have a  valid access token stored as registry credentials |
 | image.tag | string | `"10.15"` | The image tag of the apigateway image default this will be the latest version.  For realworld scenarios SAG recommends to use a  specific version to not accidently change production versions with newer images. |
 | imagePullSecrets | list | `[{"name":"regcred"}]` | Image pull secret reference. By default looks for `regcred`. |
 | ingress.annotations | object | `{"nginx.ingress.kubernetes.io/affinity":"cookie","nginx.ingress.kubernetes.io/app-root":"/portal","traefik.ingress.kubernetes.io/affinity":"true","traefik.ingress.kubernetes.io/app-root":"/portal"}` | Ingress annotations |
@@ -126,6 +126,9 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | prometheus-elasticsearch-exporter.image.pullSecret | string | `""` |  |
 | prometheus-elasticsearch-exporter.image.repository | string | `"quay.io/prometheuscommunity/elasticsearch-exporter"` |  |
 | prometheus-elasticsearch-exporter.image.tag | string | `"v1.5.0"` |  |
+| prometheus-elasticsearch-exporter.podSecurityContext.runAsNonRoot | bool | `true` |  |
+| prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project.  |
+| prometheus-elasticsearch-exporter.serviceAccount.name | string | `""` |  |
 | prometheus-elasticsearch-exporter.serviceMonitor.enabled | bool | `true` |  |
 | prometheus-elasticsearch-exporter.serviceMonitor.jobLabel | string | `"devportal"` |  |
 | prometheus.path | string | `"/portal/rest/v1/prometheus"` |  |
@@ -137,6 +140,9 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | resources.devportalContainer.limits.memory | string | `"4Gi"` |  |
 | resources.devportalContainer.requests.cpu | int | `1` |  |
 | resources.devportalContainer.requests.memory | string | `"1Gi"` |  |
+| routes | object | `{"portal":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"api-developer-portal-route","portName":"http"}}` | Route for Developer Portal |
+| routes.portal.hostName | string | `""` | Enter hostname |
+| routes.portal.name | string | `"api-developer-portal-route"` | Enter route name |
 | securityContext | object | `{}` |  |
 | service.port | int | `80` |  |
 | service.type | string | `"ClusterIP"` |  |

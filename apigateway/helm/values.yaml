@@ -331,10 +331,35 @@ apigw:
   runtimeExternalPort:     6555
   # -- gRPC port for High Availability and Fault Tolerance (HAFT) solution. This port must be manually setup after API Gateway was initizalized.
   grpcPort:                4440
+  serviceName: "apigw"  
+  # -- readinessProbe configuration for API Gateway container. The readiness probe is used to determine if the container is ready to accept traffic.
   readinessProbe:
-    # -- The readinessprobe scheme (https or http).
-    scheme:                "HTTP"
-  serviceName:             "apigw"
+    httpGet:
+      path: /rest/apigateway/health
+      port: admin-http
+      scheme: "HTTP"
+    failureThreshold: 3
+    initialDelaySeconds: 30
+    periodSeconds: 30
+    successThreshold: 1
+    timeoutSeconds: 1
+  # -- livenessProbe configuration for API Gateway container. The liveness probe is used to determine if the container is still running.
+  livenessProbe:
+    tcpSocket:
+      port: admin-http
+    failureThreshold: 3
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    successThreshold: 1
+    timeoutSeconds: 1
+  # -- startupProbe configuration for API Gateway container. Runs before the livenessProbe. It is used to determine if the container has finished starting.
+  startupProbe:
+    tcpSocket:
+      port: admin-http
+    failureThreshold: 12
+    periodSeconds: 30
+    successThreshold: 1
+    timeoutSeconds: 1
 
   # -- SecurityContext for apigw initContainer
   # Deactivated by default.
