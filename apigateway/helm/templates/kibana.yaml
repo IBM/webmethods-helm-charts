@@ -21,6 +21,10 @@ apiVersion: kibana.k8s.elastic.co/v1
 kind: Kibana
 metadata:
   name: {{ include "common.names.fullname" . }}
+  {{- with .Values.kibana.annotations -}}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   {{- if .Values.kibana.image }}
   image: {{ .Values.kibana.image }}
