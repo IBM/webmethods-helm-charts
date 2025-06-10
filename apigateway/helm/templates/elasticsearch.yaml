@@ -47,6 +47,7 @@ spec:
         disabled: true
     {{- end }}
   auth:
+    disableElasticUser: {{ .Values.elasticsearch.disableElasticUser }}
     fileRealm:
       - secretName: {{ include "apigateway.elasticsecret" . }}
       - secretName: {{ include "apigateway.kibanasecret" . }}
