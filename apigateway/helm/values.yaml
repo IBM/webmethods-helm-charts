@@ -585,6 +585,9 @@ elasticsearch:
   # -- Annotations of PVC storage
   storageAnnotations: {}
 
+  # -- Decide wether to disable the default elastic user or not
+  disableElasticUser: false
+
   # -- The secret name that holds the sag es user for API Gateway.
   secretName: ""
 
