@@ -1,0 +1,51 @@
+services:
+  datastore: &datastore-service
+    image: ${DATASTORE_IMAGE}
+    container_name: datastore-cp
+    hostname: datastore-cp
+    restart: "on-failure"
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '1'
+        reservations:
+          memory: 2G
+          cpus: '1'
+    ports:
+      - ${DATASTORE_PUBLISH_PORT}:9200
+    environment:
+      - discovery.type=single-node
+      - node.name=webmethods
+      - cluster.name=webmethods
+      - bootstrap.memory_lock=true
+      - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${DATASTORE_PASSWORD}
+      - plugins.security.ssl.http.enabled=true
+      - plugins.security.ssl.http.keystore_type=JKS
+      - plugins.security.ssl.http.keystore_filepath=/usr/share/opensearch/config/certs/keystore.jks
+      - plugins.security.ssl.http.keystore_alias=webmethods
+      - plugins.security.ssl.http.keystore_password=webmethods
+      - plugins.security.ssl.http.keystore_keypassword=webmethods
+      - plugins.security.ssl.http.truststore_type=JKS
+      - plugins.security.ssl.http.truststore_filepath=/usr/share/opensearch/config/certs/truststore.jks
+      - plugins.security.ssl.http.truststore_password=webmethods
+      - plugins.security.ssl.http.clientauth_mode=REQUIRE
+      - plugins.index_state_management.history.max_age=7d
+      - plugins.index_state_management.history.rollover_retention_period=0ms
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -fk --cert /certs/os-cert.pem --key /certs/os-key.pem https://localhost:9200 -u \"${DATASTORE_USERNAME}:${DATASTORE_PASSWORD}\"" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    volumes:
+      - datastore-cp-data:/usr/share/opensearch/data
+      - ../../certs/keystore-os.jks:/usr/share/opensearch/config/certs/keystore.jks
+      - ../../certs/truststore-os.jks:/usr/share/opensearch/config/certs/truststore.jks
+      - ../../certs/os-cert.pem:/certs/os-cert.pem
+      - ../../certs/os-key.pem:/certs/os-key.pem
+    networks:
+      - ibm-wm-api-cp-nw
