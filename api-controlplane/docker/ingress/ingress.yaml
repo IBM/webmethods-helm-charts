@@ -1,0 +1,42 @@
+services:
+  ingress: &ingress-service
+    image: ${INGRESS_IMAGE}
+    container_name: control-plane-ingress
+    hostname: ingress
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+          cpus: '0.5'
+        reservations:
+          memory: 1024M
+          cpus: '0.5'
+      restart_policy:
+        condition: "no"
+    env_file:
+      - ingress-config.env
+      - ../datastore/datastore-config.env
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "--cert", "/certs/in-cert.pem", "--key", "/certs/in-key.pem", "https://ingress:8443/api/ingress/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ./PasswordResetRequestTemplate.html:/template/PasswordResetRequestTemplate.html
+      - ./password_changed.html:/template/password_changed.html
+      - ../../certs/jwt_keystore.jks:/certs/jwt_keystore.jks
+      - ../../certs/keystore-in.jks:/certs/keystore.jks
+      - ../../certs/truststore-in.jks:/certs/truststore.jks
+      - ../../certs/in-cert.pem:/certs/in-cert.pem
+      - ../../certs/in-key.pem:/certs/in-key.pem
+    networks:
+      - ibm-wm-api-cp-nw
+
+  ingress-otel:
+    <<: *ingress-service
+    env_file:
+      - ingress-config.env
+      - ingress-config.otel.env
+      - ../datastore/datastore-config.env
+    ports:
+      - ${INGRESS_PUBLISH_PORT}:8443

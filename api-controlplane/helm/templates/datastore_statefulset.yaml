@@ -1,0 +1,110 @@
+#
+# Copyright IBM Corp. 2024, 2025
+#
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.applications.datastore.name }}
+  labels:
+    app: {{ .Values.applications.datastore.name }}
+spec:
+  serviceName: {{ .Values.applications.datastore.name }}-headless
+  podManagementPolicy: Parallel
+  replicas: {{ .Values.applications.datastore.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.applications.datastore.name }}
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+    - metadata:
+        name: {{ .Values.applications.datastore.name }}-data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.applications.datastore.storage }}
+  template:
+    metadata:
+      annotations:
+        sensor.falcon-system.crowdstrike.com/injection: disabled
+      labels:
+        app: {{ .Values.applications.datastore.name }}
+    spec:
+      securityContext:
+        fsGroup: 1000
+      imagePullSecrets:
+          - name: regcred
+      initContainers:
+      - name: init-sysctl
+        image: alpine:latest
+        imagePullPolicy: IfNotPresent
+        securityContext:
+          privileged: true
+          runAsUser: 0
+        command: ["sysctl", "-w", "vm.max_map_count=262144"]
+      volumes:
+      - name: logs
+        emptyDir: {}
+      - name: certs
+        secret:
+          secretName: {{ .Values.secrets.certs.name }}
+      containers:
+      - name: {{ .Values.applications.datastore.name }}
+        resources:
+          limits:
+            cpu: {{ .Values.applications.datastore.resources.limits.cpu }}
+            memory: {{ .Values.applications.datastore.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.applications.datastore.resources.requests.cpu }}
+            memory: {{ .Values.applications.datastore.resources.requests.memory }}
+        securityContext:
+          privileged: true
+          runAsUser: 1000
+          capabilities:
+            add:
+            - IPC_LOCK
+            - SYS_RESOURCE
+            - SYS_ADMIN
+            - DAC_OVERRIDE
+            - DAC_READ_SEARCH
+        image: {{ .Values.applications.datastore.imageName }}:{{ .Values.applications.datastore.imageTag }}
+        imagePullPolicy: "IfNotPresent"
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.applications.datastore.name }}-config
+        env:
+        - name: node.name
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        readinessProbe:
+          exec:
+            command:
+              - curl
+              - -fk
+              - --cert
+              - /usr/share/opensearch/config/certs/in-cert.pem
+              - --key
+              - /usr/share/opensearch/config/certs/in-key.pem
+              - -u
+              - admin:MyPassword@123
+              - https://localhost:9200
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 10
+        ports:
+        - containerPort: 9200
+          name: http
+        - containerPort: 9300
+          name: transport
+        volumeMounts:
+        - name: {{ .Values.applications.datastore.name }}-data
+          mountPath: /usr/share/opensearch/data
+        - name: logs
+          mountPath: /usr/share/opensearch/logs
+        - name: certs
+          mountPath: /usr/share/opensearch/config/certs
+          readOnly: true

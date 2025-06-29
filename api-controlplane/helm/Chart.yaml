@@ -1,0 +1,4 @@
+apiVersion: v2
+name: control-plane-open-telemetry-enabled
+description: Chart for the Control Plane with open telemetry enabled
+version: 0.0.2

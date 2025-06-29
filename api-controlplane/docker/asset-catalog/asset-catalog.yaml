@@ -1,0 +1,39 @@
+services:
+  asset-catalog: &asset-catalog-service
+    image: ${ASSETCATALOG_IMAGE}
+    container_name: control-plane-asset-catalog
+    hostname: asset-catalog
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+          cpus: '0.5'
+        reservations:
+          memory: 500M
+          cpus: '0.5'
+      restart_policy:
+        condition: "no"
+    env_file:
+      - asset-catalog-config.env
+      - ../datastore/datastore-config.env
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "--cert", "/certs/ac-cert.pem", "--key", "/certs/ac-key.pem", "https://asset-catalog:8443/api/assetcatalog/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ../../certs/keystore-ac.jks:/certs/keystore.jks
+      - ../../certs/truststore-ac.jks:/certs/truststore.jks
+      - ../../certs/ac-cert.pem:/certs/ac-cert.pem
+      - ../../certs/ac-key.pem:/certs/ac-key.pem
+    networks:
+      - ibm-wm-api-cp-nw
+
+  asset-catalog-otel:
+    <<: *asset-catalog-service
+    env_file:
+      - asset-catalog-config.env
+      - asset-catalog-config.otel.env
+      - ../datastore/datastore-config.env
+    ports:
+      - ${ASSETCATALOG_PUBLISH_PORT}:8443

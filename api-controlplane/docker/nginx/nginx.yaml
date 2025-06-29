@@ -1,0 +1,62 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    hostname: nginx
+    deploy:
+      restart_policy:
+        condition: "on-failure"
+    ports:
+      - "${NGINX_HTTPS_PORT}:443"
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "https://nginx:443"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - conf.d:/etc/nginx/conf.d
+      - nginx-certs:/etc/nginx/certs
+      - ../../certs:/usr/share/certs
+    networks:
+      - ibm-wm-api-cp-nw
+
+
+  nginx_setup:
+    image: nginx
+    container_name: nginx_setup
+    volumes:
+      - nginx-certs:/usr/share/certs
+      - conf.d:/usr/share/conf.d
+    user: "0"
+    command: >
+      bash -c '
+      openssl req -x509 -nodes -days 9999 -newkey rsa:2048  -subj "${NGINX_CER_SUBJECT}/CN=localhost" -keyout /usr/share/certs/${NGINX_DOMAIN_NAME}.key -out /usr/share/certs/${NGINX_DOMAIN_NAME}.crt
+      &&
+      echo "
+         server {
+           server_name ${NGINX_DOMAIN_NAME};
+            listen 443 ssl http2 ;
+             ssl_session_timeout 5m;
+             ssl_session_cache shared:SSL:50m;
+             ssl_session_tickets off;
+             ssl_certificate /usr/share/certs/nginx-cert.crt;
+             ssl_certificate_key /usr/share/certs/nginx-key.key;
+      
+             location / {
+                 proxy_pass https://ingress:8443;
+                 proxy_set_header X-Forwarded-Proto https;
+                 proxy_set_header Host ${NGINX_DOMAIN_NAME};
+                 proxy_set_header X-Forwarded-Port ${NGINX_HTTPS_PORT};
+      
+              #  Configure Nginx as a client using self-signed certs
+                 proxy_ssl_certificate /usr/share/certs/nginx-cert.crt;
+                 proxy_ssl_certificate_key /usr/share/certs/nginx-key.key;
+      
+                 #proxy_ssl_trusted_certificate /usr/share/certs/in-cert.pem;
+                 proxy_ssl_verify off;
+             }
+         }
+      " > /usr/share/conf.d/default.conf
+      '
+    networks:
+      - ibm-wm-api-cp-nw

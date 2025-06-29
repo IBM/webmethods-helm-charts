@@ -1,0 +1,80 @@
+#
+# Copyright IBM Corp. 2024, 2025
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.applications.engine.name }}
+  namespace: {{ default "control-plane" .Release.Namespace }}
+spec:
+  revisionHistoryLimit: 0
+  replicas: {{ .Values.applications.engine.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Values.applications.engine.name }}
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.applications.engine.name }}
+        date: "{{ now | unixEpoch }}"
+    spec:
+      automountServiceAccountToken: false
+      volumes:
+      - name: certs
+        secret:
+          secretName: {{ .Values.secrets.certs.name }}
+      containers:
+      - name: {{ .Values.applications.engine.name }}
+        image: {{ .Values.applications.engine.imageName }}:{{ .Values.applications.engine.imageTag }}
+        volumeMounts:
+        - name: certs
+          mountPath: {{ .Values.secrets.certs.mountPath }}
+          readOnly: true
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.applications.engine.name }}-config
+        imagePullPolicy: Always
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1724
+        resources:
+          limits:
+            cpu: {{ .Values.applications.engine.resources.limits.cpu }}
+            memory: {{ .Values.applications.engine.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.applications.engine.resources.requests.cpu }}
+            memory: {{ .Values.applications.engine.resources.requests.memory }}
+        ports:
+          - containerPort: 8443
+            name: http
+        readinessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "curl -fk -s --cert /certs/en-cert.pem --key /certs/en-key.pem  https://localhost:8443/api/engine/health/readiness || exit 1"
+          initialDelaySeconds: 100
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 15
+        livenessProbe:
+          exec:
+            command:
+              - sh
+              - -c
+              - "curl -fk -s --cert /certs/en-cert.pem --key /certs/en-key.pem  https://localhost:8443/api/engine/health/liveness || exit 1"
+          initialDelaySeconds: 100
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 15
+      terminationGracePeriodSeconds: 30
+      imagePullSecrets:
+          - name: regcred
+---

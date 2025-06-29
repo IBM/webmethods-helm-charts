@@ -1,0 +1,63 @@
+{{- if .Values.applications.jaegertracing.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.applications.jaegertracing.name }}
+  namespace: {{ default "control-plane" .Release.Namespace }}
+spec:
+  replicas: {{ .Values.applications.jaegertracing.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.applications.jaegertracing.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.applications.jaegertracing.name }}
+      annotations:
+    spec:
+      automountServiceAccountToken: false
+      containers:
+      - image: {{ .Values.applications.jaegertracing.imageName }}:{{ .Values.applications.jaegertracing.imageTag }}
+        name: {{ .Values.applications.jaegertracing.name }}
+        envFrom:
+        - configMapRef:
+            name: {{ .Values.applications.jaegertracing.name }}-config
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http-ui
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http-ui
+          initialDelaySeconds: 60
+          periodSeconds: 20
+          successThreshold: 1
+          failureThreshold: 3
+          timeoutSeconds: 5
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1724
+        resources:
+          limits:
+            cpu: {{ .Values.applications.jaegertracing.resources.limits.cpu }}
+            memory: {{ .Values.applications.jaegertracing.resources.limits.memory }}
+          requests:
+            cpu: {{ .Values.applications.jaegertracing.resources.requests.cpu }}
+            memory: {{ .Values.applications.jaegertracing.resources.requests.memory }}
+        ports:
+          - name: http
+            containerPort: {{ .Values.applications.jaegertracing.port }}
+            protocol: TCP
+          - name: http-ui
+            containerPort: 16686
+            protocol: TCP
+      terminationGracePeriodSeconds: 30
+---
+{{- end }} 
