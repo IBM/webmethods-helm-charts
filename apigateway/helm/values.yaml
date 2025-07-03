@@ -1,5 +1,13 @@
 replicaCount: 1
 
+# -- The update stragey to use
+strategy: {}
+#   type: RollingUpdate
+#   rollingUpdate:
+#     maxSurge: 0%
+#     maxUnavailable: 50%
+
+
 # -- The number of old ReplicaSets to retain to allow rollback.
 revisionHistoryLimit: 10
 
