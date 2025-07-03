@@ -176,11 +176,12 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `2.1.2` | Fixed metadata.name of PodDisruptionBudget for API Gateway |
 | `2.1.3` | Fixed proxy connect timeout annotation on all ingresses for API Gateway |
 | `3.0.0` | Added functionality to define startup, liveness and readiness probes for API Gateway in the values file. |
+# TODO:
 
 ## Chart Version `3.0.0`
 
 Added functionality to define liveness and readiness probes for API Gateway in the values file.
-Added startup probe to the API Gateway deployment. 
+Added startup probe to the API Gateway deployment.
 This allows for smaller timeouts in the liveness probe and thus an unresponsive API Gateway container will be recognized and restarted faster by Kubernetes.
 
 ### Migrate from `2.x.x` to `3.0.0`
