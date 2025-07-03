@@ -427,7 +427,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | prometheus-elasticsearch-exporter.enabled | bool | `true` | Deploy the prometheus exporter for elasticsearch |
 | prometheus-elasticsearch-exporter.es.uri | string | `"http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"` | The uri of the elasticsearch service. By default this is null and the environment variable ES_URI is used instead. Overwrite this if you are using an external Elasticsearch instance |
 | prometheus-elasticsearch-exporter.extraEnvSecrets | object | `{"ES_PASSWORD":{"key":"password","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"},"ES_USER":{"key":"username","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"}}` | secret for elasticsearch user. Will need to adjust the secret's name. By default the secret name is <releasename>-apigateway-sag-user-es. Adjust accordingly if your release name is different. |
-| prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project.  |
+| prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project. |
 | prometheus-elasticsearch-exporter.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
 | replicaCount | int | `1` |  |
 | resources.apigwContainer.limits.cpu | int | `8` |  |
@@ -453,5 +453,6 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | serviceAccount.roleName | string | `""` |  |
 | serviceMonitor.enabled | bool | `false` | Create and enable CRD ServiceMonitor. The default is `false`. |
 | serviceMonitor.serviceName | string | `""` | Set the monitored service which is connected by ServiceMonitor. Default (if not set) is the `rt` runtime service. |
+| strategy | object | `{}` | The update strategy to use |
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | object | `{}` | Set Pod topology spread constraints for APIGW. You can use templates inside because `tpl` function is called for rendering. |

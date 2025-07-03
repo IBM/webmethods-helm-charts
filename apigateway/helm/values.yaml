@@ -1,6 +1,6 @@
 replicaCount: 1
 
-# -- The update stragey to use
+# -- The update strategy to use
 strategy: {}
 #   type: RollingUpdate
 #   rollingUpdate:
@@ -339,7 +339,7 @@ apigw:
   runtimeExternalPort:     6555
   # -- gRPC port for High Availability and Fault Tolerance (HAFT) solution. This port must be manually setup after API Gateway was initizalized.
   grpcPort:                4440
-  serviceName: "apigw"  
+  serviceName: "apigw"
   # -- readinessProbe configuration for API Gateway container. The readiness probe is used to determine if the container is ready to accept traffic.
   readinessProbe:
     httpGet:
@@ -865,9 +865,9 @@ prometheus-elasticsearch-exporter:
 
   serviceAccount:
     name: ""
-  
+
   podSecurityContext:
-    # -- Enter value {1000770001} from UID range of an OpenShift Project. 
+    # -- Enter value {1000770001} from UID range of an OpenShift Project.
     runAsUser: 1000730001
     runAsNonRoot: true
 
