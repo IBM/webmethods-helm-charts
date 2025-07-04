@@ -176,6 +176,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `2.1.2` | Fixed metadata.name of PodDisruptionBudget for API Gateway |
 | `2.1.3` | Fixed proxy connect timeout annotation on all ingresses for API Gateway |
 | `3.0.0` | Added functionality to define startup, liveness and readiness probes for API Gateway in the values file. |
+| `3.1.0` | Added ability to disable creation of the default elastic user and to set update strategy |
 
 ## Chart Version `3.0.0`
 
@@ -255,6 +256,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | elasticsearch.defaultNodeSet.memoryMapping | bool | `false` | Set this to true for production workloads, this will also use an init container to increase the vm.max_map_count to 262144 on the nodes. |
 | elasticsearch.defaultNodeSet.setMaxMapCount | bool | `true` | Controls whether to start an init container that increases the vm.max_map_count to 262144 on the node. Set memoryMapping to true and this setting also to true to run the init container. Note that this requires the ability to run privileged containers, which is likely not the case on many secure clusters. |
 | elasticsearch.deploy | bool | `true` | Deploy elastic search instance |
+| elasticsearch.disableElasticUser | bool | `false` | Decide wether to disable the default elastic user or not |
 | elasticsearch.extraSecrets | list | `[]` | Extra Secrets adding or changing built-in users of Elasticsearch. You can use this to limit the roles of the default elastic user. Note if you specify user and roles, the secret will be generated with a random password. If you just specify a name, the secret will be used as is. Example for setting the default user elastic to role view only:  - name: "elasticusersecret"    username: "elastic"    roles: "viewer" |
 | elasticsearch.image | string | `nil` | The image that should be used. By default ECK will use the official Elasticsearch images. Overwrite this to use an image from an internal registry or any custom images. Make sure that the image corresponds to the version field. |
 | elasticsearch.keystoreSecretName | string | `""` | The secret name that holds the keystore password |
@@ -427,7 +429,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | prometheus-elasticsearch-exporter.enabled | bool | `true` | Deploy the prometheus exporter for elasticsearch |
 | prometheus-elasticsearch-exporter.es.uri | string | `"http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"` | The uri of the elasticsearch service. By default this is null and the environment variable ES_URI is used instead. Overwrite this if you are using an external Elasticsearch instance |
 | prometheus-elasticsearch-exporter.extraEnvSecrets | object | `{"ES_PASSWORD":{"key":"password","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"},"ES_USER":{"key":"username","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"}}` | secret for elasticsearch user. Will need to adjust the secret's name. By default the secret name is <releasename>-apigateway-sag-user-es. Adjust accordingly if your release name is different. |
-| prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project.  |
+| prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project. |
 | prometheus-elasticsearch-exporter.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
 | replicaCount | int | `1` |  |
 | resources.apigwContainer.limits.cpu | int | `8` |  |
@@ -453,5 +455,6 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | serviceAccount.roleName | string | `""` |  |
 | serviceMonitor.enabled | bool | `false` | Create and enable CRD ServiceMonitor. The default is `false`. |
 | serviceMonitor.serviceName | string | `""` | Set the monitored service which is connected by ServiceMonitor. Default (if not set) is the `rt` runtime service. |
+| strategy | object | `{}` | The update strategy to use |
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | object | `{}` | Set Pod topology spread constraints for APIGW. You can use templates inside because `tpl` function is called for rendering. |

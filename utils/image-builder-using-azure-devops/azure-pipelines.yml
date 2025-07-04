@@ -63,7 +63,7 @@ steps:
 
 - script: |
     echo '$(EMPOWER_PASSWORD)' > pass.txt
-    sh installer.bin create container-image --name '${{parameters.TAG}}' --release '${{parameters.RELEASE}}' --accept-license --products '${{parameters.PRODUCTS}}' --username '$(EMPOWER_USERNAME)' --password:file=pass.txt --admin-password '${{parameters.ADMIN_PASSWORD}}' --base-image '${{parameters.BASE_IMAGE}}' 
+    sh installer.bin create container-image --name '${{parameters.TAG}}' --release '${{parameters.RELEASE}}' --accept-license --products '${{parameters.PRODUCTS}}' --username '$(EMPOWER_USERNAME)' --password:file=pass.txt --admin-password '${{parameters.ADMIN_PASSWORD}}' --base-image '${{parameters.BASE_IMAGE}}'
     rm pass.txt
   displayName: 'Start Installer to create image'
 
