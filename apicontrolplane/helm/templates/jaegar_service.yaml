@@ -1,0 +1,17 @@
+{{- if .Values.applications.jaegertracing.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.applications.jaegertracing.name }}-svc
+  namespace: {{ default "control-plane" .Release.Namespace }}
+spec:
+  ports:
+    - port: {{ .Values.applications.jaegertracing.port }}
+      protocol: TCP
+      targetPort: {{ .Values.applications.jaegertracing.port }}
+      name: http
+  selector:
+    app: {{ .Values.applications.jaegertracing.name }}
+  type: ClusterIP
+---
+{{- end }}

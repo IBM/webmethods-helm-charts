@@ -1,0 +1,17 @@
+services:
+  jaeger-tracing:
+    image: ${JAEGER_TRACING_IMAGE}
+    container_name: jaeger-tracing
+    hostname: jaeger-tracing
+    deploy:
+      restart_policy:
+        condition: "no"
+    environment:
+      - COLLECTOR_ZIPKIN_HOST_PORT=9411
+      - COLLECTOR_OTLP_ENABLED=true
+    ports:
+      - ${JAEGER_UI_PORT}:16686
+      - ${JAEGER_COLLECTOR_PORT}:4317
+      - 4318:4318
+    networks:
+      - ibm-wm-api-cp-nw

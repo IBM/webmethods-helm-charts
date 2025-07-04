@@ -56,3 +56,8 @@ jobs:
         run: |
           helm dependency update terracottabigmemorymax/helm
           helm template tc terracottabigmemorymax/helm
+
+      - name: Dry-run of apicontrolplan
+        run: |
+          helm dependency update apicontrolplane/helm
+          helm template apicp apicontrolplane/helm

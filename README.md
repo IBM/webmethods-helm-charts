@@ -30,6 +30,7 @@ Each chart has a README for *how to use* and lists some prerequisites.
 | Chart Name | Description |
 | --- | --- |
 | [apigateway](https://github.com/IBM/webmethods-helm-charts/blob/main/apigateway/helm/README.md) | API Gateway |
+| [apicontrolplane](https://github.com/IBM/webmethods-helm-charts/blob/main/apicontrolplane/helm/README.md) | API Control Plane |
 | [developerportal](https://github.com/IBM/webmethods-helm-charts/blob/main/developerportal/helm/README.md) | webMethods Developer Portal |
 | [microservicesruntime](https://github.com/IBM/webmethods-helm-charts/blob/main/microservicesruntime/helm/README.md) | Microservices Runtime (MSR) |
 | [mywebmethodsserver](https://github.com/IBM/webmethods-helm-charts/blob/main/mywebmethodsserver/helm/README.md) | My webMethods Server (MWS) |

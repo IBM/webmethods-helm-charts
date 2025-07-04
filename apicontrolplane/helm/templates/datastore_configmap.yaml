@@ -1,0 +1,29 @@
+#
+# Copyright IBM Corp. 2024, 2025
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:  {{ .Values.applications.datastore.name }}-config
+data:
+  OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g"
+  cluster.initial_cluster_manager_nodes: "{{ .Values.applications.datastore.cluster.initial_cluster_manager_nodes }}"
+  discovery.seed_hosts: "{{ .Values.applications.datastore.name }}-headless"
+  cluster.name: {{ .Values.applications.datastore.name }}-cluster
+  network.host: "0.0.0.0"
+
+  OPENSEARCH_INITIAL_ADMIN_PASSWORD: "MyPassword@123"
+  plugins.security.ssl.http.enabled: "true"
+  plugins.security.ssl.http.keystore_type: "JKS"
+  plugins.security.ssl.http.keystore_filepath: "/usr/share/opensearch/config/certs/keystore-os.jks"
+  plugins.security.ssl.http.keystore_alias: "webmethods"
+  plugins.security.ssl.http.keystore_password: "webmethods"
+  plugins.security.ssl.http.keystore_keypassword: "webmethods"
+  plugins.security.ssl.http.truststore_type: "JKS"
+  plugins.security.ssl.http.truststore_filepath: "/usr/share/opensearch/config/certs/truststore-os.jks"
+  plugins.security.ssl.http.truststore_password: "webmethods"
+  plugins.security.ssl.http.clientauth_mode: "REQUIRE"
+  
+  plugins.index_state_management.history.max_age: 7d
+  plugins.index_state_management.history.rollover_retention_period: 0ms
+---

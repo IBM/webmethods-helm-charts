@@ -1,0 +1,152 @@
+applications:
+  assetcatalog:
+    # -- Name of the application 
+    name: assetcatalog
+    # -- Image name of assetcatalog
+    imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-assetcatalog
+    # -- Image tag of assetcatalog
+    imageTag: "11.1.5"
+    # -- No. of assetcatalog Replicas
+    replicas: 2
+    resources:
+      limits:
+        # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Maximum Memory resource units
+        memory: 512Mi
+      requests:
+        # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Minimum Memory resource units
+        memory: 512Mi
+    logLevel: TRACE
+  engine:
+    name: engine
+    # -- Image name of engine
+    imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-engine
+    # -- Image tag of engine
+    imageTag: "11.1.5"
+    # -- No. of engine Replicas 
+    replicas: 2
+    resources:
+      limits:
+        # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Maximum Memory resource units
+        memory: 512Mi
+      requests:
+        # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Minimum Memory resource units
+        memory: 512Mi
+    logLevel: TRACE    
+  ingress:
+    name: ingress
+    # -- Image name of ingress
+    imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ingress
+    # -- Image tag of ingress
+    imageTag: "11.1.5"
+    # -- No. of ingress Replicas 
+    replicas: 2
+    # -- Tenant ID - The name of the tenant for the deployment
+    tenantId: default
+    sslEnabled: true
+    resources:
+      limits:
+        # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Maximum Memory resource units
+        memory: 1024Mi
+      requests:
+        # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Minimum Memory resource units
+        memory: 1024Mi
+    logLevel: TRACE
+    licenseFileName: my_cp_license.xml
+  ui:
+    name: ui
+    # -- Image name of ui
+    imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ui
+    # -- Image tag of ui
+    imageTag: "11.1.5"
+    # -- No. of ui Replicas 
+    replicas: 2
+    resources:
+      limits:
+        # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Maximum Memory resource units
+        memory: 512Mi
+      requests:
+        # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 500m
+        # -- Minimum Memory resource units
+        memory: 512Mi
+    logLevel: TRACE
+    springCodecMaxMemorySize: 5242880
+  datastore:
+    name: datastore
+    # -- Opensearch image name
+    imageName: opensearchproject/opensearch
+    # -- Opensearch image tag
+    imageTag: "2.19.1"
+    # -- Storage size for persistent volume
+    replicas: 1
+    # -- Cluster master nodes in the format "<name>-0, ..., <name>-(n-1)" where n is replicas. For a single node cluster it will be "<name>-0".
+    cluster:
+      initial_cluster_manager_nodes: datastore-0
+    storage: 5Gi
+    storageClassName: default
+    resources:
+      limits:
+        # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 1
+        # -- Maximum Memory resource units
+        memory: 2Gi
+      requests:
+        # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 1
+        # -- Minimum Memory resource units
+        memory: 2Gi
+  jaegertracing:
+    enabled: false
+    name: jaeger-tracing
+    #--- Jaeger Tracer image name
+    imageName: jaegertracing/all-in-one
+    #--- Jaeger Tracer image tag
+    imageTag: latest
+    #--- Jaeger Tracer image replicas number
+    replicas: 1
+    #--- Port to run Jaeger.
+    port : 4317
+    uiPort: 16686
+    extPort: 30007
+    storage: 2Gi
+    resources:
+      # This is just an example. This should be a conscious choice to the user.
+      limits:
+        # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 100m
+        # -- Maximum Memory resource units
+        memory: 128Mi                                                     
+      requests:
+        # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
+        cpu: 100m
+        # -- Minimum Memory resource units
+        memory: 128Mi
+    # - Enable to use volume mapping for Jaeger    
+    volume:
+      enabled: false
+      className: ""
+      size: 3Gi
+
+secrets:
+  certs:
+    name: certs-secret
+    mountPath: /certs
+
+domainName: localhost
+imagePullSecretName: regcred
+# -- Optionally configure a ingress class to use for the kubernetes ingress (default: nginx)
+# ingressClassName: nginx

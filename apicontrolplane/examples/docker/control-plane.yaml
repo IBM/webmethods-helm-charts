@@ -1,0 +1,80 @@
+version: '3.8'
+services:
+  nginx:
+    depends_on:
+      ingress:
+        condition: service_healthy
+      nginx_setup:
+        condition: service_completed_successfully
+    extends:
+      file: nginx/nginx.yaml
+      service: nginx
+  nginx_setup:
+    extends:
+      file: nginx/nginx.yaml
+      service: nginx_setup
+
+  ingress:
+    depends_on:
+      engine:
+        condition: service_healthy
+      asset-catalog:
+        condition: service_healthy
+      ui:
+        condition: service_healthy
+    extends:
+      file: ingress/ingress.yaml
+      service: ingress
+    environment:
+      - server.forward-headers-strategy=NATIVE
+
+  ui:
+    depends_on:
+      engine:
+        condition: service_healthy
+      asset-catalog:
+        condition: service_healthy
+    extends:
+      file: ui/ui.yaml
+      service: ui
+
+  engine:
+    depends_on:
+      asset-catalog:
+        condition: service_healthy
+    extends:
+      file: engine/engine.yaml
+      service: engine
+
+  asset-catalog:
+    depends_on:
+      datastore-cp:
+        condition: service_healthy
+    extends:
+      file: asset-catalog/asset-catalog.yaml
+      service: asset-catalog
+
+  datastore-cp:
+    extends:
+      file: datastore/datastore.yaml
+      service: datastore
+
+  jaeger-tracing:
+    extends:
+      file: jaeger-tracing/jaeger-tracing.yaml
+      service: jaeger-tracing
+
+volumes:
+  datastore-cp-data:
+    driver: local
+  nginx-certs:
+    driver: local
+  conf.d:
+    driver: local
+  pem_files:
+    driver: local
+
+networks:
+  ibm-wm-api-cp-nw:
+    name: ibm-wm-api-cp-nw
+    driver: bridge

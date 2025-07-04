@@ -1,0 +1,18 @@
+#
+# Copyright IBM Corp. 2024, 2025
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.applications.ui.name }}-svc
+  namespace: {{ default "control-plane" .Release.Namespace }}
+spec:
+  ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+      name: http
+  selector:
+    app: {{ .Values.applications.ui.name }}
+  type: ClusterIP
+---

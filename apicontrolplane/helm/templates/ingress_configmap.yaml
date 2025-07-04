@@ -1,0 +1,62 @@
+#
+# Copyright IBM Corp. 2024, 2025
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.applications.ingress.name }}-config
+data:
+  SERVER_SSL_ENABLED: "true"
+  SERVER_SSL_KEY_ALIAS: "webmethods"
+  SERVER_SSL_KEY_PASSWORD: "webmethods"
+  SERVER_SSL_KEY_STORE: "/certs/keystore-in.jks"
+  SERVER_SSL_KEY_STORE_PASSWORD: "webmethods"
+  SERVER_SSL_KEY_STORE_TYPE: "JKS"
+  SERVER_SSL_TRUST_STORE: "/certs/truststore-in.jks"
+  SERVER_SSL_TRUST_STORE_PASSWORD: "webmethods"
+  SERVER_SSL_CLIENT_AUTH: "NEED"
+
+  APICP_ENGINE_ENDPOINT: "https://{{ .Values.applications.engine.name }}-svc:8443"
+  APICP_ASSET_CATALOG_ENDPOINT: "https://{{ .Values.applications.assetcatalog.name }}-svc:8443"
+  APICP_UI_ENDPOINT: "https://{{ .Values.applications.ui.name }}-svc:8443"
+  APICP_STORE_ASSETS_HOST: {{ .Values.applications.datastore.name }}-lb
+  APICP_STORE_ASSETS_PORT: "9200"
+  APICP_STORE_ASSETS_USERNAME: "admin"
+  APICP_STORE_ASSETS_PASSWORD: "MyPassword@123"
+  APICP_STORE_ASSETS_ENABLE_SSL: "true"
+  APICP_STORE_ASSETS_KEYSTORE_FILE_PATH: "/certs/keystore-in.jks"
+  APICP_STORE_ASSETS_KEYSTORE_PASSWORD: "webmethods"
+  APICP_STORE_ASSETS_KEYSTORE_ALIAS_NAME: "webmethods"
+  APICP_STORE_ASSETS_TRUSTSTORE_FILE_PATH: "/certs/truststore-in.jks"
+  APICP_STORE_ASSETS_TRUSTSTORE_PASSWORD: "webmethods"
+  MANAGEMENT_HEALTH_ELASTICSEARCH_ENABLED: "false"
+  CONTROL_PLANE_TENANTID: "{{ .Values.applications.ingress.tenantId }}"
+  APICP_TENANT_ID: "{{ .Values.applications.ingress.tenantId }}"
+  com.softwareag.api.umc.loadbalancer.url: "http://{{ .Values.domainName }}"
+  SAGCLOUD_URL: ""
+  APICP_SAG_CLOUD_URL: ""
+  APICP_LICENSE_PATH: "/home/license.xml"
+  APICP_STUDIO_ENABLED: "false"
+  APICP_INGRESS_TOKEN_SIGNATURE_KEY_STORE: "/certs/jwt_keystore.jks"
+  APICP_INGRESS_TOKEN_SIGNATURE_KEY_STORE_PASSWORD: "webmethods"
+  APICP_INGRESS_TOKEN_SIGNATURE_KEY_ALIAS: "ibm"
+  APICP_INGRESS_TOKEN_SIGNATURE_KEY_PASSWORD: "webmethods"
+  com.softwareag.api.umc.users.system.password: "manage"
+  com.softwareag.api.umc.oauth.active: ""
+  com.softwareag.api.umc.oauth.providers: ""
+  com.softwareag.api.umc.oauth.api.keys: ""
+  com.softwareag.api.umc.oauth.api.secrets: ""
+  com.softwareag.api.umc.oauth.authorize.endpoint: ""
+  com.softwareag.api.umc.oauth.access.endpoint: ""
+  com.softwareag.api.umc.oauth.user.endpoint: ""
+
+  OTEL_JAVAAGENT_ENABLED: "{{ .Values.applications.jaegertracing.enabled }}"
+  {{- if .Values.applications.jaegertracing.enabled }}
+  JAVA_OPTS: "-Dotel.exporter.otlp.endpoint=http://{{ .Values.applications.jaegertracing.name }}-svc:{{ .Values.applications.jaegertracing.port }} -Dotel.resource.attributes=service.name={{ .Values.applications.ingress.name }} -Dcom.softwareag.api.umc.config.file=umc-defaults-controlplane.properties"
+  LOGGING_LEVEL_COM_SOFTWAREAG_CONTROLPLANE: "{{ .Values.applications.ingress.logLevel }}"
+  OTEL_METRICS_EXPORTER: "none"
+  {{- else }}
+  JAVA_OPTS: "-Dcom.softwareag.api.umc.config.file=umc-defaults-controlplane.properties"
+  {{- end }}
+
+---

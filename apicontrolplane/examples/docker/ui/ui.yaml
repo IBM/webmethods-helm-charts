@@ -1,0 +1,37 @@
+services:
+  ui: &ui-service
+    image: ${UI_IMAGE}
+    container_name: control-plane-ui
+    hostname: ui
+    deploy:
+      resources:
+        limits:
+          memory: 800M
+          cpus: '0.5'
+        reservations:
+          memory: 800M
+          cpus: '0.5'
+      restart_policy:
+        condition: "no"
+    env_file:
+      - ui-config.env
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "--cert", "/certs/ui-cert.pem", "--key", "/certs/ui-key.pem", "https://ui:8443/controlplane/api/ui/health"]
+      interval: 30s
+      timeout: 20s
+      retries: 15
+    volumes:
+      - ../../certs/keystore-ui.jks:/certs/keystore.jks
+      - ../../certs/truststore-ui.jks:/certs/truststore.jks
+      - ../../certs/ui-cert.pem:/certs/ui-cert.pem
+      - ../../certs/ui-key.pem:/certs/ui-key.pem
+    networks:
+    - ibm-wm-api-cp-nw
+
+  ui-otel:
+    <<: *ui-service
+    env_file:
+      - ui-config.env
+      - ui-config.otel.env
+    ports:
+      - ${UI_PUBLISH_PORT}:8443

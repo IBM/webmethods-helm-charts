@@ -1,0 +1,39 @@
+services:
+  engine: &engine-service
+    image: ${ENGINE_IMAGE}
+    container_name: control-plane-engine
+    hostname: engine
+    deploy:
+      resources:
+        limits:
+          memory: 500M
+          cpus: '0.5'
+        reservations:
+          memory: 500M
+          cpus: '0.5'
+      restart_policy:
+        condition: "no"
+    env_file:
+      - engine-config.env
+      - ../datastore/datastore-config.env
+    healthcheck:
+      test: ["CMD", "curl", "-fk", "--cert", "/certs/en-cert.pem", "--key", "/certs/en-key.pem", "https://engine:8443/api/engine/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    volumes:
+      - ../../certs/keystore-en.jks:/certs/keystore.jks
+      - ../../certs/truststore-en.jks:/certs/truststore.jks
+      - ../../certs/en-cert.pem:/certs/en-cert.pem
+      - ../../certs/en-key.pem:/certs/en-key.pem
+    networks:
+    - ibm-wm-api-cp-nw
+
+  engine-otel:
+    <<: *engine-service
+    env_file:
+      - engine-config.env
+      - engine-config.otel.env
+      - ../datastore/datastore-config.env
+    ports:
+      - ${ENGINE_PUBLISH_PORT}:8443
