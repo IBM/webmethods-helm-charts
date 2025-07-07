@@ -27,6 +27,10 @@ metadata:
     {{- with .Values.extraLabels -}}
     {{ toYaml . | nindent 4 }}
     {{- end }}
+  {{- with .Values.elasticsearch.annotations -}}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   version: {{ .Values.elasticsearch.version }}
   {{- if .Values.elasticsearch.image }}

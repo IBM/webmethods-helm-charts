@@ -565,6 +565,9 @@ elasticsearch:
   # Make sure that the image corresponds to the version field.
   image:
 
+  # -- Annotations for Elasticsearch crd
+  annotations: {}
+
   # -- Resource Settings for Elasticsearch
   # Example:
   #
@@ -680,7 +683,7 @@ elasticsearch:
     # See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-init-containers-plugin-downloads.html
     extraInitContainers: {}
 
-    # -- Annotations for Elasticsearch
+    # -- Annotations for Elasticsearch pod annotations
     annotations: {}
 
 
@@ -702,6 +705,9 @@ kibana:
   # Overwrite this to use an image from an internal registry or any custom images.
   # Make sure that the image corresponds to the version field.
   image:
+
+  # -- Annotations for Kibana crd
+  annotations: {}
 
   # -- The default Kibana Port
   port: 5601
