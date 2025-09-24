@@ -178,6 +178,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.0.0` | Added functionality to define startup, liveness and readiness probes for API Gateway in the values file. |
 | `3.1.0` | Added functionality to define annotations for Elasticsearch and Kibana custom resource definition in the values file. |
 | `3.2.0` | Added minor changes and example values for API Gateway 11.1 |
+| `3.3.0` | Install Elasticsearch Plugins behind a Proxy. See `extraCmdPluginInstaller` |
 
 ## Chart Version `3.0.0`
 
@@ -251,9 +252,10 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | elasticsearch.affinity | object | `{}` | Set Pod (anti-) affinity for ElasticSearch. You can use templates inside because `tpl` function is called for rendering. |
 | elasticsearch.annotations | object | `{}` | Annotations for Elasticsearch crd |
 | elasticsearch.certificateSecretName | string | `"{{ include \"common.names.fullname\" .}}-es-tls-secret"` | The name of the secret holding the tls secret By default the name will be fullname of release + "es-tls-secret" |
-| elasticsearch.defaultNodeSet | object | `{"annotations":{},"count":1,"extraConfig":{},"extraInitContainers":{},"installMapperSizePlugin":true,"memoryMapping":false,"setMaxMapCount":true}` | Default Node Set |
+| elasticsearch.defaultNodeSet | object | `{"annotations":{},"count":1,"extraCmdPluginInstaller":"export CLI_JAVA_OPTS=\"-Dhttps.proxyHost=wsa-proxy.app.ahd.one -Dhttps.proxyPort=3128\"","extraConfig":{},"extraInitContainers":{},"installMapperSizePlugin":true,"memoryMapping":false,"setMaxMapCount":true}` | Default Node Set |
 | elasticsearch.defaultNodeSet.annotations | object | `{}` | Annotations for Elasticsearch pod annotations |
 | elasticsearch.defaultNodeSet.count | int | `1` | the number of replicas for Elastic Search |
+| elasticsearch.defaultNodeSet.extraCmdPluginInstaller | string | `"export CLI_JAVA_OPTS=\"-Dhttps.proxyHost=wsa-proxy.app.ahd.one -Dhttps.proxyPort=3128\""` | Extra command before Plugin Installer is called. This can be used to set environment variable regarding Proxy settings bevore the Plugin Installer is called. The Plugin Installer needs the `CLI_JAVA_OPTS` environment variable to work through a proxy. Use the following template for setting Java options to install Plugins behind a proxy. `export CLI_JAVA_OPTS="-Dhttp.proxyHost=host_name -Dhttp.proxyPort=port_number -Dhttps.proxyHost=host_name -Dhttps.proxyPort=https_port_number"` |
 | elasticsearch.defaultNodeSet.extraConfig | object | `{}` | Extra configuration parameters for Elasticsearch nodes to be appended to the default (none). See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-node-configuration.html |
 | elasticsearch.defaultNodeSet.extraInitContainers | object | `{}` | Extra init containers to be started before Elasticsearch nodes are started. See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-init-containers-plugin-downloads.html |
 | elasticsearch.defaultNodeSet.memoryMapping | bool | `false` | Set this to true for production workloads, this will also use an init container to increase the vm.max_map_count to 262144 on the nodes. |
