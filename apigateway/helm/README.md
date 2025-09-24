@@ -369,7 +369,6 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | kibana.affinity | object | `{}` | Set Pod (anti-) affinity for Kibana. You can use templates inside because `tpl` function is called for rendering. |
 | kibana.allowAnonymousStatus | bool | `true` | Enable anonymous access to /api/status. |
 | kibana.annotations | object | `{}` | Annotations for Kibana |
-| kibana.annotations | object | `{}` | Annotations for Kibana crd |
 | kibana.count | int | `1` |  |
 | kibana.customLogging | object | `{"appenders":{},"enabled":false,"loggers":[],"root":{}}` | Custom logging configuration for kibana container. |
 | kibana.customLogging.appenders | object | `{}` | Define appenders for custom logging config. Example for logging to file: file:   type: file   fileName: /usr/share/kibana/logs/kibana.log   layout:     type: pattern |
