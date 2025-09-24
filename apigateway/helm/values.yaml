@@ -695,6 +695,12 @@ elasticsearch:
     setMaxMapCount: true
     installMapperSizePlugin: true
 
+    # -- Extra command before Plugin Installer is called. This can be used to set environment variable regarding Proxy settings
+    # bevore the Plugin Installer is called. The Plugin Installer needs the `CLI_JAVA_OPTS` environment variable to work through a proxy.
+    # Use the following template for setting Java options to install Plugins behind a proxy.
+    # `export CLI_JAVA_OPTS="-Dhttp.proxyHost=host_name -Dhttp.proxyPort=port_number -Dhttps.proxyHost=host_name -Dhttps.proxyPort=https_port_number"`
+    extraCmdPluginInstaller: 'export CLI_JAVA_OPTS="-Dhttps.proxyHost=wsa-proxy.app.ahd.one -Dhttps.proxyPort=3128"'
+
     # -- Extra configuration parameters for Elasticsearch nodes to be appended to the default (none).
     # See https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-node-configuration.html
     extraConfig: {}
