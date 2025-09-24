@@ -732,9 +732,6 @@ kibana:
   # Make sure that the image corresponds to the version field.
   image:
 
-  # -- Annotations for Kibana crd
-  annotations: {}
-
   # -- The default Kibana Port
   port: 5601
 
