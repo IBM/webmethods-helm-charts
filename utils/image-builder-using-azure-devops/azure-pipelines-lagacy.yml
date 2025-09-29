@@ -49,8 +49,15 @@ steps:
     docker login -u '$(REGISTRY_USERNAME)' -p '$(REGISTRY_PASSWORD)' $(REGISTRY_HOST)
   displayName: 'Login Docker registry'
 
-- script:
-    docker build --no-cache --build-arg 'BASE_IMAGE=${{parameters.BASE_IMAGE}}'  --build-arg 'EMPOWER_USERNAME=$(EMPOWER_USERNAME)' --build-arg 'EMPOWER_PASSWORD=$(EMPOWER_PASSWORD)' --build-arg 'INSTALLER_VERSION=$(INSTALLER_VERSION)' --build-arg 'RELEASE=${{parameters.RELEASE}}' --build-arg 'ADMIN_PASSWORD=${{parameters.ADMIN_PASSWORD}}' --build-arg 'PRODUCTS=${{parameters.PRODUCTS}}' -t ${{parameters.TAG}} utils/image-builder-using-azure-devops/lagacy
+- script: |
+    if [[ ! '$(INSTALLER_VERSION)' =~ 'INSTALLER_VERSION' ]]; then
+      echo 'Download Installer from Empower by release date: $(INSTALLER_VERSION)'
+      docker build --no-cache --build-arg 'BASE_IMAGE=${{parameters.BASE_IMAGE}}'  --build-arg 'EMPOWER_USERNAME=$(EMPOWER_USERNAME)' --build-arg 'EMPOWER_PASSWORD=$(EMPOWER_PASSWORD)' --build-arg 'INSTALLER_URL=https://empowersdc.softwareag.com/ccinstallers/SoftwareAGInstaller$(INSTALLER_VERSION)-Linux_x86_64.bin' --build-arg 'RELEASE=${{parameters.RELEASE}}' --build-arg 'ADMIN_PASSWORD=${{parameters.ADMIN_PASSWORD}}' --build-arg 'PRODUCTS=${{parameters.PRODUCTS}}' -t ${{parameters.TAG}} utils/image-builder-using-azure-devops/lagacy
+    fi
+    if [[ ! '$(INSTALLER_URL)' =~ 'INSTALLER_URL' ]]; then
+      echo 'Download Installer from URL: $(INSTALLER_URL)'
+      docker build --no-cache --build-arg 'BASE_IMAGE=${{parameters.BASE_IMAGE}}'  --build-arg 'EMPOWER_USERNAME=$(EMPOWER_USERNAME)' --build-arg 'EMPOWER_PASSWORD=$(EMPOWER_PASSWORD)' --build-arg 'INSTALLER_URL=$(INSTALLER_URL)' --build-arg 'RELEASE=${{parameters.RELEASE}}' --build-arg 'ADMIN_PASSWORD=${{parameters.ADMIN_PASSWORD}}' --build-arg 'PRODUCTS=${{parameters.PRODUCTS}}' -t ${{parameters.TAG}} utils/image-builder-using-azure-devops/lagacy
+    fi
   displayName: 'Build Docker image'
 
 - script: |

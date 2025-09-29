@@ -6,7 +6,7 @@ FROM ${BASE_IMAGE}
 #   Empower credentials ...
 ARG EMPOWER_USERNAME
 ARG EMPOWER_PASSWORD
-ARG INSTALLER_VERSION
+ARG INSTALLER_URL
 ARG RELEASE
 ARG ADMIN_PASSWORD
 ARG PRODUCTS
@@ -21,7 +21,7 @@ ARG PRODUCTS
 # Install IBM webMethods Installer ...
 RUN \
   curl \
-    https://empowersdc.softwareag.com/ccinstallers/SoftwareAGInstaller${INSTALLER_VERSION}-Linux_x86_64.bin \
+    ${INSTALLER_URL} \
     -o installer.bin
 
 # Create user ...
@@ -32,8 +32,10 @@ RUN mkdir          /opt/softwareag
 RUN chown sagadmin /opt/softwareag
 
 # Create script for IBM webMethods Installer ...
+#  SAG host=sdc-hq.softwareag.com
+#  IBM host=sdc.webmethods.io
 RUN \
-    echo "ServerURL=https\://sdc-hq.softwareag.com/cgi-bin/dataservewebM`echo ${RELEASE} | sed "s/\.//g"`.cgi"            > installer.script && \
+    echo "ServerURL=https\://sdc.webmethods.io/cgi-bin/dataservewebM`echo ${RELEASE} | sed "s/\.//g"`.cgi"               > installer.script && \
     echo "selectedFixes=spro\:all"                                                                                       >> installer.script && \
     echo "InstallProducts=`for item in $(echo ${PRODUCTS} | sed "s/,/ /g");  do printf e2ei/11/.LATEST/*/$item, ; done`" >> installer.script && \ 
     echo "InstallDir=/opt/softwareag"                                                                                    >> installer.script && \
