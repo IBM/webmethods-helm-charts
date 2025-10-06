@@ -179,6 +179,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.1.0` | Added functionality to define annotations for Elasticsearch and Kibana custom resource definition in the values file. |
 | `3.2.0` | Added minor changes and example values for API Gateway 11.1 |
 | `3.3.0` | Install Elasticsearch Plugins behind a Proxy. See `extraCmdPluginInstaller` |
+| `3.3.1` | Setting of environment variable in Job template fixed. |
 
 ## Chart Version `3.0.0`
 
