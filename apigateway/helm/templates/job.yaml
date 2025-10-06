@@ -78,7 +78,6 @@ spec:
             - name: DEPLOYMENT
               value: {{ $fullName }}
             {{- with $job.env }}
-            env:
 {{ tpl (toYaml . ) $context | indent 12 }}
             {{- end }}
             {{- with $job.envFrom }}
@@ -162,7 +161,6 @@ spec:
         - name: DEPLOYMENT
           value: {{ $fullName }}
         {{- with $job.env }}
-        env:
 {{ tpl (toYaml . ) $context | indent 8 }}
         {{- end }}
         {{- with $job.envFrom }}
