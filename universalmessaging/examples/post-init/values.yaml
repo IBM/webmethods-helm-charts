@@ -6,10 +6,13 @@ jobs:
     "helm.sh/hook-weight": "0"
     "helm.sh/hook-delete-policy": hook-succeeded
   image:
-    repository: sagcr.azurecr.io/universalmessaging-tools
+    repository: ibmwebmethods.azurecr.io/universalmessaging-server
     tag: 10.15
   imagePullPolicy: IfNotPresent
   restartPolicy: Never
+  env:
+    - name: TOOLS_ONLY
+      value: "true"
   command: ["/bin/bash"]
   # -- Shell script to deploy / create assets in UM using [runUMTool.sh](https://documentation.softwareag.com/universal_messaging/num10-15/webhelp/num-webhelp/index.html#page/num-webhelp%2Fto-title_clu_administration_tools.html%23)
   # The following sample creates a Connection Factory using environment variable `$DEPLOYMENT` to reach the UM host. 
