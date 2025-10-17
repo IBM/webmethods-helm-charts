@@ -6,11 +6,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 800M
-          cpus: '0.5'
+          memory: 2g
+          cpus: 1
         reservations:
-          memory: 800M
-          cpus: '0.5'
+          memory: 2g
+          cpus: 1
       restart_policy:
         condition: "no"
     env_file:
@@ -25,6 +25,7 @@ services:
       - ../../certs/truststore-ui.jks:/certs/truststore.jks
       - ../../certs/ui-cert.pem:/certs/ui-cert.pem
       - ../../certs/ui-key.pem:/certs/ui-key.pem
+      - artifact-volume:/app/filestore
     networks:
     - ibm-wm-api-cp-nw
 
