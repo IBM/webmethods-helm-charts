@@ -44,6 +44,16 @@ spec:
       - name: certs
         secret:
           secretName: {{ .Values.secrets.certs.name }}
+      - name: artifact-volume
+        emptyDir: {}
+      initContainers:
+      - name: {{ .Values.applications.ui.initContainer.name }}
+        image: {{ .Values.applications.ui.initContainer.imageName }}:{{ .Values.applications.ui.initContainer.tagName }}
+        imagePullPolicy: Always
+        command: ["/bin/sh", "-c", "cp -rp /artifacts/* /shared"]
+        volumeMounts:
+          - name: artifact-volume
+            mountPath: /shared
       containers:
       - name: {{ .Values.applications.ui.name }}
         image: {{ .Values.applications.ui.imageName }}:{{ .Values.applications.ui.imageTag | default .Chart.AppVersion}}
@@ -51,6 +61,8 @@ spec:
         - name: certs
           mountPath: {{ .Values.secrets.certs.mountPath }}
           readOnly: true
+        - name: artifact-volume
+          mountPath: {{ .Values.applications.ui.initContainer.mountPath }}
         envFrom:
         - configMapRef:
             name: {{ .Values.applications.ui.name }}-config

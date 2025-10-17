@@ -23,6 +23,8 @@ metadata:
 data:
   APICP_ENGINE_ENDPOINT: "https://{{ .Values.applications.engine.name }}-svc:8443"
   APICP_ASSET_CATALOG_ENDPOINT: "https://{{ .Values.applications.assetcatalog.name }}-svc:8443"
+  APICP_FILESTORE_LIST_PATH: "/app/filestore/"
+  APICP_FILESTORE_LIST_FILENAME: "artifact-list.json"
   APICP_AUTH_JWKS_URI: "https://{{ .Values.applications.ingress.name }}-svc:8443/api/ingress/v1/discovery/keys"
   SPRING_CODEC_MAX_IN_MEMORY_SIZE:  "{{ .Values.applications.ui.springCodecMaxMemorySize }}"
   # JAVA_OPTS: "-Xms256m -Xmx256m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/tmp/ui_heap_dump.hprof"
@@ -37,7 +39,6 @@ data:
   SERVER_SSL_TRUST_STORE: "/certs/truststore-ui.jks"
   SERVER_SSL_TRUST_STORE_PASSWORD: "webmethods"
   SERVER_SSL_CLIENT_AUTH: "NEED"
-
 
   OTEL_JAVAAGENT_ENABLED: "{{ .Values.applications.jaegertracing.enabled }}"
   {{- if .Values.applications.jaegertracing.enabled }}

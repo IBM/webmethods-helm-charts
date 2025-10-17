@@ -28,8 +28,19 @@ services:
     environment:
       - server.forward-headers-strategy=NATIVE
 
+  artifact-init:
+    image: ${FILESTORE_INIT_IMAGE}
+    user: root
+    container_name: artifact-init
+    command: ["/bin/sh", "-c", "cp -r /artifacts/* /shared && touch /shared/.init_done"]
+    volumes:
+      - artifact-volume:/shared
+    restart: "no"
+    
   ui:
     depends_on:
+      artifact-init:
+        condition: service_completed_successfully
       engine:
         condition: service_healthy
       asset-catalog:
@@ -72,6 +83,8 @@ volumes:
   conf.d:
     driver: local
   pem_files:
+    driver: local
+  artifact-volume:
     driver: local
 
 networks:

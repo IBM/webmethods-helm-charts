@@ -36,7 +36,7 @@ The machine needs following to install the control plane through Helm.
 ***
 
 ## How to deploy IBM webMethods API Control Plane using Helm?
-> **Note:** This release includes container images built only for the `amd64` architecture. `arm64` platforms are currently not supported
+> **Note:** This release includes container images built only for the `amd64` and `arm64` architectures.
 
 1. Refer https://www.ibm.com/docs/en/wm-api-control-plane/11.1.0?topic=plane-deploy-api-control to pull control plane images from IBM container registry.
 

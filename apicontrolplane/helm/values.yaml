@@ -5,47 +5,47 @@ applications:
     # -- Image name of assetcatalog
     imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-assetcatalog
     # -- Image tag of assetcatalog
-    imageTag: "11.1.5"
+    imageTag: "11.1.8"
     # -- No. of assetcatalog Replicas
     replicas: 2
     resources:
       limits:
         # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Maximum Memory resource units
-        memory: 512Mi
+        memory: 2Gi
       requests:
         # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Minimum Memory resource units
-        memory: 512Mi
+        memory: 2Gi
     logLevel: TRACE
   engine:
     name: engine
     # -- Image name of engine
     imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-engine
     # -- Image tag of engine
-    imageTag: "11.1.5"
+    imageTag: "11.1.8"
     # -- No. of engine Replicas 
     replicas: 2
     resources:
       limits:
         # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Maximum Memory resource units
-        memory: 512Mi
+        memory: 2Gi
       requests:
         # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Minimum Memory resource units
-        memory: 512Mi
+        memory: 2Gi
     logLevel: TRACE    
   ingress:
     name: ingress
     # -- Image name of ingress
     imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ingress
     # -- Image tag of ingress
-    imageTag: "11.1.5"
+    imageTag: "11.1.8"
     # -- No. of ingress Replicas 
     replicas: 2
     # -- Tenant ID - The name of the tenant for the deployment
@@ -54,14 +54,14 @@ applications:
     resources:
       limits:
         # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Maximum Memory resource units
-        memory: 1024Mi
+        memory: 2Gi
       requests:
         # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Minimum Memory resource units
-        memory: 1024Mi
+        memory: 2Gi
     logLevel: TRACE
     licenseFileName: my_cp_license.xml
   ui:
@@ -69,22 +69,30 @@ applications:
     # -- Image name of ui
     imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ui
     # -- Image tag of ui
-    imageTag: "11.1.5"
+    imageTag: "11.1.8"
     # -- No. of ui Replicas 
     replicas: 2
     resources:
       limits:
         # -- Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Maximum Memory resource units
-        memory: 512Mi
+        memory: 2Gi
       requests:
         # -- Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core)
-        cpu: 500m
+        cpu: 1
         # -- Minimum Memory resource units
-        memory: 512Mi
+        memory: 2Gi
     logLevel: TRACE
     springCodecMaxMemorySize: 5MB
+    initContainer:
+      # -- init container name
+      name: artifact-init
+      # -- artifact-init container image name
+      imageName: cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-filestore-init
+      # -- artifact-init container image tag
+      tagName: "1.3.0.4558"
+      mountPath: /app/filestore
   datastore:
     name: datastore
     # -- Opensearch image name

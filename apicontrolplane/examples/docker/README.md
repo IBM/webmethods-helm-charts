@@ -3,7 +3,7 @@
 The instructions for installing and running the API Control Plane on docker are below.
 
 The standard deployment of API Control plane contains the following 5 microservices.
-![img.png](../docs/diagrams/apicp_logical_architecture.png)
+![img.png](../../docs/diagrams/apicp_logical_architecture.png)
 
 1. Asset catalog - Assets(Runtimes,Data planes) processing of Control plane.
 2. Engine - Metrics processing and aggregation.
@@ -29,7 +29,7 @@ The machine needs following to install the control plane using docker.
 ***
 
 ## How to deploy IBM webMethods API Control Plane using docker compose?
-> **Note:** This release includes container images built only for the `amd64` architecture. `arm64` platforms are currently not supported
+> **Note:** This release includes container images built for the `amd64` and `arm64` architectures.
 
 1. Refer https://www.ibm.com/docs/en/wm-api-control-plane/11.1.0?topic=plane-deploy-api-control to pull control plane images from IBM container registry.
 
@@ -60,6 +60,7 @@ The machine needs following to install the control plane using docker.
     ⠿ Container control-plane-ui             Healthy                       119.1s
     ⠿ Container control-plane-ingress        Healthy                       150.5s
     ⠿ Container nginx                        Started                       151.2s
+    ⠿ Container artifact-init                Exited                                                                                                           100.4s
     ```
 
 4. Verify it's started
