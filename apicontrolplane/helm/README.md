@@ -36,7 +36,7 @@ The machine needs following to install the control plane through Helm.
 ***
 
 ## How to deploy IBM webMethods API Control Plane using Helm?
-> **Note:** This release includes container images built only for the `amd64` and `arm64` architectures.
+> **Note:** This release includes container images built only for the `amd64` architecture. `arm64` platforms are currently not supported
 
 1. Refer https://www.ibm.com/docs/en/wm-api-control-plane/11.1.0?topic=plane-deploy-api-control to pull control plane images from IBM container registry.
 
@@ -224,14 +224,14 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applications.assetcatalog.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-assetcatalog"` | Image name of assetcatalog |
-| applications.assetcatalog.imageTag | string | `"11.1.5"` | Image tag of assetcatalog |
+| applications.assetcatalog.imageTag | string | `"11.1.8"` | Image tag of assetcatalog |
 | applications.assetcatalog.logLevel | string | `"TRACE"` |  |
 | applications.assetcatalog.name | string | `"assetcatalog"` | Name of the application  |
 | applications.assetcatalog.replicas | int | `2` | No. of assetcatalog Replicas |
-| applications.assetcatalog.resources.limits.cpu | string | `"500m"` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.assetcatalog.resources.limits.memory | string | `"512Mi"` | Maximum Memory resource units |
-| applications.assetcatalog.resources.requests.cpu | string | `"500m"` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.assetcatalog.resources.requests.memory | string | `"512Mi"` | Minimum Memory resource units |
+| applications.assetcatalog.resources.limits.cpu | int | `1` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.assetcatalog.resources.limits.memory | string | `"2Gi"` | Maximum Memory resource units |
+| applications.assetcatalog.resources.requests.cpu | int | `1` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.assetcatalog.resources.requests.memory | string | `"2Gi"` | Minimum Memory resource units |
 | applications.datastore.cluster | object | `{"initial_cluster_manager_nodes":"datastore-0"}` | Cluster master nodes in the format "<name>-0, ..., <name>-(n-1)" where n is replicas. For a single node cluster it will be "<name>-0". |
 | applications.datastore.imageName | string | `"opensearchproject/opensearch"` | Opensearch image name |
 | applications.datastore.imageTag | string | `"2.19.1"` | Opensearch image tag |
@@ -244,24 +244,24 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | applications.datastore.storage | string | `"5Gi"` |  |
 | applications.datastore.storageClassName | string | `"default"` |  |
 | applications.engine.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-engine"` | Image name of engine |
-| applications.engine.imageTag | string | `"11.1.5"` | Image tag of engine |
+| applications.engine.imageTag | string | `"11.1.8"` | Image tag of engine |
 | applications.engine.logLevel | string | `"TRACE"` |  |
 | applications.engine.name | string | `"engine"` |  |
 | applications.engine.replicas | int | `2` | No. of engine Replicas  |
-| applications.engine.resources.limits.cpu | string | `"500m"` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.engine.resources.limits.memory | string | `"512Mi"` | Maximum Memory resource units |
-| applications.engine.resources.requests.cpu | string | `"500m"` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.engine.resources.requests.memory | string | `"512Mi"` | Minimum Memory resource units |
+| applications.engine.resources.limits.cpu | int | `1` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.engine.resources.limits.memory | string | `"2Gi"` | Maximum Memory resource units |
+| applications.engine.resources.requests.cpu | int | `1` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.engine.resources.requests.memory | string | `"2Gi"` | Minimum Memory resource units |
 | applications.ingress.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ingress"` | Image name of ingress |
-| applications.ingress.imageTag | string | `"11.1.5"` | Image tag of ingress |
+| applications.ingress.imageTag | string | `"11.1.8"` | Image tag of ingress |
 | applications.ingress.licenseFileName | string | `"my_cp_license.xml"` |  |
 | applications.ingress.logLevel | string | `"TRACE"` |  |
 | applications.ingress.name | string | `"ingress"` |  |
 | applications.ingress.replicas | int | `2` | No. of ingress Replicas  |
-| applications.ingress.resources.limits.cpu | string | `"500m"` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.ingress.resources.limits.memory | string | `"1024Mi"` | Maximum Memory resource units |
-| applications.ingress.resources.requests.cpu | string | `"500m"` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.ingress.resources.requests.memory | string | `"1024Mi"` | Minimum Memory resource units |
+| applications.ingress.resources.limits.cpu | int | `1` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.ingress.resources.limits.memory | string | `"2Gi"` | Maximum Memory resource units |
+| applications.ingress.resources.requests.cpu | int | `1` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.ingress.resources.requests.memory | string | `"2Gi"` | Minimum Memory resource units |
 | applications.ingress.sslEnabled | bool | `true` |  |
 | applications.ingress.tenantId | string | `"default"` | Tenant ID - The name of the tenant for the deployment |
 | applications.jaegertracing.enabled | bool | `false` |  |
@@ -281,14 +281,18 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | applications.jaegertracing.volume.enabled | bool | `false` |  |
 | applications.jaegertracing.volume.size | string | `"3Gi"` |  |
 | applications.ui.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ui"` | Image name of ui |
-| applications.ui.imageTag | string | `"11.1.5"` | Image tag of ui |
+| applications.ui.imageTag | string | `"11.1.8"` | Image tag of ui |
+| applications.ui.initContainer.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-filestore-init"` | artifact-init container image name |
+| applications.ui.initContainer.mountPath | string | `"/app/filestore"` |  |
+| applications.ui.initContainer.name | string | `"artifact-init"` | init container name |
+| applications.ui.initContainer.tagName | string | `"1.3.0.4558"` | artifact-init container image tag |
 | applications.ui.logLevel | string | `"TRACE"` |  |
 | applications.ui.name | string | `"ui"` |  |
 | applications.ui.replicas | int | `2` | No. of ui Replicas  |
-| applications.ui.resources.limits.cpu | string | `"500m"` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.ui.resources.limits.memory | string | `"512Mi"` | Maximum Memory resource units |
-| applications.ui.resources.requests.cpu | string | `"500m"` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
-| applications.ui.resources.requests.memory | string | `"512Mi"` | Minimum Memory resource units |
+| applications.ui.resources.limits.cpu | int | `1` | Maximum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.ui.resources.limits.memory | string | `"2Gi"` | Maximum Memory resource units |
+| applications.ui.resources.requests.cpu | int | `1` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
+| applications.ui.resources.requests.memory | string | `"2Gi"` | Minimum Memory resource units |
 | applications.ui.springCodecMaxMemorySize | string | `"5MB"` |  |
 | domainName | string | `"localhost"` |  |
 | imagePullSecretName | string | `"regcred"` |  |
