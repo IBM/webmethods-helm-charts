@@ -6,11 +6,11 @@ services:
     deploy:
       resources:
         limits:
-          memory: 1024M
-          cpus: '0.5'
+          memory: 2g
+          cpus: 1
         reservations:
-          memory: 1024M
-          cpus: '0.5'
+          memory: 2g
+          cpus: 1
       restart_policy:
         condition: "no"
     env_file:
