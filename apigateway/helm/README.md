@@ -180,6 +180,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.2.0` | Added minor changes and example values for API Gateway 11.1 |
 | `3.3.0` | Install Elasticsearch Plugins behind a Proxy. See `extraCmdPluginInstaller` |
 | `3.3.1` | Setting of environment variable in Job template fixed. |
+| `3.4.0` | The Service Monitor supports the setting of `fallbackScrapeProtocol`. This allows newer Prometheus server versions 3.x to scrape metrics from API Gateway. See [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config) for more information. Set the port `apigw.adminPort` to empty value if you don't want to expose the administration port as a service.|
 
 ## Chart Version `3.0.0`
 
@@ -215,7 +216,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Set Pod (anti-) affinity for APIGW. You can use templates inside because `tpl` function is called for rendering. |
-| apigw.adminPort | int | `5555` | The default administration port. Note in a default installation this port will also be used for runtime traffic. |
+| apigw.adminPort | int | `5555` | The default administration port. Note in a default installation this port will also be used for runtime traffic. Set the port to empty value if you don't want to expose the administration port as a service. |
 | apigw.adminSecretKey | string | `""` | The key that holds the admin secret key; defauls to "password" |
 | apigw.adminSecretName | string | `""` | The secret that holds the admin password Depends on secrets.genereateAdminSecret; if true the setting will be ignored. |
 | apigw.apigwAdminService | string | `"apigw-admin-svc"` |  |
@@ -430,13 +431,14 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | podDisruptionBudget | object | `{"enabled":false}` | Create a PodDisruptionBudget for API Gateway |
 | podSecurityContext | object | `{}` |  |
 | priorityClassName | string | `""` | Set APIGW and Nginx Pods' Priority Class Name ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/ |
-| prometheus | object | `{"interval":"10s","path":"/metrics","port":"5555","scheme":"http","scrape":"true","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via annotation or ServiceMonitor. |
+| prometheus | object | `{"fallbackScrapeProtocol":null,"interval":"10s","path":"/metrics","port":"5555","scheme":"http","scrape":"true","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via annotation or ServiceMonitor. |
 | prometheus-elasticsearch-exporter | object | `{"enabled":true,"es":{"uri":"http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"},"extraEnvSecrets":{"ES_PASSWORD":{"key":"password","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"},"ES_USER":{"key":"username","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"}},"podAnnotations":{"prometheus.io/path":"/metrics","prometheus.io/port":"9108","prometheus.io/scheme":"http","prometheus.io/scrape":"true"},"podSecurityContext":{"runAsNonRoot":true,"runAsUser":1000730001},"revisionHistoryLimit":10,"serviceAccount":{"name":""},"serviceMonitor":{"enabled":false}}` | Elasticsearch exporter settings. See https://github.com/prometheus-community/elasticsearch_exporter for details. |
 | prometheus-elasticsearch-exporter.enabled | bool | `true` | Deploy the prometheus exporter for elasticsearch |
 | prometheus-elasticsearch-exporter.es.uri | string | `"http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apigateway-es-http:9200"` | The uri of the elasticsearch service. By default this is null and the environment variable ES_URI is used instead. Overwrite this if you are using an external Elasticsearch instance |
 | prometheus-elasticsearch-exporter.extraEnvSecrets | object | `{"ES_PASSWORD":{"key":"password","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"},"ES_USER":{"key":"username","secret":"{{ printf \"%s-apigateway-sag-user-es\" .Release.Name }}"}}` | secret for elasticsearch user. Will need to adjust the secret's name. By default the secret name is <releasename>-apigateway-sag-user-es. Adjust accordingly if your release name is different. |
 | prometheus-elasticsearch-exporter.podSecurityContext.runAsUser | int | `1000730001` | Enter value {1000770001} from UID range of an OpenShift Project. |
 | prometheus-elasticsearch-exporter.revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
+| prometheus.fallbackScrapeProtocol | string | `nil` | Setup Prometheus scrape protocol. Set value `PrometheusText0.0.4` here if you are using Prometheus server version 3.x. See [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config). |
 | replicaCount | int | `1` |  |
 | resources.apigwContainer.limits.cpu | int | `8` |  |
 | resources.apigwContainer.limits.memory | string | `"8Gi"` |  |

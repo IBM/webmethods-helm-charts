@@ -39,6 +39,7 @@ spec:
     {{- end }}
   selector:
     {{- include "common.labels.matchLabels" . | nindent 4}}
+{{- if .Values.apigw.adminPort }}
 ---
 apiVersion: v1
 kind: Service
@@ -62,6 +63,7 @@ spec:
     {{- end }}
   selector:
     {{- include "common.labels.matchLabels" . | nindent 4}}
+{{- end }}
 ---
 apiVersion: v1
 kind: Service
