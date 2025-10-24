@@ -9,7 +9,7 @@ For deployment instructions using Docker Compose, go [here](../examples/docker/R
 The instructions for installing and running the API Control Plane on Kubernetes using Helm are below.
 
 The standard deployment of API Control plane contains the following 5 microservices.
-![img.png](../docs/diagrams/apicp_logical_architecture.png)
+![img.png](../../docs/diagrams/apicp_logical_architecture.png)
 
 1. Asset catalog - Assets(Runtimes,Data planes) processing of Control plane.
 2. Engine - Metrics processing and aggregation.
@@ -36,8 +36,7 @@ The machine needs following to install the control plane through Helm.
 ***
 
 ## How to deploy IBM webMethods API Control Plane using Helm?
-> **Note:** This release includes container images built only for the `amd64` architecture. `arm64` platforms are currently not supported
-
+> **Note:** This release includes container images built for the `amd64` and `arm64` architectures.
 
 1. Refer https://www.ibm.com/docs/en/wm-api-control-plane/11.1.0?topic=plane-deploy-api-control to pull control plane images from IBM container registry.
 
@@ -193,7 +192,7 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
     port : 4317
     #--- UI Port in which Jaeger is exposed
     uiPort: 16686
-     #--- Node Port to access JaegarUI outside the cluster 
+     #--- Node Port to access JaegarUI outside the cluster
     extPort: 30007
     storage: 2Gi
     resources:
@@ -201,11 +200,11 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
       # https://raw.githubusercontent.com/hansehe/jaeger-all-in-one/master/helm/jaeger-all-in-one/values.yaml
       limits:
         cpu: 100m
-        memory: 128Mi                                                     
+        memory: 128Mi                                                    
       requests:
         cpu: 100m
         memory: 128Mi
-    # - Enable to use volume mapping for Jaeger    
+    # - Enable to use volume mapping for Jaeger   
     volume:
       enabled: false
       className: ""
@@ -217,8 +216,17 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 
 :wave: The Jaeger deployment here is a stateless deployment. Please refer to https://github.com/hansehe/jaeger-all-in-one/tree/master/helm for the complete production level deployment of Jaeger.
 
-
 ###### [Back to Top](#api-control-plane-deployment-with-helm)
+***
+
+## Version History
+
+| Version | Changes |
+|--------|---------|
+| 1.0.0 | Initial release with OpenTelemetry support. |
+| 1.0.1 | Updated compatibility to API Control Plane version 11.1.5 with documentation enhancements and overall deployment stability improvements. |
+| 1.1.0 | Updated to API Control Plane version 11.1.8 with expanded UI deployment capabilities including artifact initialization support. Added filestore initialization container for UI component. Increased resource limits from 500m/512Mi to 1 CPU/2Gi for all major components. Introduced new environment variables for filestore configuration. |
+
 ***
 
 {{ template "chart.valuesSection" . }}
