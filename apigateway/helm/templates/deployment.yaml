@@ -174,9 +174,11 @@ spec:
           - containerPort: {{ int .Values.apigw.uiPort }}
             name: ui-http
             protocol: TCP
+          {{- if .Values.apigw.adminPort }}
           - containerPort: {{ int .Values.apigw.adminPort }}
             name: admin-http
             protocol: TCP
+          {{- end }}
           - containerPort: {{ int .Values.apigw.runtimeExternalPort }}
             name: external-http
             protocol: TCP

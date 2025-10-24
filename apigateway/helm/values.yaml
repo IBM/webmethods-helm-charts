@@ -343,7 +343,7 @@ apigw:
   diagPort:                9999
   # -- The default API Administration UI port
   uiPort:                  9072
-  # -- The default administration port. Note in a default installation this port will also be used for runtime traffic.
+  # -- The default administration port. Note in a default installation this port will also be used for runtime traffic. Set the port to empty value if you don't want to expose the administration port as a service.
   adminPort:               5555
   # -- External Runtime Port for Reverse Invoke Setups. This port must be manually setup after API Gateway was initizalized.
   runtimeExternalPort:     6555
@@ -503,6 +503,8 @@ prometheus:
   interval:      10s
   ## -- Only used on ServiceMonitor
   scrapeTimeout: 10s
+  # -- Setup Prometheus scrape protocol. Set value `PrometheusText0.0.4` here if you are using Prometheus server version 3.x. See [Prometheus configuration](https://prometheus.io/docs/prometheus/latest/configuration/configuration/#scrape_config).
+  fallbackScrapeProtocol:
 
 serviceMonitor:
   # -- Create and enable CRD ServiceMonitor. The default is `false`.

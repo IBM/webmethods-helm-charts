@@ -35,6 +35,9 @@ spec:
       scrapeTimeout: {{ .Values.prometheus.scrapeTimeout }}
       tlsConfig:
         insecureSkipVerify: true
+{{- if .Values.prometheus.fallbackScrapeProtocol }}
+  fallbackScrapeProtocol: {{ .Values.prometheus.fallbackScrapeProtocol }}
+{{- end }}
   jobLabel: {{ .Release.Name }}
   namespaceSelector:
     matchNames:
