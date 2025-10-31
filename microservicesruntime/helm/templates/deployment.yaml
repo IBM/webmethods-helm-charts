@@ -59,6 +59,9 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         {{- toYaml .Values.extraInitContainers | nindent 8 }}
+      {{- if .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      {{- end }}
       containers:
         - name: {{ .Values.containerName | default (printf "msr-%s" (.Release.Name) )}}
           securityContext:
@@ -120,6 +123,10 @@ spec:
             {{- toYaml .Values.readinessProbe | nindent 12 }}
           resources:
             {{- toYaml .Values.resources.msrContainer | nindent 12 }}
+          {{- if .Values.lifecycle }}
+          lifecycle:
+          {{- toYaml .Values.lifecycle | nindent 12 }}
+          {{- end }}
           volumeMounts:
             {{- if .Values.microservicesruntime.licenseKeyProvided }}
             - name: microservicesruntime-license
@@ -153,10 +160,6 @@ spec:
               {{- if .subPath }}
               subPath: {{ .subPath }}
               {{- end }}
-            {{- end }}
-            {{- if .Values.lifecycle }}
-            lifecycle:
-            {{ toYaml .Values.lifecycle | indent 10 }}
             {{- end }}
         {{- include "common.containers.extraContainers" . | nindent 8 }}
       volumes:

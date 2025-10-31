@@ -113,6 +113,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 | `1.0.6` | `tpl` function support in `affinity` value added. `topologySpreadConstraints` support added. |
 | `1.0.7` | `priorityClassName` support added. |
 | `1.0.8` | Setting of environment variable in Job template fixed. |
+| `1.0.9` | Added new option `terminationGracePeriodSeconds`. Fix lifecycle indentation. |
 
 ## Values
 
@@ -212,6 +213,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 | serviceMonitor | object | `{"enabled":false}` | Create and enable ServiceMonitor. The default is `false`. |
 | startupProbe | object | `{"failureThreshold":60,"periodSeconds":30,"tcpSocket":{"port":"http"}}` | startup probe for container |
 | statefulSet | bool | `false` | StatefulSet or Deployment. You should only change this if you require Client Side queuing (CSQ) or functionality in IS which requires stable hostnames and filesystems. Default is false => Deployment. Keep in mind, you must disable CSQ on each webMethods messaging and JMS connection if you don't use stateful-sets. See examples in Process Engine deployment for disableing CSQ. |
+| terminationGracePeriodSeconds | int | `30` | Define the time (in seconds) the pod has to shut down gracefully after receiving a termination signal before it's forcibly killed.  |
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | object | `{}` | Set MSR and Nginx Pod topology spread constraints. You can use templates inside because `tpl` function is called for rendering. ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/#spread-constraints-for-pods  |
 | volumeClaimTemplates | list | `[]` | Volume Claim Templates, only to be used when running as a Statefulset (e.g. using client-side queuing) |

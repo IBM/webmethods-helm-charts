@@ -369,3 +369,7 @@ serviceMonitor:
 
 # -- Import the content as license key and create a ConfigMap named by `licenseConfigMap` value. You can copy/past the content of your provided license key file here.  
 license: |
+
+
+# -- Define the time (in seconds) the pod has to shut down gracefully after receiving a termination signal before it's forcibly killed. 
+terminationGracePeriodSeconds: 30
