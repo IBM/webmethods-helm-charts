@@ -34,6 +34,27 @@ spec:
   to:
     kind: Service
     name: {{ include "common.names.fullname" . }}-ui
+  {{- if .Values.routes.ui.tls }}
+  tls:
+    {{- if .Values.routes.ui.tls.termination }}
+    termination: {{ .Values.routes.ui.tls.termination }}
+    {{- end }}
+    {{- if .Values.routes.ui.tls.insecureEdgeTerminationPolicy }}
+    insecureEdgeTerminationPolicy: {{ .Values.routes.ui.tls.insecureEdgeTerminationPolicy }}
+    {{- end }}
+    {{- if .Values.routes.ui.tls.certificate }}
+    certificate: {{ .Values.routes.ui.tls.certificate | quote }}
+    {{- end }}
+    {{- if .Values.routes.ui.tls.key }}
+    key: {{ .Values.routes.ui.tls.key | quote }}
+    {{- end }}
+    {{- if .Values.routes.ui.tls.caCertificate }}
+    caCertificate: {{ .Values.routes.ui.tls.caCertificate | quote }}
+    {{- end }}
+    {{- if .Values.routes.ui.tls.destinationCACertificate }}
+    destinationCACertificate: {{ .Values.routes.ui.tls.destinationCACertificate | quote }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 
@@ -56,4 +77,25 @@ spec:
   to:
     kind: Service
     name: {{ include "common.names.fullname" . }}-admin
+  {{- if .Values.routes.admin.tls }}
+  tls:
+    {{- if .Values.routes.admin.tls.termination }}
+    termination: {{ .Values.routes.admin.tls.termination }}
+    {{- end }}
+    {{- if .Values.routes.admin.tls.insecureEdgeTerminationPolicy }}
+    insecureEdgeTerminationPolicy: {{ .Values.routes.admin.tls.insecureEdgeTerminationPolicy }}
+    {{- end }}
+    {{- if .Values.routes.admin.tls.certificate }}
+    certificate: {{ .Values.routes.admin.tls.certificate | quote }}
+    {{- end }}
+    {{- if .Values.routes.admin.tls.key }}
+    key: {{ .Values.routes.admin.tls.key | quote }}
+    {{- end }}
+    {{- if .Values.routes.admin.tls.caCertificate }}
+    caCertificate: {{ .Values.routes.admin.tls.caCertificate | quote }}
+    {{- end }}
+    {{- if .Values.routes.admin.tls.destinationCACertificate }}
+    destinationCACertificate: {{ .Values.routes.admin.tls.destinationCACertificate | quote }}
+    {{- end }}
+  {{- end }}
 {{- end }}
