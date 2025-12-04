@@ -1,6 +1,6 @@
 # Helm Chart Repository for IBM webMethods Products and Components
 
-This repository contains a collection of Helm charts for various webMethods components. The section *Available Charts* provides more information about the contents. We test and develop all Helm Charts for webMethods release version 10.15.
+This repository contains a collection of Helm charts for various webMethods components. The section *Available Charts* provides more information about the contents. We test and develop all Helm Charts for webMethods release versions 10.15 and 11.x. The App Version specified in the charts indicates the minimum supported version only.
 
 ## Adding the Helm Chart Repository
 
@@ -14,13 +14,14 @@ To list the content of repository, type `helm search repo webmethods`
 
 ```
 NAME                                CHART VERSION   APP VERSION     DESCRIPTION
-webmethods/mywebmethodsserver           1.0.0           10.15           My webMethods Server (MWS) Helm Chart for Kuber...
-webmethods/apigateway                   1.1.0           10.15           API Gateway Helm Chart for Kubernetes
-webmethods/common                       1.0.1           1.0.0           A Library Helm Chart for grouping common logic ...
-webmethods/developerportal              1.0.0           10.15           webMethods Developer Portal Helm Chart for Kube...
-webmethods/microservicesruntime         1.0.3           10.15           Microservices Runtime (MSR) Helm Chart for Kube...
-webmethods/terracottabigmemorymax       1.2.0           4.4.0           Terracotta BigMemory Max Helm Chart for Kubernetes
-webmethods/universalmessaging           1.0.3           10.15           Universal Messaging (UM) Helm Chart for Kubernetes
+webmethods/mywebmethodsserver    	1.2.0        	10.15      	My webMethods Server (MWS) Helm Chart for Kuber...
+webmethods/apicontrolplane       	1.1.0        	11.1       	API Control Plane Helm Chart for Kubernetes       
+webmethods/apigateway            	3.6.0        	10.15      	API Gateway Helm Chart for Kubernetes             
+webmethods/common                	1.0.3        	1.0.0      	A Library Helm Chart for grouping common logic ...
+webmethods/developerportal       	1.0.3        	10.15      	webMethods Developer Portal Helm Chart for Kube...
+webmethods/microservicesruntime  	1.1.0        	10.15      	Microservices Runtime (MSR) Helm Chart for Kube...
+webmethods/terracottabigmemorymax	1.4.0        	4.4.0      	Terracotta BigMemory Max Helm Chart for Kubernetes
+webmethods/universalmessaging    	1.1.0        	10.15      	Universal Messaging (UM) Helm Chart for Kubernetes
 ```
 
 ## Available Charts READMEs
@@ -59,20 +60,17 @@ If you want to contribute to this repository, please read the [contributing guid
 ## Useful links   
 
 📘 Explore the Knowledge Base    
-Dive into a wealth of webMethods tutorials and articles in our [Tech Community Knowledge Base](https://tech.forums.softwareag.com/tags/c/knowledge-base/6/webmethods).  
+Dive into a wealth of webMethods tutorials and articles in our [IBM webMethods Hybrid Integration TechXchange Community] (https://community.ibm.com/community/user/groups/community-home?CommunityKey=82b75916-ed06-4a13-8eb6-0190da9f1bfa).  
 
 💡 Get Expert Answers    
-Stuck or just curious? Ask the webMethods experts directly on our [Forum](https://tech.forums.softwareag.com/tags/c/forum/1/webMethods).  
-
-🚀 Try webMethods    
-See webMethods in action with a [Free Trial](https://techcommunity.softwareag.com/en_en/downloads.html).   
+Stuck or just curious? Ask the webMethods experts directly on our [Forum](https://community.ibm.com/community/user/groups/community-home/digestviewer?communitykey=82b75916-ed06-4a13-8eb6-0190da9f1bfa).  
 
 ✍️ Share Your Feedback    
-Your input drives our innovation. If you find a bug, please create an issue in the repository. If you’d like to share your ideas or feedback, please post them [here](https://tech.forums.softwareag.com/c/feedback/2).   
+Your input drives our innovation. If you find a bug, please create an issue in the repository.
 
 More to discover
-* [Helm Charts: Deploying webMethods Components in Kubernetes](https://tech.forums.softwareag.com/t/helm-charts-deploying-webmethods-components-in-kubernetes/285781)  
-* [What is Develop Anywhere, Deploy Anywhere?](https://tech.forums.softwareag.com/t/what-is-develop-anywhere-deploy-anywhere/284756)
+* [Helm Charts: Deploying webMethods Components in Kubernetes](https://community.ibm.com/community/user/viewdocument/helm-charts-deploying-webmethods-c?CommunityKey=82b75916-ed06-4a13-8eb6-0190da9f1bfa&tab=librarydocuments)  
+* [What is Develop Anywhere, Deploy Anywhere?](https://community.ibm.com/community/user/blogs/john-carter/2024/08/26/develop-anywhere-deploy-anywhere)
   
 ## Disclaimer
 
