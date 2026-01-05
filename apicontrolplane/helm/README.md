@@ -226,7 +226,7 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | 1.0.0 | Initial release with OpenTelemetry support. |
 | 1.0.1 | Updated compatibility to API Control Plane version 11.1.5 with documentation enhancements and overall deployment stability improvements. |
 | 1.1.0 | Updated to API Control Plane version 11.1.8 with expanded UI deployment capabilities including artifact initialization support. Added filestore initialization container for UI component. Increased resource limits from 500m/512Mi to 1 CPU/2Gi for all major components. Introduced new environment variables for filestore configuration. |
-| 1.2.0 | Updated to API Control Plane version 11.1.9.<br><ol><li>Third-party JARs upgraded to secure, vulnerability-free releases</li><li>Support added for Nano Gateway, CMS Portal</li><li>Customized UI handling for portal runtime environments</li><li>A few Bug fixes in location related in UI</li></ol>|
+| 1.2.0 | Updated to API Control Plane version 11.1.9.<br><ol><li> Third-party JARs upgraded to secure, vulnerability-free releases</li><li>Support added for Nano Gateway, CMS Portal</li><li>Customized UI handling for portal runtime environments</li><li>A few Bug fixes in location related in UI</li></ol>|
 
 ***
 
