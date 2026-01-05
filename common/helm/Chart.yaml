@@ -38,4 +38,4 @@ name: common
 sources:
   - https://github.com/softwareag/webmethods-helm-charts
 type: library
-version: 1.0.4
+version: 1.0.5

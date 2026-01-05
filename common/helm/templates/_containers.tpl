@@ -7,7 +7,14 @@ Render extra containers
 - name: {{ .name | quote }}
   image: {{ tpl .image $ }}
   {{- if .command }}
-  command: {{ tpl .command $ }}
+  command:
+  {{- if kindIs "slice" .command }}
+  {{- range .command }}
+    - {{ tpl . $ | quote }}
+  {{- end }}
+  {{- else }}
+    - {{ tpl .command $ | quote }}
+  {{- end }}
   {{- end }}
   {{- if .args }}
   args: 
