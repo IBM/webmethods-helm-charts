@@ -43,6 +43,6 @@ jobs:
         run: |
           cd webmethods-helm-charts/
           git add .
-          git commit -am "$CMT_MSG and updating helm/README.me from values.yaml"
+          git diff --quiet && git diff --staged --quiet || git commit -am "$CMT_MSG and updating helm/README.me from values.yaml"
           git branch -M      ${{ github.ref_name }}
           git push -f origin ${{ github.ref_name }}
