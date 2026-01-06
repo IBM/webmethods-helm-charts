@@ -9,9 +9,9 @@ For deployment instructions using Docker Compose, go [here](../examples/docker/R
 The instructions for installing and running the API Control Plane on Kubernetes using Helm are below.
 
 The standard deployment of API Control plane contains the following 5 microservices.
-![img.png](../../docs/diagrams/apicp_logical_architecture.png)
+![img.png](../docs/diagrams/apicp_logical_architecture.png)
 
-1. Asset catalog - Assets(Runtimes,Data planes) processing of Control plane.
+1. Asset catalog - Assets (Runtimes,Data planes) processing of Control plane.
 2. Engine - Metrics processing and aggregation.
 3. Ingress - User management and security
 4. API Control Plane UI - user interface
