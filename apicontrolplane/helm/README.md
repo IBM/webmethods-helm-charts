@@ -9,9 +9,9 @@ For deployment instructions using Docker Compose, go [here](../examples/docker/R
 The instructions for installing and running the API Control Plane on Kubernetes using Helm are below.
 
 The standard deployment of API Control plane contains the following 5 microservices.
-![img.png](../../docs/diagrams/apicp_logical_architecture.png)
+![img.png](../docs/diagrams/apicp_logical_architecture.png)
 
-1. Asset catalog - Assets(Runtimes,Data planes) processing of Control plane.
+1. Asset catalog - Assets (Runtimes,Data planes) processing of Control plane.
 2. Engine - Metrics processing and aggregation.
 3. Ingress - User management and security
 4. API Control Plane UI - user interface
@@ -226,6 +226,7 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | 1.0.0 | Initial release with OpenTelemetry support. |
 | 1.0.1 | Updated compatibility to API Control Plane version 11.1.5 with documentation enhancements and overall deployment stability improvements. |
 | 1.1.0 | Updated to API Control Plane version 11.1.8 with expanded UI deployment capabilities including artifact initialization support. Added filestore initialization container for UI component. Increased resource limits from 500m/512Mi to 1 CPU/2Gi for all major components. Introduced new environment variables for filestore configuration. |
+| 1.2.0 | Updated to API Control Plane version 11.1.9.<br><ol><li> Third-party JARs upgraded to secure, vulnerability-free releases</li><li>Support added for Nano Gateway, CMS Portal</li><li>Customized UI handling for portal runtime environments</li><li>A few Bug fixes in location related in UI</li></ol>|
 
 ***
 
@@ -234,7 +235,7 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | applications.assetcatalog.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-assetcatalog"` | Image name of assetcatalog |
-| applications.assetcatalog.imageTag | string | `"11.1.8"` | Image tag of assetcatalog |
+| applications.assetcatalog.imageTag | string | `"11.1.9"` | Image tag of assetcatalog |
 | applications.assetcatalog.logLevel | string | `"TRACE"` |  |
 | applications.assetcatalog.name | string | `"assetcatalog"` | Name of the application  |
 | applications.assetcatalog.replicas | int | `2` | No. of assetcatalog Replicas |
@@ -254,7 +255,7 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | applications.datastore.storage | string | `"5Gi"` |  |
 | applications.datastore.storageClassName | string | `"default"` |  |
 | applications.engine.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-engine"` | Image name of engine |
-| applications.engine.imageTag | string | `"11.1.8"` | Image tag of engine |
+| applications.engine.imageTag | string | `"11.1.9"` | Image tag of engine |
 | applications.engine.logLevel | string | `"TRACE"` |  |
 | applications.engine.name | string | `"engine"` |  |
 | applications.engine.replicas | int | `2` | No. of engine Replicas  |
@@ -263,7 +264,7 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | applications.engine.resources.requests.cpu | int | `1` | Minimum CPU resource units(1 CPU unit is equivalent to 1 physical CPU core, or 1 virtual core) |
 | applications.engine.resources.requests.memory | string | `"2Gi"` | Minimum Memory resource units |
 | applications.ingress.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ingress"` | Image name of ingress |
-| applications.ingress.imageTag | string | `"11.1.8"` | Image tag of ingress |
+| applications.ingress.imageTag | string | `"11.1.9"` | Image tag of ingress |
 | applications.ingress.licenseFileName | string | `"my_cp_license.xml"` |  |
 | applications.ingress.logLevel | string | `"TRACE"` |  |
 | applications.ingress.name | string | `"ingress"` |  |
@@ -291,11 +292,11 @@ To enable it set the property `applications.jaegertracing.enabled` to `true` in 
 | applications.jaegertracing.volume.enabled | bool | `false` |  |
 | applications.jaegertracing.volume.size | string | `"3Gi"` |  |
 | applications.ui.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-ui"` | Image name of ui |
-| applications.ui.imageTag | string | `"11.1.8"` | Image tag of ui |
+| applications.ui.imageTag | string | `"11.1.9"` | Image tag of ui |
 | applications.ui.initContainer.imageName | string | `"cp.icr.io/cp/webmethods/api/ibm-webmethods-api-control-plane-filestore-init"` | artifact-init container image name |
 | applications.ui.initContainer.mountPath | string | `"/app/filestore"` |  |
 | applications.ui.initContainer.name | string | `"artifact-init"` | init container name |
-| applications.ui.initContainer.tagName | string | `"1.3.0.4558"` | artifact-init container image tag |
+| applications.ui.initContainer.tagName | string | `"1.3.0.5906"` | artifact-init container image tag |
 | applications.ui.logLevel | string | `"TRACE"` |  |
 | applications.ui.name | string | `"ui"` |  |
 | applications.ui.replicas | int | `2` | No. of ui Replicas  |
