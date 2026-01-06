@@ -26,10 +26,10 @@ securityContext:
 # -- Extra Labels
 extraLabels: {}
 
-# -- Exta environment properties to be passed on to the terracotta runtime
-#  - name: extraEnvironmentVariable
-#    value: "myvalue"
-extraEnvs: []
+# extraEnvs:
+#   name: extraEnvironmentVariable
+#   value: "myvalue"
+extraEnvs:
 
 # -- The pvc storage request for the server pods
 serverStorage: 10Gi

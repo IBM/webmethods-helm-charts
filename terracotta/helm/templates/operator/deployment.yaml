@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "kube-terracotta.fullname" . }}-operator
+  namespace: {{ template "kube-terracotta.namespace" . }} 
+  labels:
+    app: {{ template "kube-terracotta.name" . }}-operator
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- include "kube-terracotta.labels" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ template "kube-terracotta.name" . }}-operator
+      release: {{ $.Release.Name | quote }}
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ template "kube-terracotta.name" . }}-operator
+{{ include "kube-terracotta.labels" . | indent 8 }}
+    spec:
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      containers:
+      - name: terracotta-operator
+        image: "{{ $.Values.terracottaOperator.operatorImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.pullPolicy }} 
+        command: ["./manager"]
+        args: ["-zap-time-encoding=iso8601","-namespace={{ template "kube-terracotta.namespace" . }}"]
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 8081
+          initialDelaySeconds: 15
+          periodSeconds: 20
+        readinessProbe:
+          httpGet:
+            path: /readyz
+            port: 8081
+          initialDelaySeconds: 5
+          periodSeconds: 10
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+        env:
+        {{- if .Values.terracottaOperator.connectionTimeout }}
+        - name: CONNECTION_TIMEOUT
+          value: {{ .Values.terracottaOperator.connectionTimeout }}
+        {{- end }}
+        {{- if .Values.terracottaOperator.requestTimeout }}
+        - name: REQUEST_TIMEOUT
+          value: {{ .Values.terracottaOperator.requestTimeout }}
+        {{- end }}
+        {{- range $key, $val := .Values.extraEnvs }}
+        - name: {{ $key }}
+          value: {{ $val }}
+        {{- end }}
+
+      serviceAccountName: {{ template "kube-terracotta.operator.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      terminationGracePeriodSeconds: 30

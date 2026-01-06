@@ -20,6 +20,8 @@ webmethods/apigateway                   3.6.3           10.15           API Gate
 webmethods/common                       1.0.5           1.0.0           A Library Helm Chart for grouping common logic ...
 webmethods/developerportal              1.0.3           10.15           webMethods Developer Portal Helm Chart for Kube...
 webmethods/microservicesruntime         1.1.0           10.15           Microservices Runtime (MSR) Helm Chart for Kube...
+webmethods/terracottabigmemorymax       2.0.1           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
+webmethods/terracotta                   1.0.0           11.1.0          Terracotta DB Helm Chart for Kubernetes
 webmethods/terracottabigmemorymax       2.0.4           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/universalmessaging           1.1.0           10.15           Universal Messaging (UM) Helm Chart for Kubernetes
 ```
@@ -28,15 +30,16 @@ webmethods/universalmessaging           1.1.0           10.15           Universa
 
 Each chart has a README for *how to use* and lists some prerequisites.
 
-| Chart Name | Description |
-| --- | --- |
-| [apigateway](https://github.com/IBM/webmethods-helm-charts/blob/main/apigateway/helm/README.md) | API Gateway |
-| [apicontrolplane](https://github.com/IBM/webmethods-helm-charts/blob/main/apicontrolplane/helm/README.md) | API Control Plane |
-| [developerportal](https://github.com/IBM/webmethods-helm-charts/blob/main/developerportal/helm/README.md) | webMethods Developer Portal |
-| [microservicesruntime](https://github.com/IBM/webmethods-helm-charts/blob/main/microservicesruntime/helm/README.md) | Microservices Runtime (MSR) |
-| [mywebmethodsserver](https://github.com/IBM/webmethods-helm-charts/blob/main/mywebmethodsserver/helm/README.md) | My webMethods Server (MWS) |
-| [universalmessaging](https://github.com/IBM/webmethods-helm-charts/blob/main/universalmessaging/helm/README.md) | Universal Messaging (UM) |
-| [terracottabigmemorymax](https://github.com/IBM/webmethods-helm-charts/blob/main/terracottabigmemorymax/helm/README.md) | Terracotta BigMemoryMax |
+| Chart Name                                                                                                              | Description                 |
+|-------------------------------------------------------------------------------------------------------------------------|-----------------------------|
+| [apigateway](https://github.com/IBM/webmethods-helm-charts/blob/main/apigateway/helm/README.md)                         | API Gateway                 |
+| [apicontrolplane](https://github.com/IBM/webmethods-helm-charts/blob/main/apicontrolplane/helm/README.md)               | API Control Plane           |
+| [developerportal](https://github.com/IBM/webmethods-helm-charts/blob/main/developerportal/helm/README.md)               | webMethods Developer Portal |
+| [microservicesruntime](https://github.com/IBM/webmethods-helm-charts/blob/main/microservicesruntime/helm/README.md)     | Microservices Runtime (MSR) |
+| [mywebmethodsserver](https://github.com/IBM/webmethods-helm-charts/blob/main/mywebmethodsserver/helm/README.md)         | My webMethods Server (MWS)  |
+| [universalmessaging](https://github.com/IBM/webmethods-helm-charts/blob/main/universalmessaging/helm/README.md)         | Universal Messaging (UM)    |
+| [terracottabigmemorymax](https://github.com/IBM/webmethods-helm-charts/blob/main/terracottabigmemorymax/helm/README.md) | Terracotta BigMemoryMax     |
+| [terracotta](https://github.com/IBM/webmethods-helm-charts/blob/main/terracotta/helm/README.md)                     | Terracotta DB               |
 
 ## Chart Versions
 

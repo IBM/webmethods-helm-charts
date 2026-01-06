@@ -180,7 +180,7 @@ helm delete <release-name>
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| extraEnvs | list | `[]` | Exta environment properties to be passed on to the terracotta runtime  - name: extraEnvironmentVariable    value: "myvalue" |
+| extraEnvs | string | `nil` |  |
 | extraLabels | object | `{}` | Extra Labels |
 | imagePullSecrets | list | `[{"name":"regcred"}]` | Image pull secret reference. By default looks for `regcred`. |
 | prometheus | object | `{"interval":"10s","path":"/tmc/api/prometheus","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via ServiceMonitor. |

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "tms-service"
+  namespace: {{ template "kube-terracotta.namespace" . }} 
+  labels:
+    app: "tms"
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- include "kube-terracotta.labels" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: tmc-port
+      port: 9480
+  selector:
+    app: "tms"

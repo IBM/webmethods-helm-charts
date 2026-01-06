@@ -1,0 +1,74 @@
+# -- Specific version to not accidentally change production versions with newer images.
+tag: 11.1
+pullPolicy: IfNotPresent
+
+# -- Image pull secret reference. By default looks for `regcred`.
+imagePullSecrets:
+  - name: regcred
+
+#
+# BELOW ARE THE CONFIGURATIONS FOR THE PODS
+#
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1724
+  runAsGroup: 0
+  fsGroup: 0
+
+# -- Extra Labels
+extraLabels: {}
+
+# -- Exta environment properties to be passed on to the terracotta runtime
+# extraEnvs:
+#   name: extraEnvironmentVariable
+#   value: "myvalue"
+extraEnvs:
+
+namespaceOverride: ""
+nameOverride: ""
+fullnameOverride: ""
+storageClass: ""
+
+terracottaOperator:
+   operatorImage: "ibmwebmethods.azurecr.io/terracotta-operator"
+   serviceAccount:
+       create: true
+       name: ""
+   connectionTimeout: "30s"
+   requestTimeout: "30s"
+
+terracotta:
+   serverImage: "ibmwebmethods.azurecr.io/terracotta-server"
+   voterImage: "ibmwebmethods.azurecr.io/terracotta-voter"
+   nodes: 2
+   stripes: 2
+   probeFailureThreshold:
+   jsonLogging: false
+   jsonAuditLogging: false
+   offheaps: "offheap-1:512MB"
+   datadirs: "dataroot-1,dataroot-2"
+   failoverPriority: "availability"
+   clusterName: "my-cluster"
+   storage: 10Gi
+   resources: {}
+   #  limits:
+   #   memory: 16Gi
+   # requests:
+   #   memory: 4Gi
+   voters: 0 
+   security:
+     isConfigured: false
+     sslEnabled: ""
+     authc: ""
+     whitelist: ""
+
+tms: 
+ tmsImage: "ibmwebmethods.azurecr.io/terracotta-management-server"
+ storage: 5Gi
+ resources: {}
+ #  limits:
+ #   memory: 16Gi
+ # requests:
+ #   memory: 4Gi
+
