@@ -65,17 +65,17 @@ spec:
           {{- end }}
           volumeMounts:
             - name: commonconfig-volume
-              mountPath: /opt/softwareag/config
+              mountPath: /opt/terracotta/config
             - name: core-store
-              mountPath: /opt/softwareag/.tc/mgmt
+              mountPath: /opt/terracotta/.tc/mgmt
           env:
             {{- if eq $.Values.terracotta.security true }}
             {{- if eq $.Values.terracotta.selfSignedCerts true }}
             - name: JAVA_OPTS
-              value: {{ $.Values.terracotta.tmcOpts }} -Djavax.net.ssl.keyStore=/opt/softwareag/.tc/mgmt/tmc-0-keystore.jks -Djavax.net.ssl.trustStore=/opt/softwareag/.tc/mgmt/truststore.jks
+              value: {{ $.Values.terracotta.tmcOpts }} -Djavax.net.ssl.keyStore=/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks -Djavax.net.ssl.trustStore=/opt/terracotta/.tc/mgmt/truststore.jks
             {{- else }}
             - name: JAVA_OPTS
-              value: {{ $.Values.terracotta.tmcOpts }} -Djavax.net.ssl.keyStore=/opt/softwareag/.tc/mgmt/tmc-0-keystore.jks
+              value: {{ $.Values.terracotta.tmcOpts }} -Djavax.net.ssl.keyStore=/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks
             {{- end }}
             {{- else }}
             {{- if ne $.Values.terracotta.tmcOpts "" }}
