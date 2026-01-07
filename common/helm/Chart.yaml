@@ -23,19 +23,19 @@ apiVersion: v2
 # Please make sure that version and appVersion are always the same.
 appVersion: 1.0.0
 description: A Library Helm Chart for grouping common logic between IBM webMethods charts. This chart is not deployable by itself.
-home: https://softwareag.com
-icon: https://softwareag.com/downloads/logos/softwareag-mark.png
+home: https://ibm.github.io/webmethods-helm-charts
+icon: https://avatars.githubusercontent.com/u/1459110
 keywords:
   - common
   - helper
   - template
   - function
-  - softwareag
+  - webmethods
 maintainers:
-  - name: SoftwareAG
-    url: https://softwareag.com
+  - name: IBM
+    url: https://www.ibm.com/opensource
 name: common
 sources:
-  - https://github.com/softwareag/webmethods-helm-charts
+  - https://ibm.github.io/webmethods-helm-charts
 type: library
-version: 1.0.4
+version: 2.0.0
