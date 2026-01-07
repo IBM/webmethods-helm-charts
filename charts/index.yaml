@@ -754,6 +754,33 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
+    created: "2026-01-07T17:37:32.82884+01:00"
+    description: A Library Helm Chart for grouping common logic between IBM webMethods
+      charts. This chart is not deployable by itself.
+    digest: abbc38b301f0dc5c6352494d494540e523099e8dfb797e89e13ca976ed09f72c
+    home: https://ibm.github.io/webmethods-helm-charts
+    icon: https://avatars.githubusercontent.com/u/1459110
+    keywords:
+    - common
+    - helper
+    - template
+    - function
+    - webmethods
+    maintainers:
+    - name: IBM
+      url: https://www.ibm.com/opensource
+    name: common
+    sources:
+    - https://ibm.github.io/webmethods-helm-charts
+    type: library
+    urls:
+    - https://ibm.github.io/webmethods-helm-charts/charts/common-2.0.0.tgz
+    version: 2.0.0
+  - annotations:
+      category: Infrastructure
+      licenses: Apache-2.0
+    apiVersion: v2
+    appVersion: 1.0.0
     created: "2026-01-06T14:24:31.26850722Z"
     description: A Library Helm Chart for grouping common logic between IBM webMethods
       charts. This chart is not deployable by itself.
