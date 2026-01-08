@@ -182,7 +182,7 @@ helm delete <release-name>
 | imagePullSecrets | list | `[{"name":"regcred"}]` | Image pull secret reference. By default looks for `regcred`. |
 | prometheus | object | `{"interval":"10s","path":"/tmc/api/prometheus","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via ServiceMonitor. |
 | pullPolicy | string | `"IfNotPresent"` |  |
-| registry | string | `"sagcr.azurecr.io"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
+| registry | string | `"ibmwebmethods.azurecr.io"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | resources | object | `{}` | We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.  tsaContainer:   limits:     cpu: 100m     memory: 128Mi   requests:     cpu: 100m     memory: 128Mi tmcContainer:   requests:     cpu: 500m     memory: 2Gi   limits:     # use a high cpu limit to avoid the container being throttled     cpu: 8     memory: 4Gi |
 | securityContext.fsGroup | int | `0` |  |
 | securityContext.runAsGroup | int | `0` |  |
@@ -191,7 +191,7 @@ helm delete <release-name>
 | serverImage | string | `"bigmemorymax-server"` |  |
 | serverStorage | string | `"10Gi"` | The pvc storage request for the server pods |
 | serviceMonitor | object | `{"enabled":false}` | Create and enable ServiceMonitor. The default is `false`. |
-| tag | string | `"4.4.0"` | Specific version to not accidentally change production versions with newer images. |
+| tag | string | `"4.5.0"` | Specific version to not accidentally change production versions with newer images. |
 | terracotta | object | `{"datastoreSize":"4G","jsonLogging":true,"license":"","nodeCountPerStripe":2,"offHeapSize":"2G","restartable":false,"secretName":"","security":false,"selfSignedCerts":true,"serverOpts":"","serviceAccountName":"","stripeCount":1,"tmcEnabled":true,"tmcManagementPort":9889,"tmcOpts":"","tmcSecurePort":9443,"tsaGroupPort":9530,"tsaManagementPort":9540,"tsaPort":9510}` | Terracotta BigMemoryMax configurations |
 | terracotta.datastoreSize | string | `"4G"` | The <datastoreSize> configuration for each Terracotta server. |
 | terracotta.jsonLogging | bool | `true` | The JSON_LOGGING environment variable for each Terracotta server. |

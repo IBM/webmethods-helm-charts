@@ -3,12 +3,12 @@
 # Change this for air-gaped installations or custom images.
 # For the IBM webMethods container repository you need to have a
 # valid access token stored as registry credentials
-registry: sagcr.azurecr.io
+registry: ibmwebmethods.azurecr.io
 serverImage: bigmemorymax-server
 tmcImage: bigmemorymax-management-server
 pullPolicy: IfNotPresent
 # -- Specific version to not accidentally change production versions with newer images.
-tag: "4.4.0"
+tag: "4.5.0"
 
 # -- Image pull secret reference. By default looks for `regcred`.
 imagePullSecrets:
