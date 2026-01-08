@@ -3,7 +3,7 @@ entries:
   apicontrolplane:
   - apiVersion: v2
     appVersion: "11.1"
-    created: "2026-01-07T17:35:37.789260338Z"
+    created: "2026-01-08T09:44:00.776814511Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -11,7 +11,7 @@ entries:
       - softwareag-common
       version: 1.0.3
     description: API Control Plane Helm Chart for Kubernetes
-    digest: af7f3480a2579e6269d0de699aa54662b8c734fc96b057d79b2daf314c5d0ca5
+    digest: ca9b45d4b4e283de5b87e985104c7aebe4f806561d4cbf4ba7000c78f0bdc489
     name: apicontrolplane
     type: application
     urls:
@@ -19,7 +19,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: "11.1"
-    created: "2026-01-07T17:35:37.785539171Z"
+    created: "2026-01-08T09:44:00.774013658Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -35,7 +35,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: "11.1"
-    created: "2026-01-07T17:35:37.781932512Z"
+    created: "2026-01-08T09:44:00.771097424Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -51,7 +51,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "11.1"
-    created: "2026-01-07T17:35:37.779066988Z"
+    created: "2026-01-08T09:44:00.769676883Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -68,7 +68,7 @@ entries:
   apigateway:
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.963088113Z"
+    created: "2026-01-08T09:44:00.914122782Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -82,7 +82,7 @@ entries:
       - prometheus-elasticsearch-exporter
       version: 6.6.0
     description: API Gateway Helm Chart for Kubernetes
-    digest: 5aafcbf05951f230ff21b68d6a74d3a97e16226c9caa629074f8c1e2e19cabb7
+    digest: 9fc9ea652320b1e6d4b8a9a4629081bb4f0470bb254370c06e28bbd149273e7c
     name: apigateway
     type: application
     urls:
@@ -90,7 +90,7 @@ entries:
     version: 3.6.4
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.957234031Z"
+    created: "2026-01-08T09:44:00.9087443Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -112,7 +112,7 @@ entries:
     version: 3.6.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.950798356Z"
+    created: "2026-01-08T09:44:00.903222179Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -134,7 +134,7 @@ entries:
     version: 3.6.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.946808192Z"
+    created: "2026-01-08T09:44:00.89820729Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -156,7 +156,7 @@ entries:
     version: 3.6.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.940651526Z"
+    created: "2026-01-08T09:44:00.894104603Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -178,7 +178,7 @@ entries:
     version: 3.6.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.936607123Z"
+    created: "2026-01-08T09:44:00.887880878Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -200,7 +200,7 @@ entries:
     version: 3.5.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.932633618Z"
+    created: "2026-01-08T09:44:00.883624988Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -222,7 +222,7 @@ entries:
     version: 3.4.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.926678748Z"
+    created: "2026-01-08T09:44:00.879152538Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -244,7 +244,7 @@ entries:
     version: 3.4.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.922636948Z"
+    created: "2026-01-08T09:44:00.873336804Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -266,7 +266,7 @@ entries:
     version: 3.3.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.918643353Z"
+    created: "2026-01-08T09:44:00.869404106Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -288,7 +288,7 @@ entries:
     version: 3.3.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.912540388Z"
+    created: "2026-01-08T09:44:00.865487252Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -310,7 +310,7 @@ entries:
     version: 3.2.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.90873386Z"
+    created: "2026-01-08T09:44:00.859540631Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -332,7 +332,7 @@ entries:
     version: 3.1.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.904849678Z"
+    created: "2026-01-08T09:44:00.855507498Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -354,7 +354,7 @@ entries:
     version: 3.0.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.899474836Z"
+    created: "2026-01-08T09:44:00.851459546Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -376,7 +376,7 @@ entries:
     version: 2.1.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.893141256Z"
+    created: "2026-01-08T09:44:00.845184966Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -398,7 +398,7 @@ entries:
     version: 2.1.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.889392641Z"
+    created: "2026-01-08T09:44:00.841328324Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -420,7 +420,7 @@ entries:
     version: 2.1.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.885603724Z"
+    created: "2026-01-08T09:44:00.837221706Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -442,7 +442,7 @@ entries:
     version: 2.1.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.87930639Z"
+    created: "2026-01-08T09:44:00.830839944Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -464,7 +464,7 @@ entries:
     version: 2.0.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.875596399Z"
+    created: "2026-01-08T09:44:00.827180274Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -486,7 +486,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.871757041Z"
+    created: "2026-01-08T09:44:00.822708435Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -508,7 +508,7 @@ entries:
     version: 1.2.9
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.867109477Z"
+    created: "2026-01-08T09:44:00.818428102Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -530,7 +530,7 @@ entries:
     version: 1.2.8
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.861245892Z"
+    created: "2026-01-08T09:44:00.814875626Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -552,7 +552,7 @@ entries:
     version: 1.2.7
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.855157463Z"
+    created: "2026-01-08T09:44:00.811234347Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -574,7 +574,7 @@ entries:
     version: 1.2.6
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.84160028Z"
+    created: "2026-01-08T09:44:00.806081847Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -596,7 +596,7 @@ entries:
     version: 1.2.5
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.835903891Z"
+    created: "2026-01-08T09:44:00.802715518Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -618,7 +618,7 @@ entries:
     version: 1.2.4
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.831348143Z"
+    created: "2026-01-08T09:44:00.799236379Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -640,7 +640,7 @@ entries:
     version: 1.2.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.818734412Z"
+    created: "2026-01-08T09:44:00.794225129Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -662,7 +662,7 @@ entries:
     version: 1.2.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.812953903Z"
+    created: "2026-01-08T09:44:00.790951491Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -684,7 +684,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.806818228Z"
+    created: "2026-01-08T09:44:00.787622942Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -706,7 +706,7 @@ entries:
     version: 1.2.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.799288989Z"
+    created: "2026-01-08T09:44:00.783104124Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -728,7 +728,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.794275153Z"
+    created: "2026-01-08T09:44:00.779903009Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -754,10 +754,10 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-07T17:35:37.965933198Z"
+    created: "2026-01-08T09:44:00.916995617Z"
     description: A Library Helm Chart for grouping common logic between IBM webMethods
       charts. This chart is not deployable by itself.
-    digest: c6bad00fcdf99cf7548eca8cc4c7e28c13df22049235943cdd5d7f4bec8c07e7
+    digest: 542404c840926f039a057aaf4ce76b3976d058ca428c3304abe26638b9c84495
     home: https://ibm.github.io/webmethods-helm-charts
     icon: https://avatars.githubusercontent.com/u/1459110
     keywords:
@@ -781,7 +781,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-07T17:35:37.964946642Z"
+    created: "2026-01-08T09:44:00.915913971Z"
     description: A Library Helm Chart for grouping common logic between IBM webMethods
       charts. This chart is not deployable by itself.
     digest: 09f04ddf7f139bad1ca60a397087282d29793f529760b1b166b8e4fba69f9848
@@ -808,7 +808,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-07T17:35:37.964541634Z"
+    created: "2026-01-08T09:44:00.915515343Z"
     description: A Library Helm Chart for grouping common logic between IBM webMethods
       charts. This chart is not deployable by itself.
     digest: e086b4eb72506a3b48e8dc281c7f76526ede56aa577c21213fc6031bea7d9947
@@ -835,7 +835,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-07T17:35:37.964197195Z"
+    created: "2026-01-08T09:44:00.915164258Z"
     description: A Library Helm Chart for grouping common logic between Software AG
       charts. This chart is not deployable by itself.
     digest: fe0922bd623fe96f1cce418e9f3c3918f303ea6a7f2a45f20873845f037d9452
@@ -862,7 +862,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-07T17:35:37.963821883Z"
+    created: "2026-01-08T09:44:00.914819529Z"
     description: A Library Helm Chart for grouping common logic between Software AG
       charts. This chart is not deployable by itself.
     digest: 7721eb7cd8b3d2c1cf82687502eb7ec5d36caefdf553ccb0ffb62ae8e0308896
@@ -889,7 +889,7 @@ entries:
       licenses: Apache-2.0
     apiVersion: v2
     appVersion: 1.0.0
-    created: "2026-01-07T17:35:37.963442585Z"
+    created: "2026-01-08T09:44:00.91446701Z"
     description: A Library Helm Chart for grouping common logic between Software AG
       charts. This chart is not deployable by itself.
     digest: 4c9eda6a44b05e9aa23e33196a67dd1ac6fd767d6a14cee40a312a320a780c8d
@@ -914,7 +914,7 @@ entries:
   developerportal:
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.976820241Z"
+    created: "2026-01-08T09:44:00.92843469Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -927,7 +927,7 @@ entries:
       - prometheus-elasticsearch-exporter
       version: 5.0.0
     description: webMethods Developer Portal Helm Chart for Kubernetes
-    digest: 91ba915010d2e00002396b61818030324af5c1b2ef087e5c218dcbcaa2f03f4c
+    digest: ef1025e13e89ed92b0c5d422d9801abb80664f5a1f80914e40c029bc3e9d7570
     name: developerportal
     type: application
     urls:
@@ -935,7 +935,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.973467513Z"
+    created: "2026-01-08T09:44:00.925203643Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -956,7 +956,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.97128734Z"
+    created: "2026-01-08T09:44:00.92286491Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -977,7 +977,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.967971123Z"
+    created: "2026-01-08T09:44:00.920835412Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -999,7 +999,7 @@ entries:
   microservicesruntime:
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.997984183Z"
+    created: "2026-01-08T09:44:00.952503761Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1007,7 +1007,7 @@ entries:
       - softwareag-common
       version: 1.0.2
     description: Microservices Runtime (MSR) Helm Chart for Kubernetes
-    digest: 81e90150b8c6ba6e5db1164fa5e7c8711f90e24884047993d3dfbbeb179300fe
+    digest: 7f807033c5a71c87456b69ea8ff5043deecdd0853e4d17cb674f98435c9253bd
     name: microservicesruntime
     type: application
     urls:
@@ -1015,7 +1015,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.995389673Z"
+    created: "2026-01-08T09:44:00.949598341Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1031,7 +1031,7 @@ entries:
     version: 1.0.9
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.992369317Z"
+    created: "2026-01-08T09:44:00.947927757Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1047,7 +1047,7 @@ entries:
     version: 1.0.8
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.990681993Z"
+    created: "2026-01-08T09:44:00.944999919Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1063,7 +1063,7 @@ entries:
     version: 1.0.7
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.989074068Z"
+    created: "2026-01-08T09:44:00.94216037Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1079,7 +1079,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.987411747Z"
+    created: "2026-01-08T09:44:00.94055147Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1095,7 +1095,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.985835991Z"
+    created: "2026-01-08T09:44:00.938768635Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1111,7 +1111,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.984232437Z"
+    created: "2026-01-08T09:44:00.937171701Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1127,7 +1127,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.981415201Z"
+    created: "2026-01-08T09:44:00.935520038Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1143,7 +1143,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.979914319Z"
+    created: "2026-01-08T09:44:00.932794466Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1159,7 +1159,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.978343628Z"
+    created: "2026-01-08T09:44:00.929908578Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1176,7 +1176,7 @@ entries:
   mywebmethodsserver:
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.010703763Z"
+    created: "2026-01-08T09:44:00.96328575Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1184,14 +1184,14 @@ entries:
       - softwareag-common
       version: 1.0.3
     description: My webMethods Server (MWS) Helm Chart for Kubernetes
-    digest: fa40852359677e2c0e36ac23534aa4f8394ff9fae4e6fb1e0edd61318d232871
+    digest: bbbdea8daf96a3db67fc141e24e11341c7dc2d5078d933f82cb4528ed379c279
     name: mywebmethodsserver
     urls:
     - https://ibm.github.io/webmethods-helm-charts/charts/mywebmethodsserver-1.2.0.tgz
     version: 1.2.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.007313348Z"
+    created: "2026-01-08T09:44:00.961018093Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1206,7 +1206,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.005013811Z"
+    created: "2026-01-08T09:44:00.959240451Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1221,7 +1221,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.003538176Z"
+    created: "2026-01-08T09:44:00.957616652Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1236,7 +1236,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.001781229Z"
+    created: "2026-01-08T09:44:00.956139828Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1251,7 +1251,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.000492642Z"
+    created: "2026-01-08T09:44:00.954888324Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1266,7 +1266,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:37.999190136Z"
+    created: "2026-01-08T09:44:00.953675798Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1282,7 +1282,23 @@ entries:
   terracottabigmemorymax:
   - apiVersion: v2
     appVersion: 4.5.0
-    created: "2026-01-07T17:35:38.017234762Z"
+    created: "2026-01-08T09:44:00.970403457Z"
+    dependencies:
+    - name: common
+      repository: https://ibm.github.io/webmethods-helm-charts/charts
+      tags:
+      - webmethods-common
+      version: 2.0.0
+    description: Terracotta BigMemory Max Helm Chart for Kubernetes
+    digest: c8172d359612ab994ccaaa013943409487c8bd4139939695c873fa64b7f68091
+    name: terracottabigmemorymax
+    type: application
+    urls:
+    - https://ibm.github.io/webmethods-helm-charts/charts/terracottabigmemorymax-2.0.1.tgz
+    version: 2.0.1
+  - apiVersion: v2
+    appVersion: 4.5.0
+    created: "2026-01-08T09:44:00.968736035Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1298,7 +1314,7 @@ entries:
     version: 2.0.0
   - apiVersion: v2
     appVersion: 4.4.0
-    created: "2026-01-07T17:35:38.015211902Z"
+    created: "2026-01-08T09:44:00.967633177Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1314,7 +1330,7 @@ entries:
     version: 1.4.0
   - apiVersion: v2
     appVersion: 4.4.0
-    created: "2026-01-07T17:35:38.014094393Z"
+    created: "2026-01-08T09:44:00.966567996Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1330,7 +1346,7 @@ entries:
     version: 1.3.0
   - apiVersion: v2
     appVersion: 4.4.0
-    created: "2026-01-07T17:35:38.01301588Z"
+    created: "2026-01-08T09:44:00.965484162Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1346,7 +1362,7 @@ entries:
     version: 1.2.1
   - apiVersion: v2
     appVersion: 4.4.0
-    created: "2026-01-07T17:35:38.011742841Z"
+    created: "2026-01-08T09:44:00.964420171Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1363,7 +1379,7 @@ entries:
   universalmessaging:
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.036516502Z"
+    created: "2026-01-08T09:44:00.990375184Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1371,7 +1387,7 @@ entries:
       - softwareag-common
       version: 1.0.3
     description: Universal Messaging (UM) Helm Chart for Kubernetes
-    digest: e4e1aef79033118c8718ef443ff907b0af5f5a9964870fea4963a778caf94e1e
+    digest: 31a900ca0a71ac38203577c7c1beab61fc824d9d5bf9b672e427f36ee421d07f
     name: universalmessaging
     type: application
     urls:
@@ -1379,7 +1395,7 @@ entries:
     version: 1.1.0
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.033655838Z"
+    created: "2026-01-08T09:44:00.987909862Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1395,7 +1411,7 @@ entries:
     version: 1.0.8
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.030550315Z"
+    created: "2026-01-08T09:44:00.985498428Z"
     dependencies:
     - name: common
       repository: https://ibm.github.io/webmethods-helm-charts/charts
@@ -1411,7 +1427,7 @@ entries:
     version: 1.0.7
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.029075948Z"
+    created: "2026-01-08T09:44:00.982512588Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1427,7 +1443,7 @@ entries:
     version: 1.0.6
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.027649077Z"
+    created: "2026-01-08T09:44:00.981050731Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1443,7 +1459,7 @@ entries:
     version: 1.0.5
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.026252645Z"
+    created: "2026-01-08T09:44:00.979632027Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1459,7 +1475,7 @@ entries:
     version: 1.0.4
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.024880317Z"
+    created: "2026-01-08T09:44:00.978306872Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1475,7 +1491,7 @@ entries:
     version: 1.0.3
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.023413302Z"
+    created: "2026-01-08T09:44:00.976993964Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1491,7 +1507,7 @@ entries:
     version: 1.0.2
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.021072016Z"
+    created: "2026-01-08T09:44:00.975500412Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1507,7 +1523,7 @@ entries:
     version: 1.0.1
   - apiVersion: v2
     appVersion: "10.15"
-    created: "2026-01-07T17:35:38.018441487Z"
+    created: "2026-01-08T09:44:00.973262201Z"
     dependencies:
     - name: common
       repository: https://open-source.softwareag.com/webmethods-helm-charts/charts
@@ -1521,4 +1537,4 @@ entries:
     urls:
     - https://ibm.github.io/webmethods-helm-charts/charts/universalmessaging-1.0.0.tgz
     version: 1.0.0
-generated: "2026-01-07T17:35:37.776565077Z"
+generated: "2026-01-08T09:44:00.768087538Z"
