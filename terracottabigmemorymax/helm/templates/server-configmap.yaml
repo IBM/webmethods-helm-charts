@@ -45,23 +45,23 @@ data:
             <tsa-port>{{ $.Values.terracotta.tsaPort }} </tsa-port>
             <tsa-group-port>{{ $.Values.terracotta.tsaGroupPort }}</tsa-group-port>
             <management-port>{{ $.Values.terracotta.tsaManagementPort }}</management-port>
-            <data>/opt/softwareag/run/data</data>
-            <logs>/opt/softwareag/run/logs</logs>
+            <data>/opt/terracotta/run/data</data>
+            <logs>/opt/terracotta/run/logs</logs>
             <dataStorage size={{ $.Values.terracotta.datastoreSize | quote }}>
               <offheap size={{ $.Values.terracotta.offHeapSize | quote }}/>
             </dataStorage>
             {{- if eq $.Values.terracotta.security true }}
             <security>
               <ssl>
-                <certificate>jks:terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-alias@/opt/softwareag/run/terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-keystore.jks</certificate>
+                <certificate>jks:terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-alias@/opt/terracotta/run/terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-keystore.jks</certificate>
               </ssl>
               <keychain>
                 <class>com.terracotta.management.keychain.FileStoreKeyChain</class>
-                <url>file:/opt/softwareag/run/keychain</url>
+                <url>file:/opt/terracotta/run/keychain</url>
               </keychain>
               <auth>
                 <realm>com.tc.net.core.security.ShiroIniRealm</realm>
-                <url>file:/opt/softwareag/run/terracotta.ini</url>
+                <url>file:/opt/terracotta/run/terracotta.ini</url>
                 <user>user</user>
               </auth>
               <management>

@@ -64,16 +64,16 @@ spec:
           {{- end }}
           volumeMounts:
             - name: commonconfig-volume
-              mountPath: /opt/softwareag/config
+              mountPath: /opt/terracotta/config
             - name: core-store
-              mountPath: /opt/softwareag/run
+              mountPath: /opt/terracotta/run
           env:
             - name: JSON_LOGGING
               value: {{ $.Values.terracotta.jsonLogging | quote }}
             {{- if eq $.Values.terracotta.security true }}
             {{- if eq $.Values.terracotta.selfSignedCerts true }}
             - name: JAVA_OPTS
-              value: {{ $.Values.terracotta.serverOpts }} -Djavax.net.ssl.trustStore=/opt/softwareag/run/truststore.jks
+              value: {{ $.Values.terracotta.serverOpts }} -Djavax.net.ssl.trustStore=/opt/terracotta/run/truststore.jks
             {{- else }} 
             {{- if ne $.Values.terracotta.serverOpts "" }}
             - name: JAVA_OPTS
