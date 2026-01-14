@@ -72,10 +72,10 @@ spec:
             {{- if eq $.Values.terracotta.security true }}
             {{- if eq $.Values.terracotta.selfSignedCerts true }}
             - name: JAVA_OPTS
-              value: {{ $.Values.terracotta.tmcOpts }} -Djavax.net.ssl.keyStore=/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks -Djavax.net.ssl.trustStore=/opt/terracotta/.tc/mgmt/truststore.jks
+              value: {{ $.Values.terracotta.tmcOpts }} -Djetty.sslContext.keyStorePath=/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks -Djetty.sslContext.trustStorePath=/opt/terracotta/.tc/mgmt/truststore.jks
             {{- else }}
             - name: JAVA_OPTS
-              value: {{ $.Values.terracotta.tmcOpts }} -Djavax.net.ssl.keyStore=/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks
+              value: {{ $.Values.terracotta.tmcOpts }} -Djetty.sslContext.keyStorePath=/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks
             {{- end }}
             {{- else }}
             {{- if ne $.Values.terracotta.tmcOpts "" }}
