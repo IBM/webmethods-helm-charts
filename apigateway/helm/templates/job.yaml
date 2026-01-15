@@ -130,6 +130,9 @@ spec:
           {{- end }}
   schedule: {{ $job.schedule | quote }}
   successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit }}
+  {{- if hasKey $job "failedJobsHistoryLimit" }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit }}
+  {{- end }}
 
   {{ else }}
 
