@@ -16,9 +16,14 @@
 #  *   limitations under the License.
 #  *
 #  */
-
+{{- $suffix := "" }}
+{{- $prefix := "" }}
+{{- if .Values.jobsMetaData }}
+{{- $suffix = default .Values.jobsMetaData.labelSuffix "" }}
+{{- $prefix = default .Values.jobsMetaData.labelPrefix "" }}
+{{- end }}
 {{- $fullName := include "common.names.fullname" . -}}
-{{- $labels   := include "common.labels.standard" . -}}
+{{- $labels   := include "common.labels.standard" (list . $prefix  $suffix ) -}}
 {{- $imagePullSecrets := .Values.imagePullSecrets -}}
 {{- $replicaCount := .Values.replicaCount }}
 {{- $extraLabels      := .Values.extraLabels      -}}
@@ -128,6 +133,9 @@ spec:
           {{- end }}
   schedule: {{ $job.schedule | quote }}
   successfulJobsHistoryLimit: {{ $job.successfulJobsHistoryLimit }}
+  {{- if hasKey $job "failedJobsHistoryLimit" }}
+  failedJobsHistoryLimit: {{ $job.failedJobsHistoryLimit }}
+  {{- end }}
 
   {{ else }}
 
