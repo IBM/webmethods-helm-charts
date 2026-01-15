@@ -15,6 +15,13 @@ This Helm chart is provided as a minimal requirement to install Terracotta BigMe
 
 ---
 
+## Compatibility Matrix
+
+| NAME                              | CHART VERSION | APP VERSION |
+|:----------------------------------|:-------------:|:-----------:|
+| webmethods/terracottabigmemorymax |  `>= 2.0.3`   |   `4.5.0`   |
+| webmethods/terracottabigmemorymax |  `<= 1.4.0`   |   `4.4.0`   |
+
 ## QuickStart
 
 From the helm directory
@@ -52,18 +59,18 @@ Suppose you are creating a 2*1 bigmemory cluster and 1 tmc then Create a secret 
 ````
 Terracotta Command Line Tools - Keychain Client
 tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
-file:/opt/softwareag/.tc/mgmt/truststore.jks : chunuAa1$
-file:/opt/softwareag/run/truststore.jks : chunuAa1$
+file:/opt/terracotta/.tc/mgmt/truststore.jks : chunuAa1$
+file:/opt/terracotta/run/truststore.jks : chunuAa1$
 tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
 tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
-file:/opt/softwareag/.tc/mgmt/tmc-0-keystore.jks : chunuAa1$
+file:/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks : chunuAa1$
 https://terracotta-1.terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
 https://terracotta-0.terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
 tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
-jks:terracotta-0-alias@/opt/softwareag/run/terracotta-0-keystore.jks : chunuAa1$
+jks:terracotta-0-alias@/opt/terracotta/run/terracotta-0-keystore.jks : chunuAa1$
 tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
 tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
-jks:terracotta-1-alias@/opt/softwareag/run/terracotta-1-keystore.jks : chunuAa1$
+jks:terracotta-1-alias@/opt/terracotta/run/terracotta-1-keystore.jks : chunuAa1$
 ````
 
 - tmc-https.ini :- For enabling ssl connections in jetty. For ex-
