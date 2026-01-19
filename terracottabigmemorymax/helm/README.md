@@ -19,7 +19,7 @@ This Helm chart is provided as a minimal requirement to install Terracotta BigMe
 
 | NAME                              | CHART VERSION | APP VERSION |
 |:----------------------------------|:-------------:|:-----------:|
-| webmethods/terracottabigmemorymax |  `>= 2.0.3`   |   `4.5.0`   |
+| webmethods/terracottabigmemorymax |  `>= 2.0.4`   |   `4.5.0`   |
 | webmethods/terracottabigmemorymax |  `<= 1.4.0`   |   `4.4.0`   |
 
 ## QuickStart
@@ -174,6 +174,7 @@ helm delete <release-name>
 | `1.2.1' | Set `terracotta.stripeCount` to 1 by default and added `terracotta.tmcEnabled`   |
 | `1.4.0` | Last version compatible with BM 4.4.0 |
 | `2.0.3` | First version compatible with BM 4.5.0 |
+| `2.0.4` | Removed registry variable to allow to use local images |
 
 ## Values
 
@@ -184,13 +185,12 @@ helm delete <release-name>
 | imagePullSecrets | list | `[{"name":"regcred"}]` | Image pull secret reference. By default looks for `regcred`. |
 | prometheus | object | `{"interval":"10s","path":"/tmc/api/prometheus","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via ServiceMonitor. |
 | pullPolicy | string | `"IfNotPresent"` |  |
-| registry | string | `"ibmwebmethods.azurecr.io"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | resources | object | `{}` | We usually recommend not to specify default resources and to leave this as a conscious choice for the user. This also increases chances charts run on environments with little resources, such as Minikube. If you do want to specify resources, uncomment the following lines, adjust them as necessary, and remove the curly braces after 'resources:'.  tsaContainer:   limits:     cpu: 100m     memory: 128Mi   requests:     cpu: 100m     memory: 128Mi tmcContainer:   requests:     cpu: 500m     memory: 2Gi   limits:     # use a high cpu limit to avoid the container being throttled     cpu: 8     memory: 4Gi |
 | securityContext.fsGroup | int | `0` |  |
 | securityContext.runAsGroup | int | `0` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1724` |  |
-| serverImage | string | `"bigmemorymax-server"` |  |
+| serverImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-server"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | serverStorage | string | `"10Gi"` | The pvc storage request for the server pods |
 | serviceMonitor | object | `{"enabled":false}` | Create and enable ServiceMonitor. The default is `false`. |
 | tag | string | `"4.5.0"` | Specific version to not accidentally change production versions with newer images. |
@@ -214,7 +214,7 @@ helm delete <release-name>
 | terracotta.tsaGroupPort | int | `9530` | TSA group port |
 | terracotta.tsaManagementPort | int | `9540` | TSA Management port |
 | terracotta.tsaPort | int | `9510` | TSA port |
-| tmcImage | string | `"bigmemorymax-management-server"` |  |
+| tmcImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-management-server"` |  |
 | tmcServer | object | `{"livenessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"readinessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"startupProbe":{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}}` | TMC-specific configurations for probes |
 | tmcServer.livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}` | Configure liveness probe |
 | tmcServer.readinessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}` | Configure readiness probe |

@@ -51,7 +51,7 @@ spec:
       {{- end }}
       containers:
         - name: tmc-server
-          image: "{{ $.Values.registry }}/{{ $.Values.tmcImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
+          image: "{{ $.Values.tmcImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.pullPolicy | quote }}
           startupProbe:
             {{- toYaml .Values.tmcServer.startupProbe | nindent 12 }}

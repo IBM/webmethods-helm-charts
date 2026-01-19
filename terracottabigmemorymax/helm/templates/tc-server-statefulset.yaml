@@ -49,7 +49,7 @@ spec:
      {{- end }}
       containers:
         - name: server
-          image: "{{ $.Values.registry }}/{{ $.Values.serverImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
+          image: "{{ $.Values.serverImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ $.Values.pullPolicy | quote }}
 
           startupProbe:
