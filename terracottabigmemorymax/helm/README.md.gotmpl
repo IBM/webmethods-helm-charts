@@ -19,7 +19,7 @@ This Helm chart is provided as a minimal requirement to install Terracotta BigMe
 
 | NAME                              | CHART VERSION | APP VERSION |
 |:----------------------------------|:-------------:|:-----------:|
-| webmethods/terracottabigmemorymax |  `>= 2.0.3`   |   `4.5.0`   |
+| webmethods/terracottabigmemorymax |  `>= 2.0.4`   |   `4.5.0`   |
 | webmethods/terracottabigmemorymax |  `<= 1.4.0`   |   `4.4.0`   |
 
 ## QuickStart
@@ -174,5 +174,6 @@ helm delete <release-name>
 | `1.2.1' | Set `terracotta.stripeCount` to 1 by default and added `terracotta.tmcEnabled`   |
 | `1.4.0` | Last version compatible with BM 4.4.0 |
 | `2.0.3` | First version compatible with BM 4.5.0 |
+| `2.0.4` | Removed registry variable to allow to use local images |
 
 {{ template "chart.valuesSection" . }}
