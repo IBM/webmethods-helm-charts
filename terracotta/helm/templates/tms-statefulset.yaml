@@ -1,0 +1,95 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: tms-statefulset
+  namespace: {{ template "kube-terracotta.namespace" . }}
+  labels:
+    app: "tms"
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- include "kube-terracotta.labels" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "tms"
+  serviceName: "tms-service"
+  template:
+    metadata:
+      labels:
+        app: "tms"
+    spec:
+      securityContext:
+        {{- toYaml .Values.securityContext | nindent 8 }}
+      serviceAccountName: {{ template "kube-terracotta.terracotta.crname" . }}-sa
+      {{- if .Values.terracotta.security.isConfigured }}
+      initContainers:
+        - name: "tms-server-init"
+          image: busybox:latest
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          command: ["/bin/sh", "-c", "tar -xzf /certs/tms/security.tar.gz --directory /opt/softwareag/config"]
+          volumeMounts:
+            - name: tms-security-volume
+              mountPath: /certs/tms
+            - name: emptydir
+              mountPath: /opt/softwareag/config
+      {{- end }}
+      containers:
+        - name: "tms-server"
+          image: "{{ $.Values.tms.tmsImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.pullPolicy }}
+          env:
+            - name: TMS_OFFHEAPSIZEMB
+              value: "8192"
+            - name: TMS_STORAGEFOLDER
+              value: "/opt/softwareag/run/data"
+            - name: TMS_AUTOCONNECT
+              value: "true"
+            - name: TMS_AUTOCONNECT_RETRYCOUNT
+              value: "-1"
+            - name: TMS_DEFAULTURL
+              value: "terracotta://{{ template "serverUrl" . }}"
+            {{- range $key, $val := .Values.extraEnvs }}
+            - name: {{ $key }}
+              value: {{ $val }}
+            {{- end }}
+          ports:
+            - name: tmc-port
+              containerPort: 9480
+          volumeMounts:
+            - name: tmsdata
+              mountPath: /opt/softwareag/run
+          {{- if .Values.terracotta.security.isConfigured }}
+            - name: emptydir
+              mountPath: /opt/softwareag/config
+          {{- end}}
+          {{- if .Values.tms.resources }}
+          resources:
+{{ toYaml .Values.tms.resources | indent 12 }}
+          {{- end }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  {{- if .Values.terracotta.security.isConfigured }}
+      volumes:
+        - name: tms-security-volume
+          configMap:
+            name: tms-security-configmap
+        - name: emptydir
+          emptyDir:
+  {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: tmsdata
+      spec:
+        volumeMode: "Filesystem"
+        accessModes: [ "ReadWriteOnce" ]
+        {{- if .Values.storageClass }}
+        storageClassName: {{ .Values.storageClass }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.tms.storage }}

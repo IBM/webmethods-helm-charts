@@ -1,0 +1,70 @@
+apiVersion: operator.terracotta.softwareag.com/v1
+kind: TerracottaCluster
+metadata:
+  name: {{ template "kube-terracotta.terracotta.crname" . }}
+  namespace: {{ template "kube-terracotta.namespace" . }}
+  labels:
+    app: {{ template "kube-terracotta.name" . }}-operator
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- include "kube-terracotta.labels" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  stripes: {{ .Values.terracotta.stripes | int }}
+  nodes: {{ .Values.terracotta.nodes | int }}
+  {{- if .Values.terracotta.probeFailureThreshold }}
+  probeFailureThreshold: {{ .Values.terracotta.probeFailureThreshold }}
+  {{- end }}
+  terracottaImage:
+    name: "{{ $.Values.terracotta.serverImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
+    pullPolicy: {{ .Values.pullPolicy }}
+    {{- if .Values.imagePullSecret }}
+    pullSecret: {{ .Values.imagePullSecret }}
+    {{- end }}
+  voterImage:
+    name: "{{ $.Values.terracotta.voterImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
+    pullPolicy: {{ .Values.pullPolicy }}
+    {{- if .Values.imagePullSecret }}
+    pullSecret: {{ .Values.imagePullSecret }}
+    {{- end }}
+  {{- if .Values.terracotta.resources }}
+  resources:
+{{ toYaml .Values.terracotta.resources | indent 4 }}
+  {{- end }}
+  dataStore:
+    spec:
+      volumeMode: "Filesystem"
+      accessModes: [ "ReadWriteOnce" ]
+      {{- if .Values.storageClass }}
+      storageClassName: {{ .Values.storageClass }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.terracotta.storage }}
+  podEnvVariables:
+  - name: "JSON_LOGGING"
+    value: {{ .Values.terracotta.jsonLogging | quote }}
+  - name: "JSON_LOGGING_AUDIT"
+    value: {{ .Values.terracotta.jsonAuditLogging | quote }}
+  - name: "DEFAULT_DATA_DIRS"
+    value: {{ .Values.terracotta.datadirs }} 
+  - name: "DEFAULT_OFFHEAP"
+    value: {{ .Values.terracotta.offheaps }} 
+  - name: "DEFAULT_FAILOVER"
+    value: {{ .Values.terracotta.failoverPriority }}
+  - name: "DEFAULT_CLUSTER_NAME"
+    value: {{ .Values.terracotta.clusterName }}
+  {{- range $key, $val := .Values.extraEnvs }}
+  - name: {{ $key }}
+    value: {{ $val }}
+  {{- end }}
+  {{- if (gt (int .Values.terracotta.voters) 0) }}
+  voters: {{ .Values.terracotta.voters }}
+  {{- end }}
+  {{- if .Values.terracotta.security.isConfigured}}
+  security:
+    sslEnabled: {{ .Values.terracotta.security.sslEnabled | default false | quote }}
+    authc: {{ .Values.terracotta.security.authc | default "certificate" | quote }}
+    whitelist: {{ .Values.terracotta.security.whitelist | default false | quote  }}
+  {{- end }}

@@ -85,10 +85,11 @@ spec:
             - name: JAVA_OPTS
               value: {{ $.Values.terracotta.serverOpts }}
             {{- end }}
-            {{- end }} 
-            {{- if .Values.extraEnvs }}
-            {{- toYaml .Values.extraEnvs | nindent 12 }}
-            {{- end }}                   
+            {{- end }}
+            {{- range $key, $val := .Values.extraEnvs }}
+            - name: {{ $key }}
+              value: {{ $val }}
+            {{- end }}
       volumes:
         - name: commonconfig-volume
           projected:
