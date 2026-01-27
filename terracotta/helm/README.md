@@ -1,4 +1,4 @@
-# Terracotta DB Helm Chart
+# Terracotta Helm Chart
 
 Helm chart for using terracotta cluster in kubernetes .
 This chart deploys following things in cluster -

@@ -18,7 +18,7 @@
 #  */
 apiVersion: v2
 name: terracotta
-description: Terracotta DB Helm Chart for Kubernetes
+description: Terracotta Helm Chart for Kubernetes
 
 # A chart can be either an 'application' or a 'library' chart.
 #
