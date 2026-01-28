@@ -45,7 +45,7 @@ terracotta:
    stripes: 2
    probeFailureThreshold:
    jsonLogging: false
-   jsonAuditLogging: false
+   jsonAuditLogging: true
    offheaps: "offheap-1:512MB"
    datadirs: "dataroot-1,dataroot-2"
    failoverPriority: "availability"
