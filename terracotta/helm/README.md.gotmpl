@@ -7,6 +7,7 @@ This chart deploys following things in cluster -
 2. Terracotta Management server
 3. Terracotta operator which is actually responsible for deploying terracotta servers, create and activate the cluster
    and also manage node and stripe scaling operations for the cluster.
+4. Terracotta REST Gateway (optional)
 
 Note- helm install also deploys the CRD for the terracotta operator in the cluster if its not present
 or CRD can also be installed using kubectl command before helm install.
@@ -35,9 +36,10 @@ invalidated.*
 
 ## Compatibility Matrix
 
-| NAME                    | CHART VERSION | APP VERSION |
-|:------------------------|:-------------:|:-----------:|
+| NAME                  | CHART VERSION | APP VERSION |
+|:----------------------|:-------------:|:-----------:|
 | webmethods/terracotta |     `1.x`     |   `11.x`    |
+| webmethods/terracotta |     `2.x`     |   `12.x`    |
 
 ## Setup Guide
 
@@ -62,7 +64,6 @@ terracotta-stripe-1-1                             0/1     Running   0          3
 terracotta-stripe-1-0                             0/1     Running   0          33s
 terracotta-stripe-2-0                             0/1     Running   0          33s
 terracotta-stripe-2-1                             0/1     Running   0          33s
-
 
 mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pvc
 NAME                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
@@ -338,12 +339,12 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    tms.security.https.enabled=true
 
    # client directory should be configured like following
-   tms.security.root.directory.connection.default=/opt/softwareag/config/client
+   tms.security.root.directory.connection.default=/opt/terracotta/config/client
    ```
    Next create a tar.gz for security folder like following -
    ```
    mdh@SAG-1HXQKG3:~/Downloads/tms-security$ tar -czf security.tar.gz .
-   This is necessary since the docker container for tms looks for tms.properties file inside /opt/softwareag/config inside container.
+   This is necessary since the docker container for tms looks for tms.properties file inside /opt/terracotta/config inside container.
    ```
    ````
    Note- The directory names for creating security.tar.gz i.e terracotta-stripe-1-security, tool-security etc. must be as its shown in
@@ -368,5 +369,6 @@ Note - There are two ways in which node identity certificates can be configured.
 | Version | Changes and Description |
 |---------|-------------------------|
 | `1.0.0' | Initial release         |
+| `2.0.0' | Updated charts for 12.x |
 
 {{ template "chart.valuesSection" . }}

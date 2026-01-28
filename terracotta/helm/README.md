@@ -7,6 +7,7 @@ This chart deploys following things in cluster -
 2. Terracotta Management server
 3. Terracotta operator which is actually responsible for deploying terracotta servers, create and activate the cluster
    and also manage node and stripe scaling operations for the cluster.
+4. Terracotta REST Gateway (optional)
 
 Note- helm install also deploys the CRD for the terracotta operator in the cluster if its not present
 or CRD can also be installed using kubectl command before helm install.
@@ -35,9 +36,10 @@ invalidated.*
 
 ## Compatibility Matrix
 
-| NAME                    | CHART VERSION | APP VERSION |
-|:------------------------|:-------------:|:-----------:|
+| NAME                  | CHART VERSION | APP VERSION |
+|:----------------------|:-------------:|:-----------:|
 | webmethods/terracotta |     `1.x`     |   `11.x`    |
+| webmethods/terracotta |     `2.x`     |   `12.x`    |
 
 ## Setup Guide
 
@@ -337,12 +339,12 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    tms.security.https.enabled=true
 
    # client directory should be configured like following
-   tms.security.root.directory.connection.default=/opt/softwareag/config/client
+   tms.security.root.directory.connection.default=/opt/terracotta/config/client
    ```
    Next create a tar.gz for security folder like following -
    ```
    mdh@SAG-1HXQKG3:~/Downloads/tms-security$ tar -czf security.tar.gz .
-   This is necessary since the docker container for tms looks for tms.properties file inside /opt/softwareag/config inside container.
+   This is necessary since the docker container for tms looks for tms.properties file inside /opt/terracotta/config inside container.
    ```
    ````
    Note- The directory names for creating security.tar.gz i.e terracotta-stripe-1-security, tool-security etc. must be as its shown in
@@ -367,6 +369,7 @@ Note - There are two ways in which node identity certificates can be configured.
 | Version | Changes and Description |
 |---------|-------------------------|
 | `1.0.0' | Initial release         |
+| `2.0.0' | Updated charts for 12.x |
 
 ## Values
 
@@ -384,12 +387,13 @@ Note - There are two ways in which node identity certificates can be configured.
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1724` |  |
 | storageClass | string | `""` |  |
-| tag | float | `11.1` | Specific version to not accidentally change production versions with newer images. |
+| tag | float | `12` | Specific version to not accidentally change production versions with newer images. |
 | terracotta.clusterName | string | `"my-cluster"` |  |
 | terracotta.datadirs | string | `"dataroot-1,dataroot-2"` |  |
 | terracotta.failoverPriority | string | `"availability"` |  |
 | terracotta.jsonAuditLogging | bool | `true` |  |
 | terracotta.jsonLogging | bool | `false` |  |
+| terracotta.jsonSecurityLogging | bool | `true` |  |
 | terracotta.nodes | int | `2` |  |
 | terracotta.offheaps | string | `"offheap-1:512MB"` |  |
 | terracotta.probeFailureThreshold | string | `nil` |  |
@@ -410,6 +414,11 @@ Note - There are two ways in which node identity certificates can be configured.
 | terracottaOperator.serviceAccount.name | string | `""` |  |
 | tms.jsonAuditLogging | bool | `true` |  |
 | tms.jsonLogging | bool | `false` |  |
+| tms.jsonSecurityLogging | bool | `true` |  |
 | tms.resources | object | `{}` |  |
 | tms.storage | string | `"5Gi"` |  |
 | tms.tmsImage | string | `"ibmwebmethods.azurecr.io/terracotta-management-server"` |  |
+| trg.jsonAuditLogging | bool | `true` |  |
+| trg.jsonLogging | bool | `false` |  |
+| trg.jsonSecurityLogging | bool | `true` |  |
+| trg.trgImage | string | `"ibmwebmethods.azurecr.io/terracotta-rest-gateway"` |  |
