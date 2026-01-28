@@ -408,6 +408,8 @@ Note - There are two ways in which node identity certificates can be configured.
 | terracottaOperator.requestTimeout | string | `"30s"` |  |
 | terracottaOperator.serviceAccount.create | bool | `true` |  |
 | terracottaOperator.serviceAccount.name | string | `""` |  |
+| tms.jsonAuditLogging | bool | `true` |  |
+| tms.jsonLogging | bool | `false` |  |
 | tms.resources | object | `{}` |  |
 | tms.storage | string | `"5Gi"` |  |
 | tms.tmsImage | string | `"ibmwebmethods.azurecr.io/terracotta-management-server"` |  |
