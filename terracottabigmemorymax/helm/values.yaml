@@ -3,15 +3,17 @@
 # Change this for air-gaped installations or custom images.
 # For the IBM webMethods container repository you need to have a
 # valid access token stored as registry credentials
-serverImage: ibmwebmethods.azurecr.io/bigmemorymax-server
-tmcImage: ibmwebmethods.azurecr.io/bigmemorymax-management-server
+serverImage: icr.io/webmethods/terracotta/bigmemorymax-server
+tmcImage: icr.io/webmethods/terracotta/bigmemorymax-management-server
 pullPolicy: IfNotPresent
 # -- Specific version to not accidentally change production versions with newer images.
-tag: "4.5.0"
+tag: "4.5.1.0.22"
 
 # -- Image pull secret reference. By default looks for `regcred`.
 imagePullSecrets:
   - name: regcred
+
+fullnameOverride: ""
 
 #
 # BELOW ARE THE CONFIGURATIONS FOR THE PODS
@@ -109,6 +111,12 @@ tsaServer:
     successThreshold: 1
     timeoutSeconds: 5
     failureThreshold: 3 
+
+  # -- Configure pod affinity
+  affinity:
+
+  # -- Configure pod topologySpreadConstraints
+  topologySpreadConstraints:
 
 # -- TMC-specific configurations for probes
 tmcServer:

@@ -20,7 +20,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: tmc
+  name: {{ include "common.names.fullname" . }}-tmc
   labels:
     app: tmc
     {{- include "common.labels.standard" . | nindent 4 }}
@@ -34,7 +34,7 @@ spec:
   selector:
     matchLabels:
       app: tmc
-  serviceName: tmc-service
+  serviceName: {{ include "common.names.fullname" . }}-tmc-service
   template:
     metadata:
       labels:
@@ -66,7 +66,7 @@ spec:
           volumeMounts:
             - name: commonconfig-volume
               mountPath: /opt/terracotta/config
-            - name: core-store
+            - name: {{ include "common.names.fullname" . }}-core-store
               mountPath: /opt/terracotta/.tc/mgmt
           env:
             {{- if eq $.Values.terracotta.security true }}
@@ -97,7 +97,7 @@ spec:
               {{- end }}
   volumeClaimTemplates:
     - metadata:
-        name: core-store
+        name: {{ include "common.names.fullname" . }}-core-store
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:

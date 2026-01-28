@@ -20,7 +20,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: tmc-service
+  name: {{ include "common.names.fullname" . }}-tmc-service
   annotations:
     {{- include "common.prometheus.annotations" (dict "port" .Values.terracotta.tmcManagementPort "path" "/tmc/api/prometheus" ) | nindent 8 }}
   labels:

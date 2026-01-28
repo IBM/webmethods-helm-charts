@@ -20,7 +20,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: tmc-servicemonitor
+  name: {{ include "common.names.fullname" . }}-tmc-servicemonitor
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
