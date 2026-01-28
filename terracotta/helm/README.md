@@ -388,7 +388,7 @@ Note - There are two ways in which node identity certificates can be configured.
 | terracotta.clusterName | string | `"my-cluster"` |  |
 | terracotta.datadirs | string | `"dataroot-1,dataroot-2"` |  |
 | terracotta.failoverPriority | string | `"availability"` |  |
-| terracotta.jsonAuditLogging | bool | `false` |  |
+| terracotta.jsonAuditLogging | bool | `true` |  |
 | terracotta.jsonLogging | bool | `false` |  |
 | terracotta.nodes | int | `2` |  |
 | terracotta.offheaps | string | `"offheap-1:512MB"` |  |
