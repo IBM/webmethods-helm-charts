@@ -50,30 +50,30 @@ kubectl create secret docker-registry regcred --docker-server=<your-registry-ser
 
 Suppose you are creating a 2*1 bigmemory cluster and 1 tmc then Create a secret which contains following files
 
-- terracotta-0-keystore.jks :- keystore file for server1.
-- terracotta-1-keystore.jks :- keystore file for server2.
-- tmc-0-keystore.jks :- keystore file for tmc.
+- my-release-terracotta-0-keystore.jks :- keystore file for server1.
+- my-release-terracotta-1-keystore.jks :- keystore file for server2.
+- my-release-tmc-0-keystore.jks :- keystore file for tmc.
 - truststore.jks :- truststore file containing public certs for all the above keystores.
 - keychain - keychain file containing password for everything. For ex-
 
 ````
 Terracotta Command Line Tools - Keychain Client
-tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
+tc://user@my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
 file:/opt/terracotta/.tc/mgmt/truststore.jks : chunuAa1$
 file:/opt/terracotta/run/truststore.jks : chunuAa1$
-tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
-tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
-file:/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks : chunuAa1$
-https://terracotta-1.terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
-https://terracotta-0.terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
-tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
-jks:terracotta-0-alias@/opt/terracotta/run/terracotta-0-keystore.jks : chunuAa1$
-tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
-tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
-jks:terracotta-1-alias@/opt/terracotta/run/terracotta-1-keystore.jks : chunuAa1$
+tc://user@my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
+tc://user@my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
+file:/opt/terracotta/.tc/mgmt/my-release-tmc-0-keystore.jks : chunuAa1$
+https://my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
+https://my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
+tc://user@my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
+jks:my-release-terracotta-0@/opt/terracotta/run/my-release-terracotta-0-keystore.jks : chunuAa1$
+tc://user@my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
+tc://user@my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
+jks:my-release-terracotta-1@/opt/terracotta/run/my-release-terracotta-1-keystore.jks : chunuAa1$
 ````
 
-- tmc-https.ini :- For enabling ssl connections in jetty. For ex-
+- ssl.ini :- For enabling ssl connections in jetty. For ex-
 
 ````
 jetty.sslContext.keyManagerPassword=OBF:1fwe1jg61vgz1nsc1zen1npu1vfv1jd41fsw
@@ -92,39 +92,39 @@ Example to create secret in k8s cluster manually -
 ````
 kubectl create secret generic certificatesecret \
 --from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/keychain \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/terracotta-0-keystore.jks \
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/my-release-terracotta-0-keystore.jks \
 --from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/truststore.jks \
 --from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/terracotta.ini \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/tmc-0-keystore.jks \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/tmc-https.ini \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/terracotta-1-keystore.jks
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/my-release-tmc-0-keystore.jks \
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/ssl.ini \
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/my-release-terracotta-1-keystore.jks
 ````
 
 ### Step #2: Install the helm chart and use the above created secret.
 
 ````
-helm install "my-release" --set terracotta.stripeCount=2 --set terracotta.nodeCountPerStripe=1 --set-file terracotta.license=/home/mdh@eur.ad.sag/4.xlicense/license.key --set tag=4.3.10-SNAPSHOT --set security=true --set secretName=certificatesecret  .
+helm install "my-release" --set fullnameOverride="my-release" --set terracotta.stripeCount=2 --set terracotta.nodeCountPerStripe=1 --set-file terracotta.license=/home/mdh@eur.ad.sag/4.xlicense/license.key --set tag=4.3.10-SNAPSHOT --set security=true --set secretName=certificatesecret  .
 ````
 
 ### Step #3: Verify from the browser to see if connections can be created securely to tmc.
 
-- First enable port-forwarding for tmc-service using -
+- First enable port-forwarding for my-release-tmc-service using -
 
 ````
-kubectl port-forward service/tmc-service 8080:9443
+kubectl port-forward service/my-release-tmc-service 8080:9443
 ````
 
 - Go to browser and go to url https://localhost:8080 and then set up authentication.
 - It will ask for tmc restart so do it using
 
 ```
-kubectl delete pod tmc-0.
+kubectl delete pod my-release-tmc-0.
 ```
 
 - Now again start port-forwarding and go to browser and provide the connection location (URL)  -
 
 ```
-https://terracotta-0.terracotta-service.default.svc.cluster.local:9540
+https://my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9540
 ```
 
 - When asking for username enter "user" . It should be able to connect and show cluster information on browser.
@@ -175,6 +175,7 @@ helm delete <release-name>
 | `1.4.0` | Last version compatible with BM 4.4.0 |
 | `2.0.3` | First version compatible with BM 4.5.0 |
 | `2.0.4` | Removed registry variable to allow to use local images |
+| `2.1.0` | Support for release name in terracottabigmemorymax resources |
 
 ## Values
 
@@ -182,6 +183,7 @@ helm delete <release-name>
 |-----|------|---------|-------------|
 | extraEnvs | string | `nil` |  |
 | extraLabels | object | `{}` | Extra Labels |
+| fullnameOverride | string | `""` |  |
 | imagePullSecrets | list | `[{"name":"regcred"}]` | Image pull secret reference. By default looks for `regcred`. |
 | prometheus | object | `{"interval":"10s","path":"/tmc/api/prometheus","scrapeTimeout":"10s"}` | Define values for Prometheus Operator to scrap metrics via ServiceMonitor. |
 | pullPolicy | string | `"IfNotPresent"` |  |
@@ -190,10 +192,10 @@ helm delete <release-name>
 | securityContext.runAsGroup | int | `0` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1724` |  |
-| serverImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-server"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
+| serverImage | string | `"icr.io/webmethods/terracotta/bigmemorymax-server"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | serverStorage | string | `"10Gi"` | The pvc storage request for the server pods |
 | serviceMonitor | object | `{"enabled":false}` | Create and enable ServiceMonitor. The default is `false`. |
-| tag | string | `"4.5.0"` | Specific version to not accidentally change production versions with newer images. |
+| tag | string | `"4.5.1.0.22"` | Specific version to not accidentally change production versions with newer images. |
 | terracotta | object | `{"datastoreSize":"4G","jsonLogging":true,"license":"","nodeCountPerStripe":2,"offHeapSize":"2G","restartable":false,"secretName":"","security":false,"selfSignedCerts":true,"serverOpts":"","serviceAccountName":"","stripeCount":1,"tmcEnabled":true,"tmcManagementPort":9889,"tmcOpts":"","tmcSecurePort":9443,"tsaGroupPort":9530,"tsaManagementPort":9540,"tsaPort":9510}` | Terracotta BigMemoryMax configurations |
 | terracotta.datastoreSize | string | `"4G"` | The <datastoreSize> configuration for each Terracotta server. |
 | terracotta.jsonLogging | bool | `true` | The JSON_LOGGING environment variable for each Terracotta server. |
@@ -214,13 +216,17 @@ helm delete <release-name>
 | terracotta.tsaGroupPort | int | `9530` | TSA group port |
 | terracotta.tsaManagementPort | int | `9540` | TSA Management port |
 | terracotta.tsaPort | int | `9510` | TSA port |
-| tmcImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-management-server"` |  |
-| tmcServer | object | `{"livenessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"readinessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"startupProbe":{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}}` | TMC-specific configurations for probes |
+| tmcImage | string | `"icr.io/webmethods/terracotta/bigmemorymax-management-server"` |  |
+| tmcServer | object | `{"affinity":null,"livenessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"readinessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"startupProbe":{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"topologySpreadConstraints":null}` | TMC-specific configurations for probes |
+| tmcServer.affinity | string | `nil` | Configure pod affinity for tms server |
 | tmcServer.livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}` | Configure liveness probe |
 | tmcServer.readinessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}` | Configure readiness probe |
 | tmcServer.startupProbe | object | `{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}` | Configure startup probe |
+| tmcServer.topologySpreadConstraints | string | `nil` | Configure pod topologySpreadConstraints for tms server |
 | tmcStorage | string | `"1Gi"` | The pvc storage request for the tmc pods |
-| tsaServer | object | `{"livenessProbe":{"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5},"readinessProbe":{"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5},"startupProbe":{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5}}` | TSA container-specific configurations for probes |
+| tsaServer | object | `{"affinity":null,"livenessProbe":{"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5},"readinessProbe":{"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5},"startupProbe":{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5},"topologySpreadConstraints":null}` | TSA container-specific configurations for probes |
+| tsaServer.affinity | string | `nil` | Configure pod affinity for terracotta servers |
 | tsaServer.livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5}` | Configure liveness probe |
 | tsaServer.readinessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5}` | Configure readiness probe |
 | tsaServer.startupProbe | object | `{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":5,"successThreshold":1,"tcpSocket":{"port":9530},"timeoutSeconds":5}` | Configure startup probe |
+| tsaServer.topologySpreadConstraints | string | `nil` | Configure pod topologySpreadConstraints for terracotta servers |
