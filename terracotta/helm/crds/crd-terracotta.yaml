@@ -5,9 +5,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.9.2
   creationTimestamp: null
-  name: terracottaclusters.operator.terracotta.softwareag.com
+  name: terracottaclusters.operator.terracotta.ibm.com
 spec:
-  group: operator.terracotta.softwareag.com
+  group: operator.terracotta.ibm.com
   names:
     kind: TerracottaCluster
     listKind: TerracottaClusterList
