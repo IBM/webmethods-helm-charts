@@ -51,6 +51,10 @@ spec:
               value: "-1"
             - name: TMS_DEFAULTURL
               value: "terracotta://{{ template "serverUrl" . }}"
+            - name: "JSON_LOGGING"
+              value: {{ .Values.tms.jsonLogging | quote }}
+            - name: "JSON_LOGGING_AUDIT"
+              value: {{ .Values.tms.jsonAuditLogging | quote }}
             {{- range $key, $val := .Values.extraEnvs }}
             - name: {{ $key }}
               value: {{ $val }}

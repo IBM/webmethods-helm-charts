@@ -65,6 +65,8 @@ terracotta:
 
 tms: 
  tmsImage: "ibmwebmethods.azurecr.io/terracotta-management-server"
+ jsonLogging: false
+ jsonAuditLogging: true
  storage: 5Gi
  resources: {}
  #  limits:
