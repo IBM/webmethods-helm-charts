@@ -50,30 +50,30 @@ kubectl create secret docker-registry regcred --docker-server=<your-registry-ser
 
 Suppose you are creating a 2*1 bigmemory cluster and 1 tmc then Create a secret which contains following files
 
-- terracotta-0-keystore.jks :- keystore file for server1.
-- terracotta-1-keystore.jks :- keystore file for server2.
-- tmc-0-keystore.jks :- keystore file for tmc.
+- my-release-terracotta-0-keystore.jks :- keystore file for server1.
+- my-release-terracotta-1-keystore.jks :- keystore file for server2.
+- my-release-tmc-0-keystore.jks :- keystore file for tmc.
 - truststore.jks :- truststore file containing public certs for all the above keystores.
 - keychain - keychain file containing password for everything. For ex-
 
 ````
 Terracotta Command Line Tools - Keychain Client
-tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
+tc://user@my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
 file:/opt/terracotta/.tc/mgmt/truststore.jks : chunuAa1$
 file:/opt/terracotta/run/truststore.jks : chunuAa1$
-tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
-tc://user@terracotta-1.terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
-file:/opt/terracotta/.tc/mgmt/tmc-0-keystore.jks : chunuAa1$
-https://terracotta-1.terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
-https://terracotta-0.terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
-tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
-jks:terracotta-0-alias@/opt/terracotta/run/terracotta-0-keystore.jks : chunuAa1$
-tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
-tc://user@terracotta-0.terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
-jks:terracotta-1-alias@/opt/terracotta/run/terracotta-1-keystore.jks : chunuAa1$
+tc://user@my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
+tc://user@my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
+file:/opt/terracotta/.tc/mgmt/my-release-tmc-0-keystore.jks : chunuAa1$
+https://my-release-terracotta-1.my-release-terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
+https://my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9540/tc-management-api : chunuAa1$
+tc://user@my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9510 : chunuAa1$
+jks:my-release-terracotta-0@/opt/terracotta/run/my-release-terracotta-0-keystore.jks : chunuAa1$
+tc://user@my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9540 : chunuAa1$
+tc://user@my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9530 : chunuAa1$
+jks:my-release-terracotta-1@/opt/terracotta/run/my-release-terracotta-1-keystore.jks : chunuAa1$
 ````
 
-- tmc-https.ini :- For enabling ssl connections in jetty. For ex-
+- ssl.ini :- For enabling ssl connections in jetty. For ex-
 
 ````
 jetty.sslContext.keyManagerPassword=OBF:1fwe1jg61vgz1nsc1zen1npu1vfv1jd41fsw
@@ -92,39 +92,39 @@ Example to create secret in k8s cluster manually -
 ````
 kubectl create secret generic certificatesecret \
 --from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/keychain \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/terracotta-0-keystore.jks \
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/my-release-terracotta-0-keystore.jks \
 --from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/truststore.jks \
 --from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/terracotta.ini \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/tmc-0-keystore.jks \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/tmc-https.ini \
---from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/terracotta-1-keystore.jks
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/my-release-tmc-0-keystore.jks \
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/ssl.ini \
+--from-file=/home/mdh@eur.ad.sag/4.xconfig/k8sCert/my-release-terracotta-1-keystore.jks
 ````
 
 ### Step #2: Install the helm chart and use the above created secret.
 
 ````
-helm install "my-release" --set terracotta.stripeCount=2 --set terracotta.nodeCountPerStripe=1 --set-file terracotta.license=/home/mdh@eur.ad.sag/4.xlicense/license.key --set tag=4.3.10-SNAPSHOT --set security=true --set secretName=certificatesecret  .
+helm install "my-release" --set fullnameOverride="my-release" --set terracotta.stripeCount=2 --set terracotta.nodeCountPerStripe=1 --set-file terracotta.license=/home/mdh@eur.ad.sag/4.xlicense/license.key --set tag=4.3.10-SNAPSHOT --set security=true --set secretName=certificatesecret  .
 ````
 
 ### Step #3: Verify from the browser to see if connections can be created securely to tmc.
 
-- First enable port-forwarding for tmc-service using -
+- First enable port-forwarding for my-release-tmc-service using -
 
 ````
-kubectl port-forward service/tmc-service 8080:9443
+kubectl port-forward service/my-release-tmc-service 8080:9443
 ````
 
 - Go to browser and go to url https://localhost:8080 and then set up authentication.
 - It will ask for tmc restart so do it using
 
 ```
-kubectl delete pod tmc-0.
+kubectl delete pod my-release-tmc-0.
 ```
 
 - Now again start port-forwarding and go to browser and provide the connection location (URL)  -
 
 ```
-https://terracotta-0.terracotta-service.default.svc.cluster.local:9540
+https://my-release-terracotta-0.my-release-terracotta-service.default.svc.cluster.local:9540
 ```
 
 - When asking for username enter "user" . It should be able to connect and show cluster information on browser.
@@ -175,5 +175,6 @@ helm delete <release-name>
 | `1.4.0` | Last version compatible with BM 4.4.0 |
 | `2.0.3` | First version compatible with BM 4.5.0 |
 | `2.0.4` | Removed registry variable to allow to use local images |
+| `2.1.0` | Support for release name in terracottabigmemorymax resources |
 
 {{ template "chart.valuesSection" . }}

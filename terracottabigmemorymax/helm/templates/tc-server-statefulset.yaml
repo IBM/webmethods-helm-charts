@@ -19,7 +19,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: terracotta
+  name: {{ include "common.names.fullname" . }}-terracotta
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
     {{- with .Values.extraLabels -}}
@@ -32,7 +32,7 @@ spec:
   selector:
     matchLabels:
       app: terracotta
-  serviceName: terracotta-service
+  serviceName: {{ include "common.names.fullname" . }}-terracotta-service
   template:
     metadata:
       labels:
@@ -47,6 +47,14 @@ spec:
       {{- if .Values.terracotta.serviceAccountName }}
       serviceAccount: {{ .Values.terracotta.serviceAccountName }}
      {{- end }}
+      {{- with .Values.tsaServer.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tsaServer.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: server
           image: "{{ $.Values.serverImage }}:{{ $.Values.tag | default .Chart.AppVersion }}"
@@ -65,7 +73,7 @@ spec:
           volumeMounts:
             - name: commonconfig-volume
               mountPath: /opt/terracotta/config
-            - name: core-store
+            - name: {{ include "common.names.fullname" . }}-core-store
               mountPath: /opt/terracotta/run
           env:
             - name: JSON_LOGGING
@@ -102,7 +110,7 @@ spec:
                 {{- end }}
   volumeClaimTemplates:
     - metadata:
-        name: core-store
+        name: {{ include "common.names.fullname" . }}-core-store
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:

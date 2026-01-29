@@ -36,12 +36,13 @@ data:
     -->
 
     <tc:tc-config xmlns:tc="http://www.terracotta.org/config">
-      <servers secure="{{ $.Values.terracotta.security }}">
+      <servers secure="{{ $.Values.terracotta.security }}">    
+    {{- $root := . }}
     {{- range $i := until (int $.Values.terracotta.stripeCount) }}
         <mirror-group>
     {{- range $j := until (int $.Values.terracotta.nodeCountPerStripe) }}
-          <server host="terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}.terracotta-service.{{ $.Release.Namespace }}.svc.cluster.local"
-                  name="terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}">
+          <server host="{{ include "common.names.fullname" $root }}-terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}.{{ include "common.names.fullname" $root }}-terracotta-service.{{ $.Release.Namespace }}.svc.cluster.local"
+                  name="{{ include "common.names.fullname" $root }}-terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}">
             <tsa-port>{{ $.Values.terracotta.tsaPort }} </tsa-port>
             <tsa-group-port>{{ $.Values.terracotta.tsaGroupPort }}</tsa-group-port>
             <management-port>{{ $.Values.terracotta.tsaManagementPort }}</management-port>
@@ -53,7 +54,7 @@ data:
             {{- if eq $.Values.terracotta.security true }}
             <security>
               <ssl>
-                <certificate>jks:terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-alias@/opt/terracotta/run/terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-keystore.jks</certificate>
+                <certificate>jks:{{ include "common.names.fullname" $root }}-terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}@/opt/terracotta/run/{{ include "common.names.fullname" $root }}-terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}-keystore.jks</certificate>
               </ssl>
               <keychain>
                 <class>com.terracotta.management.keychain.FileStoreKeyChain</class>
@@ -65,9 +66,9 @@ data:
                 <user>user</user>
               </auth>
               <management>
-                <ia>https://tmc-0.tmc-service.{{ $.Release.Namespace }}.svc.cluster.local:{{ $.Values.terracotta.tmcSecurePort }}/tmc/api/assertIdentity</ia>
+                <ia>https://{{ include "common.names.fullname" $root }}-tmc-0.{{ include "common.names.fullname" $root }}-tmc-service.{{ $.Release.Namespace }}.svc.cluster.local:{{ $.Values.terracotta.tmcSecurePort }}/tmc/api/assertIdentity</ia>
                 <timeout>10000</timeout>
-                <hostname>terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}.terracotta-service.{{ $.Release.Namespace }}.svc.cluster.local</hostname >
+                <hostname>{{ include "common.names.fullname" $root }}-terracotta-{{ add (mul $i $.Values.terracotta.nodeCountPerStripe) $j }}.{{ include "common.names.fullname" $root }}-terracotta-service.{{ $.Release.Namespace }}.svc.cluster.local</hostname>
               </management>
             </security>
             {{- end }}
