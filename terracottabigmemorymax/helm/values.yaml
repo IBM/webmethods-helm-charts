@@ -3,11 +3,11 @@
 # Change this for air-gaped installations or custom images.
 # For the IBM webMethods container repository you need to have a
 # valid access token stored as registry credentials
-serverImage: icr.io/webmethods/terracotta/bigmemorymax-server
-tmcImage: icr.io/webmethods/terracotta/bigmemorymax-management-server
+serverImage: ibmwebmethods.azurecr.io/bigmemorymax-server
+tmcImage: ibmwebmethods.azurecr.io/bigmemorymax-management-server
 pullPolicy: IfNotPresent
 # -- Specific version to not accidentally change production versions with newer images.
-tag: "4.5.1.0.22"
+tag: "4.5.0"
 
 # -- Image pull secret reference. By default looks for `regcred`.
 imagePullSecrets:

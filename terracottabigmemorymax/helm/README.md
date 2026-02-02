@@ -176,6 +176,7 @@ helm delete <release-name>
 | `2.0.3` | First version compatible with BM 4.5.0 |
 | `2.0.4` | Removed registry variable to allow to use local images |
 | `2.1.0` | Support for release name in terracottabigmemorymax resources |
+| `2.1.1` | Fix registry name |
 
 ## Values
 
@@ -192,10 +193,10 @@ helm delete <release-name>
 | securityContext.runAsGroup | int | `0` |  |
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1724` |  |
-| serverImage | string | `"icr.io/webmethods/terracotta/bigmemorymax-server"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
+| serverImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-server"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | serverStorage | string | `"10Gi"` | The pvc storage request for the server pods |
 | serviceMonitor | object | `{"enabled":false}` | Create and enable ServiceMonitor. The default is `false`. |
-| tag | string | `"4.5.1.0.22"` | Specific version to not accidentally change production versions with newer images. |
+| tag | string | `"4.5.0"` | Specific version to not accidentally change production versions with newer images. |
 | terracotta | object | `{"datastoreSize":"4G","jsonLogging":true,"license":"","nodeCountPerStripe":2,"offHeapSize":"2G","restartable":false,"secretName":"","security":false,"selfSignedCerts":true,"serverOpts":"","serviceAccountName":"","stripeCount":1,"tmcEnabled":true,"tmcManagementPort":9889,"tmcOpts":"","tmcSecurePort":9443,"tsaGroupPort":9530,"tsaManagementPort":9540,"tsaPort":9510}` | Terracotta BigMemoryMax configurations |
 | terracotta.datastoreSize | string | `"4G"` | The <datastoreSize> configuration for each Terracotta server. |
 | terracotta.jsonLogging | bool | `true` | The JSON_LOGGING environment variable for each Terracotta server. |
@@ -216,7 +217,7 @@ helm delete <release-name>
 | terracotta.tsaGroupPort | int | `9530` | TSA group port |
 | terracotta.tsaManagementPort | int | `9540` | TSA Management port |
 | terracotta.tsaPort | int | `9510` | TSA port |
-| tmcImage | string | `"icr.io/webmethods/terracotta/bigmemorymax-management-server"` |  |
+| tmcImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-management-server"` |  |
 | tmcServer | object | `{"affinity":null,"livenessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"readinessProbe":{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"startupProbe":{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5},"topologySpreadConstraints":null}` | TMC-specific configurations for probes |
 | tmcServer.affinity | string | `nil` | Configure pod affinity for tms server |
 | tmcServer.livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":20,"periodSeconds":30,"successThreshold":1,"tcpSocket":{"port":9889},"timeoutSeconds":5}` | Configure liveness probe |
