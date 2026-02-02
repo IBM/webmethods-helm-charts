@@ -20,9 +20,8 @@ webmethods/apigateway                   3.6.3           10.15           API Gate
 webmethods/common                       1.0.5           1.0.0           A Library Helm Chart for grouping common logic ...
 webmethods/developerportal              1.0.3           10.15           webMethods Developer Portal Helm Chart for Kube...
 webmethods/microservicesruntime         1.1.0           10.15           Microservices Runtime (MSR) Helm Chart for Kube...
-webmethods/terracottabigmemorymax       2.0.1           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
+webmethods/terracottabigmemorymax       2.1.1           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/terracotta                   1.0.1           11.x            Terracotta Helm Chart for Kubernetes
-webmethods/terracottabigmemorymax       2.1.0           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/universalmessaging           1.1.0           10.15           Universal Messaging (UM) Helm Chart for Kubernetes
 ```
 
