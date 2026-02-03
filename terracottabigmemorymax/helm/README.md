@@ -19,7 +19,7 @@ This Helm chart is provided as a minimal requirement to install Terracotta BigMe
 
 | NAME                              | CHART VERSION | APP VERSION |
 |:----------------------------------|:-------------:|:-----------:|
-| webmethods/terracottabigmemorymax |  `>= 2.0.4`   |   `4.5.0`   |
+| webmethods/terracottabigmemorymax |  `>= 2.1.1`   |   `4.5.0`   |
 | webmethods/terracottabigmemorymax |  `<= 1.4.0`   |   `4.4.0`   |
 
 ## QuickStart
