@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: "tms-service"
+  name: {{ template "kube-terracotta.fullname" . }}-tms-service
   namespace: {{ template "kube-terracotta.namespace" . }} 
   labels:
     app: "tms"
