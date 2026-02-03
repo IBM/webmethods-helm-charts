@@ -50,15 +50,11 @@ Allow the release namespace to be overridden for multi-namespace deployments in 
 {{- end -}}
 {{- end -}}
 
-{{/* Terracotta custom resource instance name */}}
-{{- define "kube-terracotta.terracotta.crname" -}}
-{{- print (include "kube-terracotta.fullname" .) "-cr" }}
-{{- end -}}
-
 {{- define "serverUrl" -}}
+{{- $root := . }}
 {{- range $i := until (int .Values.terracotta.stripes) -}}
 {{- range $j := until (int $.Values.terracotta.nodes) -}}
-terracotta-stripe-{{add $i 1}}-{{ add $j }}.terracotta-stripe-{{ add $i 1}}-service.{{ template "kube-terracotta.namespace" $ }}.svc.cluster.local,
+{{ include "kube-terracotta.fullname" $root }}-terracotta-stripe-{{add $i 1}}-{{ add $j }}.{{ include "kube-terracotta.fullname" $root }}-terracotta-stripe-{{ add $i 1}}-service.{{ template "kube-terracotta.namespace" $ }}.svc.cluster.local,
 {{- end -}}
 {{- end -}}
 {{- end -}}
