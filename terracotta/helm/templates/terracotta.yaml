@@ -1,7 +1,7 @@
 apiVersion: operator.terracotta.softwareag.com/v1
 kind: TerracottaCluster
 metadata:
-  name: {{ template "kube-terracotta.terracotta.crname" . }}
+  name: {{ template "kube-terracotta.fullname" . }}
   namespace: {{ template "kube-terracotta.namespace" . }}
   labels:
     app: {{ template "kube-terracotta.name" . }}-operator
