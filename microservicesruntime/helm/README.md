@@ -117,6 +117,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 | `1.0.9` | Added new option `terminationGracePeriodSeconds`. Fix lifecycle indentation. |
 | `1.1.0` | Custom Resource objects are supported. Enhancement in job template to add `extraSpec` options. See [schedule-a-restart](../examples/schedule-a-restart/README.md). |
 | `1.2.0` | Option `failedJobsHistoryLimit` for Cron Job added. |
+| `1.2.1` | Adopt common 2.0.0. |
 
 ## Values
 
