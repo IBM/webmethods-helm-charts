@@ -22,6 +22,8 @@ This Helm chart is provided as a minimal requirement to install Terracotta BigMe
 | webmethods/terracottabigmemorymax |  `>= 2.1.1`   |   `4.5.0`   |
 | webmethods/terracottabigmemorymax |  `<= 1.4.0`   |   `4.4.0`   |
 
+⚠️ Resources and resources names have been updated from version 1 to version to so doing a helm uninstall/install with new version 2 from version 1 will not re-use the previous PVC (data). You may need to perform a manual sync of the PVC data.
+
 ## QuickStart
 
 From the helm directory
