@@ -57,9 +57,13 @@ invalidated._
 ## Version History
 
 | Version | Changes and Description               |
-| ------- | -----------------------               |
+|---------|---------------------------------------|
 | `1.0.0' | Initial release                       |
 | `2.0.0' | Support for release name in resources |
+
+⚠️ Resources and resources names have been updated from version 1 to version to so doing a helm uninstall/install with
+new version 2 from version 1 will not re-use the previous PVC (data). You may need to perform a manual sync of the PVC
+data.
 
 ## Compatibility Matrix
 
@@ -466,8 +470,7 @@ This chart can also be used to run secure Terracotta cluster and TMS.
 
    ##### Creation procedure of myrelease-tms-security-configmap
 
-   An additional tms.properties must also be present in myrelease-tms-security-configmap which is necessary for configuring
-   security in TMS. For ex -
+   An additional tms.properties must also be present in myrelease-tms-security-configmap which is necessary for configuring security in TMS. For ex -
 
    ```
    mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ ls
