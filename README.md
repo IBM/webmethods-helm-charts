@@ -24,6 +24,7 @@ webmethods/terracottabigmemorymax       1.4.0           4.4.0           Terracot
 webmethods/terracottabigmemorymax       2.1.1           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/terracotta                   1.0.0           11.x            Terracotta Helm Chart for Kubernetes
 webmethods/terracotta                   2.0.0           11.x            Terracotta Helm Chart for Kubernetes
+webmethods/terracotta                   3.0.0           12.x            Terracotta Helm Chart for Kubernetes
 webmethods/universalmessaging           1.1.0           10.15           Universal Messaging (UM) Helm Chart for Kubernetes
 ```
 
