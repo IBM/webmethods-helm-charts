@@ -29,12 +29,12 @@ spec:
         - name: "tms-server-init"
           image: busybox:latest
           imagePullPolicy: {{ .Values.pullPolicy }}
-          command: ["/bin/sh", "-c", "tar -xzf /certs/tms/security.tar.gz --directory /opt/softwareag/config"]
+          command: ["/bin/sh", "-c", "tar -xzf /certs/tms/security.tar.gz --directory /opt/terracotta/config"]
           volumeMounts:
             - name: tms-security-volume
               mountPath: /certs/tms
             - name: emptydir
-              mountPath: /opt/softwareag/config
+              mountPath: /opt/terracotta/config
       {{- end }}
       containers:
         - name: "tms-server"
@@ -44,17 +44,15 @@ spec:
             - name: TMS_OFFHEAPSIZEMB
               value: "8192"
             - name: TMS_STORAGEFOLDER
-              value: "/opt/softwareag/run/data"
-            - name: TMS_AUTOCONNECT
-              value: "true"
-            - name: TMS_AUTOCONNECT_RETRYCOUNT
-              value: "-1"
+              value: "/opt/terracotta/run/data"
             - name: TMS_DEFAULTURL
               value: "terracotta://{{ template "serverUrl" . }}"
             - name: "JSON_LOGGING"
               value: {{ .Values.tms.jsonLogging | quote }}
             - name: "JSON_LOGGING_AUDIT"
               value: {{ .Values.tms.jsonAuditLogging | quote }}
+            - name: "JSON_LOGGING_SECURITY"
+              value: {{ .Values.tms.jsonSecurityLogging | quote }}
             {{- range $key, $val := .Values.extraEnvs }}
             - name: {{ $key }}
               value: {{ $val }}
@@ -64,10 +62,10 @@ spec:
               containerPort: 9480
           volumeMounts:
             - name: tmsdata
-              mountPath: /opt/softwareag/run
+              mountPath: /opt/terracotta/run
           {{- if .Values.terracotta.security.isConfigured }}
             - name: emptydir
-              mountPath: /opt/softwareag/config
+              mountPath: /opt/terracotta/config
           {{- end}}
           {{- if .Values.tms.resources }}
           resources:

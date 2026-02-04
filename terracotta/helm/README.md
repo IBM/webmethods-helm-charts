@@ -30,6 +30,7 @@ This Helm chart deploys a Terracotta cluster on Kubernetes, including:
 1. **Terracotta Server** - Distributed in-memory data management
 2. **Terracotta Management Server (TMS)** - Cluster monitoring and management
 3. **Terracotta Operator** - Manages cluster lifecycle, activation, and scaling operations
+4. Terracotta REST Gateway (optional)
 
 The chart automatically deploys the Terracotta Operator CRD during installation if not already present. Note that `helm uninstall` does not remove the CRD from the cluster.
 
@@ -60,16 +61,21 @@ invalidated._
 |---------|---------------------------------------|
 | `1.0.0' | Initial release                       |
 | `2.0.0' | Support for release name in resources |
+| `3.0.0' | Updated folder path (XPC)             |
 
 ⚠️ Resources and resources names have been updated from version 1 to version to so doing a helm uninstall/install with
 new version 2 from version 1 will not re-use the previous PVC (data). You may need to perform a manual sync of the PVC
 data.
 
+⚠️ Internal folder names in docker images have been updated in version 3.
+
 ## Compatibility Matrix
 
 | NAME                  | CHART VERSION | APP VERSION |
-| :-------------------- | :-----------: | :---------: |
+| :-------------------- |:-------------:| :---------: |
 | webmethods/terracotta |     `1.x`     |   `11.x`    |
+| webmethods/terracotta |     `2.x`     |   `11.x`    |
+| webmethods/terracotta |     `3.x`     |   `12.x`    |
 
 ## Prerequisites
 
@@ -479,7 +485,7 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    tms.properties file must have following properties configured like following -
 
    # tms directory should be configured like following
-   tms.security.root.directory=/opt/softwareag/config/tms
+   tms.security.root.directory=/opt/terracotta/config/tms
 
    # if audit directory is required
    tms.security.audit.directory=
@@ -488,7 +494,7 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    tms.security.https.enabled=true
 
    # client directory should be configured like following
-   tms.security.root.directory.connection.default=/opt/softwareag/config/client
+   tms.security.root.directory.connection.default=/opt/terracotta/config/client
    ```
 
    Next create a tar.gz for security folder like following -
@@ -536,12 +542,13 @@ Note - There are two ways in which node identity certificates can be configured.
 | securityContext.runAsNonRoot | bool | `true` |  |
 | securityContext.runAsUser | int | `1724` |  |
 | storageClass | string | `""` |  |
-| tag | float | `11.1` | Specific version to not accidentally change production versions with newer images. |
+| tag | float | `12` | Specific version to not accidentally change production versions with newer images. |
 | terracotta.clusterName | string | `"my-cluster"` |  |
 | terracotta.datadirs | string | `"dataroot-1,dataroot-2"` |  |
 | terracotta.failoverPriority | string | `"availability"` |  |
 | terracotta.jsonAuditLogging | bool | `true` |  |
 | terracotta.jsonLogging | bool | `false` |  |
+| terracotta.jsonSecurityLogging | bool | `true` |  |
 | terracotta.nodes | int | `2` |  |
 | terracotta.offheaps | string | `"offheap-1:512MB"` |  |
 | terracotta.probeFailureThreshold | string | `nil` |  |
@@ -562,6 +569,11 @@ Note - There are two ways in which node identity certificates can be configured.
 | terracottaOperator.serviceAccount.name | string | `""` |  |
 | tms.jsonAuditLogging | bool | `true` |  |
 | tms.jsonLogging | bool | `false` |  |
+| tms.jsonSecurityLogging | bool | `true` |  |
 | tms.resources | object | `{}` |  |
 | tms.storage | string | `"5Gi"` |  |
 | tms.tmsImage | string | `"ibmwebmethods.azurecr.io/terracotta-management-server"` |  |
+| trg.jsonAuditLogging | bool | `true` |  |
+| trg.jsonLogging | bool | `false` |  |
+| trg.jsonSecurityLogging | bool | `true` |  |
+| trg.trgImage | string | `"ibmwebmethods.azurecr.io/terracotta-rest-gateway"` |  |

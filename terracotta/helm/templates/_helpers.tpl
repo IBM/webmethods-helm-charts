@@ -23,9 +23,18 @@ The longest name that gets created adds and extra 37 characters, so truncation s
 {{- end -}}
 {{- end -}}
 
+{{/* Create chart name and version as used by the chart label. */}}
+{{- define "kube-terracotta.chartref" -}}
+{{- replace "+" "_" .Chart.Version | printf "%s-%s" .Chart.Name -}}
+{{- end }}
+
 {{/* Generate basic labels */}}
 {{- define "kube-terracotta.labels" -}}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/version: "{{ replace "+" "_" .Chart.Version }}"
 app.kubernetes.io/part-of: {{ template "kube-terracotta.name" . }}
+chart: {{ template "kube-terracotta.chartref" . }}
 release: {{ $.Release.Name | quote }}
 heritage: {{ $.Release.Service | quote }}
 {{- end }}
