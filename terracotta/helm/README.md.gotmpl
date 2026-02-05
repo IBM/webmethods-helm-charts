@@ -56,9 +56,14 @@ invalidated._
 
 ## Version History
 
-| Version | Changes and Description |
-| ------- | ----------------------- |
-| `1.0.0' | Initial release         |
+| Version | Changes and Description               |
+|---------|---------------------------------------|
+| `1.0.0' | Initial release                       |
+| `2.0.0' | Support for release name in resources |
+
+⚠️ Resources and resources names have been updated from version 1 to version to so doing a helm uninstall/install with
+new version 2 from version 1 will not re-use the previous PVC (data). You may need to perform a manual sync of the PVC
+data.
 
 ## Compatibility Matrix
 
@@ -86,20 +91,20 @@ Here are the list of platforms on which we have tested these Helm Charts:
 ### Add the Helm Repository
 
 ```bash
-helm repo add webmethods https://open-source.softwareag.com/webmethods-helm-charts/
+helm repo add webmethods https://ibm.github.io/webmethods-helm-charts/
 helm repo update
 ```
 
 ### Install the Chart
 
 ```bash
-helm install <release-name> webmethods/terracotta [flags]
+helm install <release-name> terracotta/helm/. [flags]
 ```
 
 Example:
 
 ```bash
-helm install my-terracotta webmethods/terracotta
+helm install my-terracotta terracotta/helm/.
 ```
 
 ### Verify Installation
@@ -131,7 +136,7 @@ The following table lists the main configurable parameters of the Terracotta cha
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 
 ```bash
-helm install my-terracotta webmethods/terracotta \
+helm install my-terracotta terracotta/helm/ \
   --set stripes=3 \
   --set nodes=2 \
   --set clusterName=production-cluster
@@ -140,7 +145,7 @@ helm install my-terracotta webmethods/terracotta \
 Alternatively, provide a YAML file with parameter values:
 
 ```bash
-helm install my-terracotta webmethods/terracotta -f values.yaml
+helm install my-terracotta terracotta/helm/ -f values.yaml
 ```
 
 ## Upgrading
@@ -148,7 +153,7 @@ helm install my-terracotta webmethods/terracotta -f values.yaml
 To upgrade an existing release:
 
 ```bash
-helm upgrade my-terracotta webmethods/terracotta [flags]
+helm upgrade my-terracotta terracotta/helm/ [flags]
 ```
 
 ## Uninstalling
@@ -171,46 +176,47 @@ helm uninstall my-terracotta
 ### Creating a new Terracotta cluster
 
 ```bash
-helm install <release-name> cloud/multi-stripe.
+helm install <release-name> terracotta/helm/
 For ex:-
-helm install "my-release" cloud/multi-stripe
+helm install "my-release" --set fullnameOverride="myrelease" terracotta/helm/.
 ```
 
 As part of install with default values for the charts, it deploys 2\*2 Terracotta cluster and activate it -
 
 ```
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pods
-NAME                                              READY   STATUS    RESTARTS   AGE
-tms-statefulset-0                                 1/1     Running   0          35s
-my-release-terracotta-operator-66b7fddc97-7mskc   1/1     Running   0          35s
-terracotta-stripe-1-1                             0/1     Running   0          33s
-terracotta-stripe-1-0                             0/1     Running   0          33s
-terracotta-stripe-2-0                             0/1     Running   0          33s
-terracotta-stripe-2-1                             0/1     Running   0          33s
+kubectl get pods
+NAME                                                       READY   STATUS    RESTARTS   AGE
+myrelease-tms-0                                             1/1     Running   0          35s
+myrelease-operator-66b7fddc97-7mskc                         1/1     Running   0          35s
+myrelease-terracotta-stripe-1-1                             1/1     Running   0          33s
+myrelease-terracotta-stripe-1-1                             1/1     Running   0          33s
+myrelease-terracotta-stripe-2-0                             1/1     Running   0          33s
+myrelease-terracotta-stripe-2-1                             1/1     Running   0          33s
 
+kubectl get pvc
+NAME                                       STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+tmsdata-myrelease-tms-0                     Bound    pvc-005091fc-dee0-4d42-be4e-6be0e07d8c0f   5Gi        RWO            local-path     83s
+corestore-myrelease-terracotta-stripe-2-0   Bound    pvc-3a109ca7-1c10-481f-9a6a-573f894de38f   10Gi       RWO            local-path     81s
+corestore-myrelease-terracotta-stripe-1-0   Bound    pvc-f0c34001-593b-466c-bea5-b9c228d7b8d0   10Gi       RWO            local-path     81s
+corestore-myrelease-terracotta-stripe-1-1   Bound    pvc-7b3e40e1-78ff-4bf5-88fa-9679ab2e85cf   10Gi       RWO            local-path     81s
+corestore-myrelease-terracotta-stripe-2-1   Bound    pvc-422d1959-d970-4418-b1d0-1b09198fde95   10Gi       RWO            local-path     81s
 
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pvc
-NAME                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-tmsdata-tms-statefulset-0         Bound    pvc-005091fc-dee0-4d42-be4e-6be0e07d8c0f   5Gi        RWO            local-path     83s
-corestore-terracotta-stripe-2-0   Bound    pvc-3a109ca7-1c10-481f-9a6a-573f894de38f   10Gi       RWO            local-path     81s
-corestore-terracotta-stripe-1-0   Bound    pvc-f0c34001-593b-466c-bea5-b9c228d7b8d0   10Gi       RWO            local-path     81s
-corestore-terracotta-stripe-1-1   Bound    pvc-7b3e40e1-78ff-4bf5-88fa-9679ab2e85cf   10Gi       RWO            local-path     81s
-corestore-terracotta-stripe-2-1   Bound    pvc-422d1959-d970-4418-b1d0-1b09198fde95   10Gi       RWO            local-path     81s
-
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get deployments
+kubectl get deployments
 NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
-my-release-terracotta-operator   1/1     1            1           3m24s
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get statefulsets
-NAME                  READY   AGE
-tms-statefulset       1/1     14m
-terracotta-stripe-1   2/2     14m
-terracotta-stripe-2   2/2     14m
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get svc
-NAME                          TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)             AGE
-kubernetes                    ClusterIP   10.43.0.1    <none>        443/TCP             20d
-tms-service                   ClusterIP   None         <none>        9480/TCP            14m
-terracotta-stripe-1-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   14m
-terracotta-stripe-2-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   14m
+my-release-operator              1/1     1            1           3m24s
+
+kubectl get statefulsets
+NAME                            READY      AGE
+myrelease-tms                   1/1        14m
+myrelease-terracotta-stripe-1   2/2        14m
+myrelease-terracotta-stripe-2   2/2        14m
+
+kubectl get svc
+NAME                                    TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)             AGE
+kubernetes                              ClusterIP   10.43.0.1    <none>        443/TCP             20d
+myrelease-tms-service                   ClusterIP   None         <none>        9480/TCP            14m
+myrelease-terracotta-stripe-1-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   14m
+myrelease-terracotta-stripe-2-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   14m
 
 ```
 
@@ -246,21 +252,22 @@ Adding a node in all stripes can be achieved by changing the nodes to N+1 in val
 terracotta-operator logs can be used to verify the node addition for each stripe.
 
 ```
-helm upgrade "my-release" cloud/multi-stripe
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pods
-NAME                                              READY   STATUS    RESTARTS   AGE
-my-release-terracotta-operator-66b7fddc97-7mskc   1/1     Running   0          48m
-terracotta-stripe-2-0                             1/1     Running   0          48m
-terracotta-stripe-1-0                             1/1     Running   0          48m
-terracotta-stripe-1-1                             1/1     Running   0          48m
-terracotta-stripe-2-1                             1/1     Running   0          48m
-tms-statefulset-0                                 1/1     Running   0          80s
-terracotta-stripe-1-2                             1/1     Running   0          78s
-terracotta-stripe-2-2                             0/1     Running   0          29s
+helm upgrade "my-release" --set fullnameOverride="myrelease" terracotta/helm/.
+
+kubectl get pods
+NAME                                                        READY   STATUS    RESTARTS   AGE
+myrelease-operator-66b7fddc97-7mskc                         1/1     Running   0          48m
+myrelease-terracotta-stripe-2-0                             1/1     Running   0          48m
+myrelease-terracotta-stripe-1-0                             1/1     Running   0          48m
+myrelease-terracotta-stripe-1-1                             1/1     Running   0          48m
+myrelease-terracotta-stripe-2-1                             1/1     Running   0          48m
+myrelease-tms-0                                             1/1     Running   0          80s
+myrelease-terracotta-stripe-1-2                             1/1     Running   0          78s
+myrelease-terracotta-stripe-2-2                             1/1     Running   0          29s
 
 the pvcs for the newly created pod -
-corestore-terracotta-stripe-1-2   Bound    pvc-4fd7a59c-3772-4f00-bf8f-cb25fcf2e8b6   10Gi       RWO            local-path     95s
-corestore-terracotta-stripe-2-2   Bound    pvc-2064205a-1b38-4d47-ac3f-3bf04171e900   10Gi       RWO            local-path     46s
+corestore-myrelease-terracotta-stripe-1-2   Bound    pvc-4fd7a59c-3772-4f00-bf8f-cb25fcf2e8b6   10Gi       RWO            local-path     95s
+corestore-myrelease-terracotta-stripe-2-2   Bound    pvc-2064205a-1b38-4d47-ac3f-3bf04171e900   10Gi       RWO            local-path     46s
 ```
 
 #### Removing a node from all stripes of an activated cluster
@@ -268,24 +275,24 @@ corestore-terracotta-stripe-2-2   Bound    pvc-2064205a-1b38-4d47-ac3f-3bf04171e
 Removing a node from all stripes can be achieved by change the nodes to N-1 in values.yaml and do an helm upgrade.
 
 ```
-helm upgrade "my-release" cloud/multi-stripe
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pods
-NAME                                              READY   STATUS    RESTARTS   AGE
-my-release-terracotta-operator-66b7fddc97-7mskc   1/1     Running   0          54m
-terracotta-stripe-2-0                             1/1     Running   0          54m
-terracotta-stripe-1-0                             1/1     Running   0          54m
-terracotta-stripe-1-1                             1/1     Running   0          54m
-terracotta-stripe-2-1                             1/1     Running   0          54m
-tms-statefulset-0                                 1/1     Running   0          113s
+helm upgrade "my-release" --set fullnameOverride="myrelease" terracotta/helm/.
+kubectl get pods
+NAME                                                       READY   STATUS    RESTARTS   AGE
+myrelease-operator-66b7fddc97-7mskc                         1/1     Running   0          54m
+myrelease-terracotta-stripe-2-0                             1/1     Running   0          54m
+myrelease-terracotta-stripe-1-0                             1/1     Running   0          54m
+myrelease-terracotta-stripe-1-1                             1/1     Running   0          54m
+myrelease-terracotta-stripe-2-1                             1/1     Running   0          54m
+myrelease-tms-0                                             1/1     Running   0          113s
 
 You can verify the pvcs also get deleted.
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pvc
-NAME                              STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
-tmsdata-tms-statefulset-0         Bound    pvc-005091fc-dee0-4d42-be4e-6be0e07d8c0f   5Gi        RWO            local-path     108m
-corestore-terracotta-stripe-2-0   Bound    pvc-3a109ca7-1c10-481f-9a6a-573f894de38f   10Gi       RWO            local-path     108m
-corestore-terracotta-stripe-1-0   Bound    pvc-f0c34001-593b-466c-bea5-b9c228d7b8d0   10Gi       RWO            local-path     108m
-corestore-terracotta-stripe-1-1   Bound    pvc-7b3e40e1-78ff-4bf5-88fa-9679ab2e85cf   10Gi       RWO            local-path     108m
-corestore-terracotta-stripe-2-1   Bound    pvc-422d1959-d970-4418-b1d0-1b09198fde95   10Gi       RWO            local-path     108m
+ kubectl get pvc
+NAME                                        STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+tmsdata-myrelease-tms-0                     Bound    pvc-005091fc-dee0-4d42-be4e-6be0e07d8c0f   5Gi        RWO            local-path     108m
+corestore-myrelease-terracotta-stripe-2-0   Bound    pvc-3a109ca7-1c10-481f-9a6a-573f894de38f   10Gi       RWO            local-path     108m
+corestore-myrelease-terracotta-stripe-1-0   Bound    pvc-f0c34001-593b-466c-bea5-b9c228d7b8d0   10Gi       RWO            local-path     108m
+corestore-myrelease-terracotta-stripe-1-1   Bound    pvc-7b3e40e1-78ff-4bf5-88fa-9679ab2e85cf   10Gi       RWO            local-path     108m
+corestore-myrelease-terracotta-stripe-2-1   Bound    pvc-422d1959-d970-4418-b1d0-1b09198fde95   10Gi       RWO            local-path     108m
 ```
 
 #### Adding a stripe to an activated cluster
@@ -296,32 +303,31 @@ Adding a stripe will result in creation of new statefulset which is logical repr
 be attached to the existing terracotta cluster.
 
 ```
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get pods
-NAME                                              READY   STATUS    RESTARTS   AGE
-terracotta-stripe-1-0                             1/1     Running   0          154m
-terracotta-stripe-1-1                             1/1     Running   0          154m
-terracotta-stripe-2-0                             1/1     Running   0          154m
-terracotta-stripe-2-1                             1/1     Running   0          154m
-my-release-terracotta-operator-66b7fddc97-7mskc   1/1     Running   0          154m
-tms-statefulset-0                                 1/1     Running   0          2m18s
-terracotta-stripe-3-0                             1/1     Running   0          2m18s
-terracotta-stripe-3-1                             1/1     Running   0          2m18s
+kubectl get pods
+NAME                                                        READY   STATUS    RESTARTS   AGE
+myrelease-terracotta-stripe-1-0                             1/1     Running   0          154m
+myrelease-terracotta-stripe-1-1                             1/1     Running   0          154m
+myrelease-terracotta-stripe-2-0                             1/1     Running   0          154m
+myrelease-terracotta-stripe-2-1                             1/1     Running   0          154m
+myrelease-operator-66b7fddc97-7mskc                         1/1     Running   0          154m
+myrelease-tms-0                                             1/1     Running   0          2m18s
+myrelease-terracotta-stripe-3-0                             1/1     Running   0          2m18s
+myrelease-terracotta-stripe-3-1                             1/1     Running   0          2m18s
 
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get statefulsets
-NAME                  READY   AGE
-terracotta-stripe-1   2/2     155m
-terracotta-stripe-2   2/2     155m
-tms-statefulset       1/1     155m
-terracotta-stripe-3   2/2     2m46s
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myre
+kubectl get statefulsets
+NAME                            READY   AGE
+myrelease-terracotta-stripe-1   2/2     155m
+myrelease-terracotta-stripe-2   2/2     155m
+myrelease-tms                   1/1     155m
+myrelease-terracotta-stripe-3   2/2     2m46s
 
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get svc
-NAME                          TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)             AGE
-kubernetes                    ClusterIP   10.43.0.1    <none>        443/TCP             20d
-tms-service                   ClusterIP   None         <none>        9480/TCP            155m
-terracotta-stripe-1-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   155m
-terracotta-stripe-2-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   155m
-terracotta-stripe-3-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   3m2s
+kubectl get svc
+NAME                                    TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)             AGE
+kubernetes                              ClusterIP   10.43.0.1    <none>        443/TCP             20d
+myrelease-tms-service                   ClusterIP   None         <none>        9480/TCP            155m
+myrelease-terracotta-stripe-1-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   155m
+myrelease-terracotta-stripe-2-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   155m
+myrelease-terracotta-stripe-3-service   ClusterIP   None         <none>        9410/TCP,9430/TCP   3m2s
 ```
 
 #### Removing a stripe from an activated cluster
@@ -361,10 +367,10 @@ in values.yaml either during initial deployment time (i.e helm install) or later
 It will result in creation of voter deployment with the configured number of voter pods.
 
 ```
-mdh@SAG-1HXQKG3:/mnt/c/Users/MDH/Myrepos/terracotta-enterprise/cloud/helm/multi-stripe$ kubectl get deployments
-NAME                             READY   UP-TO-DATE   AVAILABLE   AGE
-my-release-terracotta-operator   1/1     1            1           84s
-terracotta-voter                 1/1     1            1           21s
+kubectl get deployments
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+myrelease-operator                         1/1     1            1           84s
+myrelease-terracotta-voter                 1/1     1            1           21s
 ```
 
 ### Running with Security
@@ -397,78 +403,77 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    default namespace.
 
    ```
-   terracotta-stripe-1-security-configmap -> It should contain the security root directory for terracotta-stripe-1.
-   terracotta-stripe-2-security-configmap -> It should contain the security root directory for terracotta-stripe-2.
-   tool-security-configmap -> It should contain the client security root directory for communicating with the various terracotta server nodes.
-   tms-security-configmap -> It should contain the security root directory for terracotta management server and the tms.properties file .
+   myrelease-terracotta-stripe-1-security-configmap -> It should contain the security root directory for myrelease-terracotta-stripe-1.
+   myrelease-terracotta-stripe-2-security-configmap -> It should contain the security root directory for myrelease-terracotta-stripe-2.
+   myrelease-tool-security-configmap -> It should contain the client security root directory for communicating with the various terracotta server nodes.
+   myrelease-tms-security-configmap -> It should contain the security root directory for terracotta management server and the tms.properties file .
    ```
 
    kubectl create configmap can be used for the creation of the above mentioned configmaps.
 
-   ##### Creation procedure of terracotta-stripe-1-security-configmap
+   ##### Creation procedure of myrelease-terracotta-stripe-1-security-configmap
 
    ```
-   mdh@SAG-1HXQKG3:~/Downloads/terracotta-stripe-1-security$ ls
+   mdh@SAG-1HXQKG3:~/Downloads/myrelease-terracotta-stripe-1-security$ ls
    access-control  identity  trusted-authority
    ```
 
    Step 1: create tar.gz file from the above directory like following -
 
    ```
-   tar -czf security.tar.gz terracotta-stripe-1-security
+   tar -czf security.tar.gz myrelease-terracotta-stripe-1-security
    ```
 
    Step 2 : create configmap from the security.tar.gz using following command -
 
    ```
-   kubectl create configmap terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+   kubectl create configmap myrelease-terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
    ```
 
-   ##### Creation procedure of terracotta-stripe-2-security-configmap
+   ##### Creation procedure of myrelease-terracotta-stripe-2-security-configmap
 
    ```
-   mdh@SAG-1HXQKG3:~/Downloads/terracotta-stripe-2-security$ ls
+   mdh@SAG-1HXQKG3:~/Downloads/myrelease-terracotta-stripe-2-security$ ls
    access-control  identity  trusted-authority
    ```
 
    Step 1: create tar.gz file from the above directory like following -
 
    ```
-   tar -czf security.tar.gz terracotta-stripe-2-security
+   tar -czf security.tar.gz myrelease-terracotta-stripe-2-security
    ```
 
    Step 2 : create configmap from the security.tar.gz using following command -
 
    ```
-   kubectl create configmap terracotta-stripe-2-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+   kubectl create configmap myrelease-terracotta-stripe-2-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
    ```
 
-   ##### Creation procedure of tool-security-configmap
+   ##### Creation procedure of myrelease-tool-security-configmap
 
    ```
-   mdh@SAG-1HXQKG3:~/Downloads/tool-security$ ls
+   mdh@SAG-1HXQKG3:~/Downloads/myrelease-tool-security$ ls
    identity  trusted-authority
    ```
 
    Step 1: create tar.gz file from the above directory like following -
 
    ```
-   tar -czf security.tar.gz tool-security
+   tar -czf security.tar.gz myrelease-tool-security
    ```
 
    Step 2 : create configmap from the security.tar.gz using following command -
 
    ```
-   kubectl create configmap tool-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+   kubectl create configmap myrelease-tool-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
    ```
 
-   ##### Creation procedure of tms-security-configmap
+   ##### Creation procedure of myrelease-tms-security-configmap
 
-   An additional tms.properties must also be present in tms-security-configmap which is necessary for configuring
-   security in TMS. For ex -
+   An additional tms.properties must also be present in myrelease-tms-security-configmap which is necessary for configuring security in TMS. For ex -
 
    ```
-   mdh@SAG-1HXQKG3:~/Downloads/tms-security$ ls
+   mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ ls
    client  tms  tms.properties
 
    tms.properties file must have following properties configured like following -
@@ -489,12 +494,12 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    Next create a tar.gz for security folder like following -
 
    ```
-   mdh@SAG-1HXQKG3:~/Downloads/tms-security$ tar -czf security.tar.gz .
+   mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ tar -czf security.tar.gz .
    This is necessary since the docker container for tms looks for tms.properties file inside /opt/softwareag/config inside container.
    ```
 
    ```
-   Note- The directory names for creating security.tar.gz i.e terracotta-stripe-1-security, tool-security etc. must be as its shown in
+   Note- The directory names for creating security.tar.gz i.e myrelease-terracotta-stripe-1-security, myrelease-tool-security etc. must be as its shown in
    the above example because these are the names that's used internally by terracotta operator.
    ```
 
@@ -506,12 +511,13 @@ Note - There are two ways in which node identity certificates can be configured.
 1. Identity certificate named <hostname>.jks for each node within identity folder of the security root directory could be configured.
    This way during scaling up the number of nodes in a stripe, its security configmap needs to be updated everytime
    before triggering helm upgrade via creation of new security.tar.gz from the updated security root directory and then finally updating the configmap
-   via ` kubectl create configmap terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f - `.
+   via ` kubectl create configmap myrelease-terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f - `.
 
-2. Single identity certificate for the whole stripe named wildcard.jks can be configured with CN as `*.terracotta-stripe-<ind>.<namespace>.svc.cluster.local`.
+2. Single identity certificate for the whole stripe named wildcard.jks can be configured with CN as `*.myrelease-terracotta-stripe-<ind>.<namespace>.svc.cluster.local`.
    This way the same certificate could be used for all the nodes in single stripe and hence there is no need to update the security configmap for the stripes in case of scaling up the number of nodes in stripes.
 ```
 
 ## F.A.Q and Troubleshooting
-
+1. Please ensure that operator have enough permission to create all the  kubernetes resource in the cluster.
+2. User should also ensure they have enough permission to install crds in the cluster.
 {{ template "chart.valuesSection" . }}
