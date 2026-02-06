@@ -180,7 +180,7 @@ rules:
   - patch
   - update
 - apiGroups:
-  - operator.terracotta.softwareag.com
+  - operator.terracotta.ibm.com
   resources:
   - terracottaclusters
   verbs:
@@ -192,13 +192,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - operator.terracotta.softwareag.com
+  - operator.terracotta.ibm.com
   resources:
   - terracottaclusters/finalizers
   verbs:
   - update
 - apiGroups:
-  - operator.terracotta.softwareag.com
+  - operator.terracotta.ibm.com
   resources:
   - terracottaclusters/status
   verbs:
