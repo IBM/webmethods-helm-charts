@@ -63,6 +63,10 @@ terracotta:
      sslEnabled: ""
      authc: ""
      whitelist: ""
+   # -- Configure pod affinity for terracotta server
+   affinity:
+   # -- Configure pod topologySpreadConstraints for terracotta server
+   topologySpreadConstraints:
 
 tms: 
  tmsImage: "ibmwebmethods.azurecr.io/terracotta-management-server"
@@ -75,6 +79,11 @@ tms:
  #   memory: 16Gi
  # requests:
  #   memory: 4Gi
+
+ # -- Configure pod affinity for tms server
+ affinity:
+ # -- Configure pod topologySpreadConstraints for tms server
+ topologySpreadConstraints:
 
 trg:
   trgImage: "ibmwebmethods.azurecr.io/terracotta-rest-gateway"
