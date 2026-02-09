@@ -68,3 +68,13 @@ spec:
     authc: {{ .Values.terracotta.security.authc | default "certificate" | quote }}
     whitelist: {{ .Values.terracotta.security.whitelist | default false | quote  }}
   {{- end }}
+  {{- with .Values.terracotta.affinity }}
+  affinity:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{- with .Values.terracotta.topologySpreadConstraints }}
+  topologySpreadConstraints:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+
+

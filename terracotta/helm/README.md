@@ -537,6 +537,7 @@ Note - There are two ways in which node identity certificates can be configured.
 | securityContext.runAsUser | int | `1724` |  |
 | storageClass | string | `""` |  |
 | tag | float | `11.1` | Specific version to not accidentally change production versions with newer images. |
+| terracotta.affinity | string | `nil` | Configure pod affinity for terracotta server |
 | terracotta.clusterName | string | `"my-cluster"` |  |
 | terracotta.datadirs | string | `"dataroot-1,dataroot-2"` |  |
 | terracotta.failoverPriority | string | `"availability"` |  |
@@ -553,6 +554,7 @@ Note - There are two ways in which node identity certificates can be configured.
 | terracotta.serverImage | string | `"ibmwebmethods.azurecr.io/terracotta-server"` |  |
 | terracotta.storage | string | `"10Gi"` |  |
 | terracotta.stripes | int | `2` |  |
+| terracotta.topologySpreadConstraints | string | `nil` | Configure pod topologySpreadConstraints for terracotta server |
 | terracotta.voterImage | string | `"ibmwebmethods.azurecr.io/terracotta-voter"` |  |
 | terracotta.voters | int | `0` |  |
 | terracottaOperator.connectionTimeout | string | `"30s"` |  |
@@ -560,8 +562,10 @@ Note - There are two ways in which node identity certificates can be configured.
 | terracottaOperator.requestTimeout | string | `"30s"` |  |
 | terracottaOperator.serviceAccount.create | bool | `true` |  |
 | terracottaOperator.serviceAccount.name | string | `""` |  |
+| tms.affinity | string | `nil` | Configure pod affinity for tms server |
 | tms.jsonAuditLogging | bool | `true` |  |
 | tms.jsonLogging | bool | `false` |  |
 | tms.resources | object | `{}` |  |
 | tms.storage | string | `"5Gi"` |  |
 | tms.tmsImage | string | `"ibmwebmethods.azurecr.io/terracotta-management-server"` |  |
+| tms.topologySpreadConstraints | string | `nil` | Configure pod topologySpreadConstraints for tms server |
