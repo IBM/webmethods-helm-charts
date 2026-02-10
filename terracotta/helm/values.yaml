@@ -1,5 +1,5 @@
 # -- Specific version to not accidentally change production versions with newer images.
-tag: 11.1
+tag: 12.0
 pullPolicy: IfNotPresent
 
 # -- Image pull secret reference. By default looks for `regcred`.
@@ -46,6 +46,7 @@ terracotta:
    probeFailureThreshold:
    jsonLogging: false
    jsonAuditLogging: true
+   jsonSecurityLogging: true
    offheaps: "offheap-1:512MB"
    datadirs: "dataroot-1,dataroot-2"
    failoverPriority: "availability"
@@ -62,11 +63,16 @@ terracotta:
      sslEnabled: ""
      authc: ""
      whitelist: ""
+   # -- Configure pod affinity for terracotta server
+   affinity:
+   # -- Configure pod topologySpreadConstraints for terracotta server
+   topologySpreadConstraints:
 
 tms: 
  tmsImage: "ibmwebmethods.azurecr.io/terracotta-management-server"
  jsonLogging: false
  jsonAuditLogging: true
+ jsonSecurityLogging: true
  storage: 5Gi
  resources: {}
  #  limits:
@@ -74,3 +80,13 @@ tms:
  # requests:
  #   memory: 4Gi
 
+ # -- Configure pod affinity for tms server
+ affinity:
+ # -- Configure pod topologySpreadConstraints for tms server
+ topologySpreadConstraints:
+
+trg:
+  trgImage: "ibmwebmethods.azurecr.io/terracotta-rest-gateway"
+  jsonLogging: false
+  jsonAuditLogging: true
+  jsonSecurityLogging: true

@@ -1,7 +1,7 @@
-apiVersion: operator.terracotta.softwareag.com/v1
+apiVersion: operator.terracotta.ibm.com/v1
 kind: TerracottaCluster
 metadata:
-  name: {{ template "kube-terracotta.terracotta.crname" . }}
+  name: {{ template "kube-terracotta.fullname" . }}
   namespace: {{ template "kube-terracotta.namespace" . }}
   labels:
     app: {{ template "kube-terracotta.name" . }}-operator
@@ -47,6 +47,8 @@ spec:
     value: {{ .Values.terracotta.jsonLogging | quote }}
   - name: "JSON_LOGGING_AUDIT"
     value: {{ .Values.terracotta.jsonAuditLogging | quote }}
+  - name: "JSON_LOGGING_SECURITY"
+    value: {{ .Values.terracotta.jsonSecurityLogging | quote }}
   - name: "DEFAULT_DATA_DIRS"
     value: {{ .Values.terracotta.datadirs }} 
   - name: "DEFAULT_OFFHEAP"
@@ -68,3 +70,13 @@ spec:
     authc: {{ .Values.terracotta.security.authc | default "certificate" | quote }}
     whitelist: {{ .Values.terracotta.security.whitelist | default false | quote  }}
   {{- end }}
+  {{- with .Values.terracotta.affinity }}
+  affinity:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+  {{- with .Values.terracotta.topologySpreadConstraints }}
+  topologySpreadConstraints:
+  {{- toYaml . | nindent 8 }}
+  {{- end }}
+
+
