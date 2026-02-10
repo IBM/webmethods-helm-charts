@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: tms-statefulset
+  name: {{ template "kube-terracotta.fullname" . }}-tms
   namespace: {{ template "kube-terracotta.namespace" . }}
   labels:
     app: "tms"
@@ -15,7 +15,7 @@ spec:
   selector:
     matchLabels:
       app: "tms"
-  serviceName: "tms-service"
+  serviceName: {{ template "kube-terracotta.fullname" . }}-tms-service
   template:
     metadata:
       labels:
@@ -23,7 +23,15 @@ spec:
     spec:
       securityContext:
         {{- toYaml .Values.securityContext | nindent 8 }}
-      serviceAccountName: {{ template "kube-terracotta.terracotta.crname" . }}-sa
+      serviceAccountName: {{ template "kube-terracotta.fullname" . }}-sa
+      {{- with .Values.tms.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tms.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- if .Values.terracotta.security.isConfigured }}
       initContainers:
         - name: "tms-server-init"
@@ -81,7 +89,7 @@ spec:
       volumes:
         - name: tms-security-volume
           configMap:
-            name: tms-security-configmap
+            name: {{ template "kube-terracotta.fullname" . }}-tms-security-configmap
         - name: emptydir
           emptyDir:
   {{- end }}
