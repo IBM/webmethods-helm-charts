@@ -255,7 +255,14 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
+
+# -- Create a PodDisruptionBudget for Microservices Runtime
+podDisruptionBudget:
+  enabled: false
+  # -- Set a valid PodDisruptionBudgetSpec
+  #spec:
+  #  minAvailable: 1
+  #  #maxUnavailable: 1
 
 nodeSelector: {}
 
