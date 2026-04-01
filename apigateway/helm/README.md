@@ -36,7 +36,7 @@ Up until version 10.15, API Gateway requires a valid license key. If you have a 
 OR follow the instructions at https://community.ibm.com/community/user/blogs/marianne-fuller/2024/11/20/webmethods-product-offering-details download new license keys, replace your existing license key via:
 
 ```bash
-kubectl create configmap apigw-license-config --from-file=licenseKey.xml=<NEW API GATEWAY LICENSEKEY FILE> --dry-run=client -o yaml | kubectl replace -f -
+kubectl create configmap apigw-license-config --from-file=licenseKey.xml=<NEW API GATEWAY LICENSEKEY FILE> --dry-run=client -o yaml | kubectl replace -f -
 ```
 
 ### Licenses for >= 11.x
@@ -219,6 +219,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.6.4` | Fixes for job suffix and prefix for Jobs |
 | `3.7.0` | Option `failedJobsHistoryLimit` for Cron Job added. |
 | `3.8.0` | Option `timeZone` for Cron Job added. `tpl` function support added on `podAnnotation` option. |
+| `3.9.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 
 ## Chart Version `3.0.0`
 

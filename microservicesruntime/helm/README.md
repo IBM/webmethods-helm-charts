@@ -119,6 +119,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 | `1.2.0` | Option `failedJobsHistoryLimit` for Cron Job added. |
 | `1.2.1` | Adopt common 2.0.0. |
 | `1.3.0` | Option `timeZone` for Cron Job added. |
+| `1.4.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 
 ## Values
 
