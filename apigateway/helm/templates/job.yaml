@@ -66,22 +66,18 @@ spec:
           serviceAccountName: {{ $job.name }}
           {{- end }}
           {{- end }}
-          {{- if hasKey $job "securityContext" }}
-          {{- if $job.securityContext.runAsUser }}
+          {{- if hasKey $job "podSecurityContext" }}
           securityContext:
-            runAsUser: {{ $job.securityContext.runAsUser }}
-            {{- if $job.securityContext.runAsGroup }}
-            runAsGroup: {{ $job.securityContext.runAsGroup }}
-            {{- end }}
-            {{- if $job.securityContext.fsGroup }}
-            fsGroup: {{ $job.securityContext.fsGroup }}
-            {{- end }}
-          {{- end }}
+{{ tpl (toYaml $job.podSecurityContext) $context | indent 12 }}
           {{- end }}
           containers:
           - image: "{{ $job.image.repository }}:{{ $job.image.tag }}"
             imagePullPolicy: {{ $job.image.imagePullPolicy }}
             name: {{ $job.name }}
+            {{- if hasKey $job "securityContext" }}
+            securityContext:
+{{ tpl (toYaml $job.securityContext) $context | indent 14 }}
+            {{- end }}
             env:
             - name: DEPLOYMENT
               value: {{ $fullName }}
@@ -158,22 +154,18 @@ spec:
       serviceAccountName: {{ $job.name }}
       {{- end }}
       {{- end }}
-      {{- if hasKey $job "securityContext" }}
-      {{- if $job.securityContext.runAsUser }}
+      {{- if hasKey $job "podSecurityContext" }}
       securityContext:
-        runAsUser: {{ $job.securityContext.runAsUser }}
-        {{- if $job.securityContext.runAsGroup }}
-        runAsGroup: {{ $job.securityContext.runAsGroup }}
-        {{- end }}
-        {{- if $job.securityContext.fsGroup }}
-        fsGroup: {{ $job.securityContext.fsGroup }}
-        {{- end }}
-      {{- end }}
+{{ tpl (toYaml $job.podSecurityContext ) $context | indent 8 }}
       {{- end }}
       containers:
       - image: "{{ $job.image.repository }}:{{ $job.image.tag }}"
         imagePullPolicy: {{ $job.image.imagePullPolicy }}
         name: {{ $job.name }}
+        {{- if hasKey $job "securityContext" }}
+        securityContext:
+{{ tpl (toYaml $job.securityContext ) $context | indent 10 }}
+        {{- end }}
         env:
         - name: DEPLOYMENT
           value: {{ $fullName }}

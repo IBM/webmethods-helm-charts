@@ -69,6 +69,7 @@ helm install um webmethods/universalmessaging
 | `1.1.0` | Custom Resource objects are supported. Enhancement in job template to add `extraSpec` options. |
 | `1.2.0` | Option `failedJobsHistoryLimit` for Cron Job added. |
 | `1.3.0` | Option `timeZone` for Cron Job added. `tpl` function support added on `podAnnotation` option. |
+| `1.4.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 
 ## Values
 

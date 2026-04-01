@@ -28,7 +28,7 @@ If you need to create an own image with additional webMethods product components
 
 ### Licenses
 
-Microservices Runtime requires a license file. These license is supposed to be provided as configmap. If you want to omit the license key 
+Microservices Runtime requires a license file. These license is supposed to be provided as configmap. If you want to omit the license key
 because you are using a trial image or an image with a baked-in license key, use:
 
 ```
@@ -56,7 +56,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | [msr-post-init](../examples/msr-post-init/README.md) | Performs *post-init* actions after startup, e.g. deploy assets to Universal Messaging |
 | [msr-push-doc-types](../examples/msr-push-doc-types/README.md) | Pushing IS Document Types after startup |
 | [msr-statefulset-csq](../examples/msr-statefulset-csq/README.md) | Deploy MSR with stateful set |
-| [msr-tsa-stateful-cluster](../examples/msr-tsa-stateful-cluster/README.md) | Deploy MSR with Terracotta as distributed cache | 
+| [msr-tsa-stateful-cluster](../examples/msr-tsa-stateful-cluster/README.md) | Deploy MSR with Terracotta as distributed cache |
 | [msr-using-secrets](../examples/msr-using-secrets/README.md) | Using secrets in application properties and set Administrator password |
 | [msr-with-extra-ports](../examples/msr-with-extra-ports/README.md) | Define additional ports in MSR deployment |
 | [msr-with-tls](../examples/msr-with-tls/README.md) | Configure Ingress with TLS |
@@ -80,7 +80,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 --set-file=license=<your path and filename to Microservices Runtime license file> \
 ```
 
-... set your own image pull secret if you didn't create the default `regcred` ... 
+... set your own image pull secret if you didn't create the default `regcred` ...
 
 ```shell
 --set "imagePullSecrets[0].name=your-registry-credentials" \
@@ -120,6 +120,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 | `1.2.1` | Adopt common 2.0.0. |
 | `1.3.0` | Option `timeZone` for Cron Job added. |
 | `1.4.0` | PodDisruptionBudget support added. |
+| `1.5.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 
 ## Values
 
