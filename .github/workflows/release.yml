@@ -45,6 +45,7 @@ jobs:
           helm package --dependency-update terracottabigmemorymax/helm
           helm package --dependency-update terracotta/helm
           helm package --dependency-update apicontrolplane/helm
+          helm package --dependency-update apianalyticstore/helm
 
       - name: Push Helm Charts to this GitHub repo branch 'gh-pages'
         env:
