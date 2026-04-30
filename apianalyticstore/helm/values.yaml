@@ -1,0 +1,505 @@
+# /*
+#  * Copyright (c) 2026 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  */
+
+# -- Database type for Analytics Store. Valid values: "elasticsearch" or "opensearch"
+# This determines which search engine and dashboard to deploy
+databaseType: "elasticsearch"
+
+# -- Extra Labels for all resources
+extraLabels: {}
+
+# -- Image pull secret reference. By default looks for `regcred`.
+imagePullSecrets:
+  - name: regcred
+
+# -- The number of old ReplicaSets to retain to allow rollback.
+revisionHistoryLimit: 10
+
+# -- Controls if secrets should be generated automatically.
+secrets:
+  generateSecrets: true
+
+# -- Custom Resource Objects (CROs) for additional Kubernetes resources
+# This allows you to deploy any custom resources alongside the analytics store
+# Example: SealedSecrets, ExternalSecrets, Certificates, etc.
+#
+# Example SealedSecret:
+# customResourceObjects:
+#   - apiVersion: bitnami.com/v1alpha1
+#     kind: SealedSecret
+#     metadata:
+#       name: {{ include "common.names.fullname" . }}-sealed-secret
+#       namespace: {{ .Release.Namespace }}
+#     spec:
+#       encryptedData:
+#         password: AgBh8T7...encrypted-data...
+#       template:
+#         metadata:
+#           name: {{ include "common.names.fullname" . }}-credentials
+#           namespace: {{ .Release.Namespace }}
+#         type: Opaque
+customResourceObjects: []
+
+# -- Extra ConfigMaps for dashboards, configurations, etc.
+# Example for dashboards:
+# extraConfigMaps:
+#   - name: kibana-dashboards
+#     data:
+#       system-metrics.ndjson: |
+#         {"type":"dashboard","id":"system-metrics","attributes":{"title":"System Metrics"}}
+#   - name: opensearch-dashboards
+#     binaryData:
+#       logo.png: <base64-encoded-data>
+extraConfigMaps: []
+
+# -- Ingress configuration for dashboards (Kibana or OpenSearch Dashboards)
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    nginx.ingress.kubernetes.io/proxy-body-size: 10m
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-connect-timeout: "600"
+  # -- Default domain for ingress
+  defaultDomain: "my-domain.com"
+  hosts:
+    - host: ""
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: ""
+      hosts: []
+
+# -- OpenShift Routes configuration for dashboards
+routes:
+  enabled: false
+  # -- Route name, defaults to release name
+  name: ""
+  # -- Port name to use (http)
+  portName: http
+  labels: {}
+  annotations: {}
+  # -- Hostname for the route
+  hostName: ""
+  tls:
+    enabled: false
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+
+elasticsearch:
+
+  # -- Deploy elastic search instance
+  deploy: true
+
+  # -- The ECK version to be used
+  version: 8.2.3
+
+  # -- The image that should be used.
+  # By default ECK will use the official Elasticsearch images.
+  # Overwrite this to use an image from an internal registry or any custom images.
+  # Make sure that the image corresponds to the version field.
+  image: ""
+
+  # -- Annotations for Elasticsearch crd
+  annotations: {}
+
+  # -- Resource Settings for Elasticsearch
+  resources: {}
+
+  # -- Request size of storage. The default is 1Gi.
+  storage: "5Gi"
+
+  # -- Use the storage class.
+  storageClassName: ""
+
+  # -- Annotations of PVC storage
+  storageAnnotations: {}
+
+  # -- Decide wether to disable the default elastic user or not
+  disableElasticUser: false
+
+  # -- The secret name that holds the sag es user.
+  secretName: ""
+
+  # -- The key that holds the Elasticsearch user; defaults to "username"
+  secretUserKey: ""
+
+  # -- The key that holds the Elasticsearch password; defaults to "password"
+  secretPasswordKey: ""
+
+  # -- Extra Secrets adding or changing built-in users of Elasticsearch.
+  extraSecrets: []
+
+  # -- Customization of ElasticSearchs PodDisruptionBudget Policy.
+  podDisruptionBudget:
+    enabled: true
+    data: {}
+
+  # -- Enable and configure service account creation.
+  serviceAccount:
+    create: false
+    name: ""
+    roleName: ""
+    roleBindingName: "elasticsearch-rolebinding"
+
+  # -- Whether the communication should be HTTPS
+  tlsEnabled: false
+
+  # -- The name of the elasticsearch secret.
+  tlsSecretName: ""
+
+  # -- The secret name that holds the keystore password
+  keystoreSecretName: ""
+
+  # -- The name of the secret holding the tls secret
+  certificateSecretName: "{{ include \"common.names.fullname\" .}}-es-tls-secret"
+
+  # -- Set Pod (anti-) affinity for ElasticSearch.
+  affinity: {}
+
+  # -- Set Pod topology spread constraints for ElasticSearch.
+  topologySpreadConstraints: {}
+
+  # -- Set Pods' Priority Class Name
+  priorityClassName: ""
+
+  # -- Node sets.
+  nodeSets: []
+
+  # -- Default Node Set
+  defaultNodeSet:
+    count: 1
+    memoryMapping: false
+    setMaxMapCount: true
+    installMapperSizePlugin: false
+    extraCmdPluginInstaller: ""
+    extraConfig: {}
+    extraInitContainers: {}
+    annotations: {}
+    extraVolumes: []
+    extraVolumeMounts: []
+
+
+kibana:
+  # -- The ECK version to be used
+  version: 8.2.3
+
+  # -- Set Pod (anti-) affinity for Kibana.
+  affinity: {}
+
+  # -- Set Pod topology spread constraints for Kibana.
+  topologySpreadConstraints: {}
+
+  # -- Set Pods' Priority Class Name
+  priorityClassName: ""
+
+  # -- The image that should be used.
+  image: ""
+
+  # -- The default Kibana Port
+  port: 5601
+
+  count: 1
+
+  # -- Annotations for Kibana
+  annotations: {}
+
+  # -- The secret name that holds the kibana user.
+  secretName: ""
+
+  # -- The pod securityContext for kibana pod.
+  podSecurityContext: {}
+
+  # -- The securityContext for kibana container.
+  securityContext: {}
+
+  # -- Custom logging configuration for kibana container.
+  customLogging:
+    enabled: false
+    appenders: {}
+    root: {}
+    loggers: []
+
+  # -- The definition of extra volumes for kibana.
+  extraVolumes: []
+
+  # -- The definition of extra volumeMounts for kibana.
+  extraVolumeMounts: []
+
+  # -- The definition of extra containers for kibana.
+  extraContainers: []
+
+  # -- The definition of extra initContainers for kibana.
+  extraInitContainers: []
+
+  # -- Resource Settings for Kibana
+  resources: {}
+
+  # -- Additional labels to be added to kibana pod labels.
+  extraLabels: {}
+
+  # -- Enable and configure service account creation.
+  serviceAccount:
+    create: false
+    name: ""
+    roleName: ""
+    roleBindingName: "kibana-rolebinding"
+
+  # -- Configure Kibana's readinessProbe.
+  readinessProbe:
+    httpGet:
+      path: /status
+      port: 5601
+      scheme: HTTP
+    failureThreshold: 3
+    successThreshold: 1
+    periodSeconds: 10
+    timeoutSeconds: 1
+
+  # -- Configure Kibana's livenessProbe.
+  livenessProbe: {}
+
+  # -- Enable anonymous access to /api/status.
+  allowAnonymousStatus: true
+
+  # -- Enable and configure tls connection from Kibana to Elasticsearch.
+  tls:
+    enabled: false
+    secretName: ""
+    trustStoreName: ""
+    truststorePasswordSecret: ""
+    verificationMode: certificate
+
+
+opensearch:
+
+  # -- Deploy OpenSearch instance using OpenSearch Operator
+  deploy: false
+
+  # -- The OpenSearch version to be used
+  version: 2.11.0
+
+  # -- The image that should be used.
+  image: ""
+
+  # -- The vendor for OpenSearch. Default is "opensearch"
+  vendor: "opensearch"
+
+  # -- HTTP port for OpenSearch. Default is 9200
+  httpPort: 9200
+
+  # -- Annotations for OpenSearch cluster
+  annotations: {}
+
+  # -- Resource Settings for OpenSearch
+  resources: {}
+
+  # -- Request size of storage. The default is 5Gi.
+  storage: "5Gi"
+
+  # -- Use the storage class.
+  storageClassName: ""
+
+  # -- The secret name that holds the admin credentials for OpenSearch.
+  adminCredentialsSecret: ""
+
+  # -- The secret name that holds the security config for OpenSearch.
+  secretName: ""
+
+  # -- List of plugins to install
+  pluginsList: []
+
+  # -- Additional configuration for OpenSearch cluster
+  additionalConfig: {}
+
+  # -- Whether the communication should be HTTPS
+  tlsEnabled: false
+
+  # -- Transport layer TLS configuration
+  transport:
+    tlsSecretName: ""
+
+  # -- HTTP layer TLS configuration
+  http:
+    tlsSecretName: ""
+
+  # -- Set Pod (anti-) affinity for OpenSearch.
+  affinity: {}
+
+  # -- Set Pod topology spread constraints for OpenSearch.
+  topologySpreadConstraints: {}
+
+  # -- Set Pods' Priority Class Name
+  priorityClassName: ""
+
+  # -- Node pools.
+  nodePools: []
+
+  # -- Default Node Pool
+  defaultNodePool:
+    replicas: 1
+    jvm: ""
+    additionalConfig: {}
+    nodeSelector: {}
+    tolerations: []
+    persistence: {}
+    env: []
+    labels: {}
+    annotations: {}
+    initContainers: []
+    extraVolumes: []
+    extraVolumeMounts: []
+
+  # -- OpenSearch Dashboards configuration
+  dashboards:
+    enable: false
+    version: ""
+    replicas: 1
+    image: ""
+    resources: {}
+    additionalConfig: {}
+    tls:
+      enable: false
+      secretName: ""
+
+
+opensearchDashboards:
+
+  # -- Deploy OpenSearch Dashboards instance
+  deploy: false
+
+  # -- The OpenSearch Dashboards version to be used
+  version: 2.11.0
+
+  # -- Set Pod (anti-) affinity for OpenSearch Dashboards.
+  affinity: {}
+
+  # -- Set Pod topology spread constraints for OpenSearch Dashboards.
+  topologySpreadConstraints: {}
+
+  # -- Set Pods' Priority Class Name
+  priorityClassName: ""
+
+  # -- The image that should be used.
+  image: ""
+
+  # -- The default OpenSearch Dashboards Port
+  port: 5601
+
+  # -- Number of OpenSearch Dashboards replicas
+  count: 1
+
+  # -- Annotations for OpenSearch Dashboards
+  annotations: {}
+
+  # -- The secret name that holds the opensearch dashboards user credentials.
+  secretName: ""
+
+  # -- The pod securityContext for opensearch dashboards pod.
+  podSecurityContext: {}
+
+  # -- The securityContext for opensearch dashboards container.
+  securityContext: {}
+
+  # -- OpenSearch hosts URL. Defaults to the OpenSearch service created by this chart.
+  opensearchHosts: ""
+
+  # -- Additional configuration for OpenSearch Dashboards as key-value pairs
+  config: {}
+
+  # -- Additional environment variables for OpenSearch Dashboards
+  extraEnv: []
+
+  # -- The definition of extra volumes for opensearch dashboards.
+  extraVolumes: []
+
+  # -- The definition of extra volumeMounts for opensearch dashboards.
+  extraVolumeMounts: []
+
+  # -- The definition of extra containers for opensearch dashboards.
+  extraContainers: []
+
+  # -- The definition of extra initContainers for opensearch dashboards.
+  extraInitContainers: []
+
+  # -- Resource Settings for OpenSearch Dashboards
+  resources: {}
+
+  # -- Additional labels to be added to opensearch dashboards pod labels.
+  extraLabels: {}
+
+  # -- Enable and configure service account creation.
+  serviceAccount:
+    create: false
+    name: ""
+    roleName: ""
+    roleBindingName: "opensearch-dashboards-rolebinding"
+
+  # -- Configure OpenSearch Dashboards' readinessProbe.
+  readinessProbe:
+    httpGet:
+      path: /api/status
+      port: 5601
+      scheme: HTTP
+    failureThreshold: 3
+    successThreshold: 1
+    periodSeconds: 10
+    timeoutSeconds: 5
+
+  # -- Configure OpenSearch Dashboards' livenessProbe.
+  livenessProbe: {}
+
+  # -- Enable anonymous access to /api/status.
+  allowAnonymousStatus: true
+
+  # -- Enable and configure tls connection from OpenSearch Dashboards to OpenSearch.
+  tls:
+    enabled: false
+    secretName: ""
+    trustStoreName: ""
+    truststorePasswordSecret: ""
+    verificationMode: certificate
+
+
+# -- Elasticsearch exporter settings.
+prometheus-elasticsearch-exporter:
+
+  # -- Deploy the prometheus exporter for elasticsearch
+  enabled: false
+
+  # -- The number of old ReplicaSets to retain to allow rollback.
+  revisionHistoryLimit: 10
+
+  # -- secret for elasticsearch user.
+  extraEnvSecrets:
+    ES_PASSWORD:
+      secret: "{{ printf \"%s-apianalyticstore-ibm-user-es\" .Release.Name }}"
+      key: password
+    ES_USER:
+      secret: "{{ printf \"%s-apianalyticstore-ibm-user-es\" .Release.Name }}"
+      key: username
+
+  es:
+    uri: "http://$(ES_USER):$(ES_PASSWORD)@{{ printf \"%s\" .Release.Name }}-apianalyticstore-es-http:9200"
+
+  serviceMonitor:
+    enabled: false
+
+  podAnnotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "9108"
+    prometheus.io/scheme: http
+    prometheus.io/scrape: "true"
+
+  serviceAccount:
+    name: ""
+
+  podSecurityContext:
+    runAsUser: 1000730001
+    runAsNonRoot: true
+
+

@@ -1,0 +1,193 @@
+{{- if eq (include "apianalyticstore.deployOpensearch" .) "true" }}
+---
+# /*
+#  * Copyright (c) 2026 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  *
+#  *   Licensed under the Apache License, Version 2.0 (the "License");
+#  *   you may not use this file except in compliance with the License.
+#  *   You may obtain a copy of the License at
+#  *
+#  *       http://www.apache.org/licenses/LICENSE-2.0
+#  *
+#  *   Unless required by applicable law or agreed to in writing, software
+#  *   distributed under the License is distributed on an "AS IS" BASIS,
+#  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  *   See the License for the specific language governing permissions and
+#  *   limitations under the License.
+#  *
+#  */
+{{- $context := . }}
+apiVersion: opensearch.org/v1
+kind: OpenSearchCluster
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.opensearch.annotations -}}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  general:
+    serviceName: {{ include "common.names.fullname" . }}
+    version: {{ .Values.opensearch.version }}
+    {{- if .Values.opensearch.httpPort }}
+    httpPort: {{ .Values.opensearch.httpPort }}
+    {{- end }}
+    {{- if .Values.opensearch.vendor }}
+    vendor: {{ .Values.opensearch.vendor }}
+    {{- end }}
+    {{- if .Values.opensearch.pluginsList }}
+    pluginsList: {{ toYaml .Values.opensearch.pluginsList | nindent 6 }}
+    {{- end }}
+    {{- if .Values.opensearch.additionalConfig }}
+    additionalConfig:
+      {{- toYaml .Values.opensearch.additionalConfig | nindent 6 }}
+    {{- end }}
+  security:
+    {{- if .Values.opensearch.tlsEnabled }}
+    tls:
+      transport:
+        generate: true
+        {{- if .Values.opensearch.transport.tlsSecretName }}
+        secret:
+          name: {{ tpl .Values.opensearch.transport.tlsSecretName . }}
+        {{- end }}
+      http:
+        generate: true
+        {{- if .Values.opensearch.http.tlsSecretName }}
+        secret:
+          name: {{ tpl .Values.opensearch.http.tlsSecretName . }}
+        {{- end }}
+    {{- end }}
+    config:
+      securityConfigSecret:
+        name: {{ include "apianalyticstore.opensearchsecret" . }}
+      {{- if .Values.opensearch.adminCredentialsSecret }}
+      adminCredentialsSecret:
+        name: {{ tpl .Values.opensearch.adminCredentialsSecret . }}
+      {{- else }}
+      adminCredentialsSecret:
+        name: {{ include "apianalyticstore.opensearchadminsecret" . }}
+      {{- end }}
+  {{- if .Values.opensearch.dashboards.enable }}
+  dashboards:
+    enable: true
+    version: {{ .Values.opensearch.dashboards.version | default .Values.opensearch.version }}
+    replicas: {{ .Values.opensearch.dashboards.replicas | default 1 }}
+    {{- if .Values.opensearch.dashboards.image }}
+    image: {{ .Values.opensearch.dashboards.image }}
+    {{- end }}
+    {{- if .Values.opensearch.dashboards.resources }}
+    resources:
+      {{- toYaml .Values.opensearch.dashboards.resources | nindent 6 }}
+    {{- end }}
+    {{- if .Values.opensearch.dashboards.additionalConfig }}
+    additionalConfig:
+      {{- toYaml .Values.opensearch.dashboards.additionalConfig | nindent 6 }}
+    {{- end }}
+    {{- if .Values.opensearch.dashboards.tls }}
+    tls:
+      enable: {{ .Values.opensearch.dashboards.tls.enable | default false }}
+      {{- if .Values.opensearch.dashboards.tls.secretName }}
+      secret:
+        name: {{ tpl .Values.opensearch.dashboards.tls.secretName . }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- if ne (.Values.opensearch.defaultNodePool.replicas | int) 1 }}
+  bootstrap:
+    # Multi-node cluster - create bootstrap node
+    replicas: 1
+    {{- if .Values.opensearch.resources }}
+    resources:
+      {{- toYaml .Values.opensearch.resources | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  nodePools:
+  {{- if .Values.opensearch.nodePools }}
+    {{- toYaml .Values.opensearch.nodePools | nindent 4 }}
+  {{ else }}
+    # use default node pool
+    - component: nodes
+      replicas: {{ .Values.opensearch.defaultNodePool.replicas }}
+      diskSize: {{ default "5Gi" .Values.opensearch.storage }}
+      {{- if .Values.opensearch.storageClassName }}
+      storageClass: {{ .Values.opensearch.storageClassName }}
+      {{- end }}
+      {{- if .Values.opensearch.image }}
+      image: {{ .Values.opensearch.image }}
+      {{- end }}
+      {{- if .Values.opensearch.resources }}
+      resources:
+        {{- toYaml .Values.opensearch.resources | nindent 8 }}
+      {{- end }}
+      roles:
+        - cluster_manager
+        - data
+      {{- if .Values.opensearch.defaultNodePool.jvm }}
+      jvm: {{ .Values.opensearch.defaultNodePool.jvm }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.additionalConfig }}
+      additionalConfig:
+        {{- toYaml .Values.opensearch.defaultNodePool.additionalConfig | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.probes }}
+      probes:
+        {{- toYaml .Values.opensearch.defaultNodePool.probes | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opensearch.affinity }}
+      affinity:
+        {{- tpl (toYaml .) $context  | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opensearch.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl (toYaml .) $context  | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.priorityClassName }}
+      priorityClassName: {{ .Values.opensearch.priorityClassName }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.tolerations }}
+      tolerations:
+        {{- toYaml .Values.opensearch.defaultNodePool.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.opensearch.defaultNodePool.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.persistence }}
+      persistence:
+        {{- toYaml .Values.opensearch.defaultNodePool.persistence | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.env }}
+      env:
+        {{- toYaml .Values.opensearch.defaultNodePool.env | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.labels }}
+      labels:
+        {{- toYaml .Values.opensearch.defaultNodePool.labels | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.annotations }}
+      annotations:
+        {{- toYaml .Values.opensearch.defaultNodePool.annotations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.initContainers }}
+      initContainers:
+        {{- toYaml .Values.opensearch.defaultNodePool.initContainers | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.extraVolumes }}
+      volumes:
+        {{- tpl (toYaml .Values.opensearch.defaultNodePool.extraVolumes) $ | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearch.defaultNodePool.extraVolumeMounts }}
+      volumeMounts:
+        {{- toYaml .Values.opensearch.defaultNodePool.extraVolumeMounts | nindent 8 }}
+      {{- end }}
+  {{- end }}
+{{- end }}
+

@@ -1,0 +1,213 @@
+{{- if eq (include "apianalyticstore.deployOpensearchDashboards" .) "true" }}
+---
+# /*
+#  * Copyright (c) 2026 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  *
+#  *   Licensed under the Apache License, Version 2.0 (the "License");
+#  *   you may not use this file except in compliance with the License.
+#  *   You may obtain a copy of the License at
+#  *
+#  *       http://www.apache.org/licenses/LICENSE-2.0
+#  *
+#  *   Unless required by applicable law or agreed to in writing, software
+#  *   distributed under the License is distributed on an "AS IS" BASIS,
+#  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  *   See the License for the specific language governing permissions and
+#  *   limitations under the License.
+#  *
+#  */
+{{- $context := . }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.opensearchDashboards.annotations -}}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: ClusterIP
+  ports:
+    - port: {{ .Values.opensearchDashboards.port | default 5601 }}
+      targetPort: {{ .Values.opensearchDashboards.port | default 5601 }}
+      protocol: TCP
+      name: http
+  selector:
+    app: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+  labels:
+    app: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.opensearchDashboards.annotations -}}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.opensearchDashboards.count }}
+  {{- if .Values.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+        {{- include "common.labels.standard" . | nindent 8 }}
+        {{- with .Values.extraLabels -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.opensearchDashboards.extraLabels -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.opensearchDashboards.annotations -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.opensearchDashboards.affinity }}
+      affinity:
+        {{- tpl (toYaml .) $context  | nindent 8 }}
+      {{- end }}
+      {{- with .Values.opensearchDashboards.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl (toYaml .) $context  | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearchDashboards.priorityClassName }}
+      priorityClassName: {{ .Values.opensearchDashboards.priorityClassName }}
+      {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearchDashboards.serviceAccount.name }}
+      serviceAccountName: {{ .Values.opensearchDashboards.serviceAccount.name }}
+      {{- end }}
+      {{- if .Values.opensearchDashboards.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.opensearchDashboards.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if .Values.opensearchDashboards.extraInitContainers }}
+      initContainers:
+        {{- toYaml .Values.opensearchDashboards.extraInitContainers | nindent 8 }}
+      {{- end }}
+      {{- if or ( .Values.opensearchDashboards.tls.enabled ) ( .Values.opensearchDashboards.extraVolumes ) }}
+      volumes:
+        {{- if .Values.opensearchDashboards.tls.enabled }}
+        - name: opensearch-certs
+          secret:
+            secretName: {{ .Values.opensearchDashboards.tls.secretName }}
+            items:
+              - key: {{ .Values.opensearchDashboards.tls.trustStoreName }}
+                path: truststore.p12
+        {{- end }}
+        {{- if .Values.opensearchDashboards.extraVolumes }}
+        {{- toYaml .Values.opensearchDashboards.extraVolumes | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: opensearch-dashboards
+          {{- if .Values.opensearchDashboards.image }}
+          image: {{ .Values.opensearchDashboards.image }}
+          {{- else }}
+          image: opensearchproject/opensearch-dashboards:{{ .Values.opensearchDashboards.version }}
+          {{- end }}
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: {{ .Values.opensearchDashboards.port | default 5601 }}
+              name: http
+              protocol: TCP
+          {{- if .Values.opensearchDashboards.resources }}
+          resources:
+            {{- toYaml .Values.opensearchDashboards.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.opensearchDashboards.securityContext }}
+          securityContext:
+            {{- toYaml .Values.opensearchDashboards.securityContext | nindent 12 }}
+          {{- end }}
+          env:
+            - name: OPENSEARCH_HOSTS
+              value: {{ .Values.opensearchDashboards.opensearchHosts | default (printf "https://%s:9200" (include "common.names.fullname" .)) }}
+            - name: OPENSEARCH_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "apianalyticstore.opensearchdashboardssecret" . }}
+                  key: username
+            - name: OPENSEARCH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "apianalyticstore.opensearchdashboardssecret" . }}
+                  key: password
+            {{- if .Values.opensearchDashboards.tls.enabled }}
+            - name: OPENSEARCH_SSL_VERIFICATIONMODE
+              value: {{ .Values.opensearchDashboards.tls.verificationMode | default "certificate" }}
+            {{- end }}
+            {{- if .Values.opensearchDashboards.extraEnv }}
+            {{- toYaml .Values.opensearchDashboards.extraEnv | nindent 12 }}
+            {{- end }}
+          {{- if .Values.opensearchDashboards.config }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}-config
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.opensearchDashboards.readinessProbe | nindent 12 }}
+          {{- if .Values.opensearchDashboards.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.opensearchDashboards.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if or ( .Values.opensearchDashboards.tls.enabled ) ( .Values.opensearchDashboards.extraVolumeMounts ) }}
+          volumeMounts:
+            {{- if .Values.opensearchDashboards.tls.enabled }}
+            - name: opensearch-certs
+              mountPath: /usr/share/opensearch-dashboards/config/opensearch-certs/truststore.p12
+              subPath:   truststore.p12
+              readOnly: true
+            {{- end }}
+            {{- if .Values.opensearchDashboards.extraVolumeMounts }}
+            {{- toYaml .Values.opensearchDashboards.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        {{- if .Values.opensearchDashboards.extraContainers }}
+        {{- toYaml .Values.opensearchDashboards.extraContainers | nindent 8 }}
+        {{- end }}
+---
+{{- if .Values.opensearchDashboards.config }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}-config
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+data:
+  {{- if .Values.opensearchDashboards.allowAnonymousStatus }}
+  STATUS_ALLOWANONYMOUS: "true"
+  {{- else }}
+  STATUS_ALLOWANONYMOUS: "false"
+  {{- end }}
+  {{- if .Values.opensearchDashboards.config }}
+  {{- range $key, $value := .Values.opensearchDashboards.config }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}
+

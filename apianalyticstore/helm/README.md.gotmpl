@@ -1,0 +1,504 @@
+{{ template "chart.header" . }}
+
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+## Overview
+
+The API Analytics Store Helm chart provides a flexible deployment solution for analytics and search capabilities using either:
+
+- **Elasticsearch + Kibana** (using Elastic Cloud on Kubernetes operator)
+- **OpenSearch + OpenSearch Dashboards** (using OpenSearch Kubernetes Operator)
+
+This chart is designed to be used as a standalone analytics store or as a dependency for other charts like API Gateway.
+
+## Prerequisites
+
+### For Elasticsearch Deployment
+
+- Kubernetes 1.19+
+- Helm 3.2.0+
+- Elastic Cloud on Kubernetes (ECK) operator installed
+- PV provisioner support in the underlying infrastructure
+
+Install ECK operator:
+```bash
+kubectl create -f https://download.elastic.co/downloads/eck/2.9.0/crds.yaml
+kubectl apply -f https://download.elastic.co/downloads/eck/2.9.0/operator.yaml
+```
+
+### For OpenSearch Deployment
+
+- Kubernetes 1.19+
+- Helm 3.2.0+
+- OpenSearch Kubernetes Operator installed (v2.6.0+)
+- PV provisioner support in the underlying infrastructure
+
+**Install OpenSearch operator:**
+
+```bash
+# Add the OpenSearch operator Helm repository
+helm repo add opensearch-operator https://opensearch-project.github.io/opensearch-k8s-operator/
+helm repo update
+
+# Install the operator (installs CRDs and operator)
+helm install opensearch-operator opensearch-operator/opensearch-operator \
+  --namespace opensearch-operator-system \
+  --create-namespace
+
+# Verify the operator is running
+kubectl get pods -n opensearch-operator-system
+
+# Verify CRDs are installed
+kubectl get crd | grep opensearch
+```
+
+**Expected CRDs:**
+- `opensearchclusters.opensearch.opensearch.org`
+- `opensearchroles.opensearch.opensearch.org`
+- `opensearchusers.opensearch.opensearch.org`
+- `opensearchuserrolebindings.opensearch.opensearch.org`
+
+## Installing the Chart
+
+### Deploy Elasticsearch + Kibana
+
+```bash
+helm install my-analytics-store webmethods/apianalyticstore \
+  --set databaseType=elasticsearch \
+  --set elasticsearch.deploy=true
+```
+
+### Deploy OpenSearch + OpenSearch Dashboards
+
+**Important**: You must explicitly set `opensearch.deploy=true` and `opensearchDashboards.deploy=true` when using OpenSearch.
+
+```bash
+helm install my-analytics-store webmethods/apianalyticstore \
+  --set databaseType=opensearch \
+  --set opensearch.deploy=true \
+  --set opensearchDashboards.deploy=true
+```
+
+## Upgrading the Chart
+
+### ⚠️ Important: Elasticsearch/Kibana Upgrades
+
+When using Elasticsearch and Kibana with the ECK operator, Helm upgrades require the `--force-conflicts` flag to resolve conflicts between Helm and the operator managing the same resources.
+
+**Upgrade command for Elasticsearch/Kibana deployments:**
+
+```bash
+helm upgrade my-analytics-store webmethods/apianalyticstore \
+  --set databaseType=elasticsearch \
+  --force-conflicts
+```
+
+**Why is this needed?**
+- ECK operator manages `.spec.nodeSets` in Elasticsearch and `.spec.podTemplate.spec.containers` in Kibana
+- Helm tries to update these same fields during upgrade
+- Kubernetes detects conflicting controllers and blocks the update
+- The `--force-conflicts` flag allows Helm to take ownership of operator-managed fields
+
+This is a known limitation when using Kubernetes operators with Helm.
+
+For more details, see: https://github.com/elastic/cloud-on-k8s/issues/2314
+
+### OpenSearch Upgrades
+
+OpenSearch deployments using the OpenSearch Kubernetes Operator typically work with standard Helm upgrades:
+
+```bash
+helm upgrade my-analytics-store webmethods/apianalyticstore \
+  --set databaseType=opensearch
+```
+
+## Configuration
+
+The following table lists the main configurable parameters of the API Analytics Store chart and their default values.
+
+### Global Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `databaseType` | Database type to deploy: "elasticsearch" or "opensearch" | `"elasticsearch"` |
+| `extraLabels` | Extra labels for all resources | `{}` |
+| `imagePullSecrets` | Image pull secrets | `[{"name": "regcred"}]` |
+| `revisionHistoryLimit` | Number of old ReplicaSets to retain | `10` |
+| `secrets.generateSecrets` | Auto-generate authentication secrets | `true` |
+| `customResourceObjects` | Array of custom Kubernetes resources to deploy | `[]` |
+
+### Ingress Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `ingress.enabled` | Enable Ingress for dashboard access | `true` |
+| `ingress.className` | Ingress class name | `"nginx"` |
+| `ingress.annotations` | Ingress annotations | `{}` |
+| `ingress.defaultDomain` | Default domain for ingress hosts | `"my-domain.com"` |
+| `ingress.hosts` | Ingress hosts configuration | `[{"host": "", "paths": [{"path": "/", "pathType": "Prefix"}]}]` |
+| `ingress.tls` | TLS configuration for ingress | `[]` |
+
+### OpenShift Routes Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `routes.enabled` | Enable OpenShift Routes | `false` |
+| `routes.name` | Route name | `""` |
+| `routes.portName` | Port name to use | `"http"` |
+| `routes.labels` | Additional labels | `{}` |
+| `routes.annotations` | Route annotations | `{}` |
+| `routes.hostName` | Hostname for the route | `""` |
+| `routes.tls.enabled` | Enable TLS for route | `false` |
+| `routes.tls.termination` | TLS termination type | `"edge"` |
+| `routes.tls.insecureEdgeTerminationPolicy` | Insecure edge termination policy | `"Redirect"` |
+
+### Elasticsearch Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `elasticsearch.deploy` | Deploy Elasticsearch instance | `true` |
+| `elasticsearch.version` | Elasticsearch version | `"8.2.3"` |
+| `elasticsearch.image` | Custom Elasticsearch image | `""` |
+| `elasticsearch.storage` | Storage size for Elasticsearch | `"5Gi"` |
+| `elasticsearch.storageClassName` | Storage class name | `""` |
+| `elasticsearch.resources` | Resource limits and requests | `{}` |
+| `elasticsearch.tlsEnabled` | Enable TLS for Elasticsearch | `false` |
+| `elasticsearch.defaultNodeSet.count` | Number of Elasticsearch nodes | `1` |
+| `elasticsearch.defaultNodeSet.memoryMapping` | Enable memory mapping | `false` |
+
+### Kibana Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `kibana.version` | Kibana version | `"8.2.3"` |
+| `kibana.image` | Custom Kibana image | `""` |
+| `kibana.count` | Number of Kibana instances | `1` |
+| `kibana.port` | Kibana port | `5601` |
+| `kibana.resources` | Resource limits and requests | `{}` |
+| `kibana.allowAnonymousStatus` | Allow anonymous access to /api/status | `true` |
+
+### OpenSearch Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `opensearch.deploy` | Deploy OpenSearch instance | `false` |
+| `opensearch.version` | OpenSearch version | `"2.11.0"` |
+| `opensearch.image` | Custom OpenSearch image | `""` |
+| `opensearch.storage` | Storage size for OpenSearch | `"5Gi"` |
+| `opensearch.storageClassName` | Storage class name | `""` |
+| `opensearch.resources` | Resource limits and requests | `{}` |
+| `opensearch.tlsEnabled` | Enable TLS for OpenSearch | `false` |
+| `opensearch.defaultNodePool.replicas` | Number of OpenSearch nodes | `1` |
+
+### OpenSearch Dashboards Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `opensearchDashboards.deploy` | Deploy OpenSearch Dashboards | `false` |
+| `opensearchDashboards.version` | OpenSearch Dashboards version | `"2.11.0"` |
+| `opensearchDashboards.image` | Custom image | `""` |
+| `opensearchDashboards.count` | Number of instances | `1` |
+| `opensearchDashboards.port` | Port | `5601` |
+| `opensearchDashboards.resources` | Resource limits and requests | `{}` |
+| `opensearchDashboards.allowAnonymousStatus` | Allow anonymous access | `true` |
+
+### Prometheus Exporter Parameters
+
+| Parameter | Description | Default |
+|-----------|-------------|---------|
+| `prometheus-elasticsearch-exporter.enabled` | Enable Elasticsearch exporter | `false` |
+
+## Examples
+
+### Production Elasticsearch Setup
+
+```yaml
+databaseType: elasticsearch
+
+elasticsearch:
+  deploy: true
+  version: "8.2.3"
+  storage: "50Gi"
+  storageClassName: "fast-ssd"
+  defaultNodeSet:
+    count: 3
+    memoryMapping: true
+    setMaxMapCount: true
+  resources:
+    requests:
+      memory: "4Gi"
+      cpu: "2"
+    limits:
+      memory: "8Gi"
+      cpu: "4"
+
+kibana:
+  count: 2
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1"
+
+prometheus-elasticsearch-exporter:
+  enabled: true
+```
+
+### Production OpenSearch Setup
+
+```yaml
+databaseType: opensearch
+
+opensearch:
+  deploy: true
+  version: "2.11.0"
+  storage: "50Gi"
+  storageClassName: "fast-ssd"
+  tlsEnabled: true
+  defaultNodePool:
+    replicas: 3
+    jvm: "-Xms4g -Xmx4g"
+  resources:
+    requests:
+      memory: "8Gi"
+      cpu: "2"
+    limits:
+      memory: "8Gi"
+      cpu: "4"
+
+opensearchDashboards:
+  deploy: true
+  count: 2
+  resources:
+    requests:
+      memory: "1Gi"
+      cpu: "500m"
+    limits:
+      memory: "2Gi"
+      cpu: "1"
+```
+
+### Ingress Configuration
+
+```yaml
+ingress:
+  enabled: true
+  className: "nginx"
+  defaultDomain: "example.com"
+  hosts:
+    - host: "analytics.example.com"
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: analytics-tls
+      hosts:
+        - analytics.example.com
+```
+
+### OpenShift Routes Configuration
+
+```yaml
+routes:
+  enabled: true
+  hostName: "analytics.apps.openshift.example.com"
+  tls:
+    enabled: true
+    termination: edge
+    insecureEdgeTerminationPolicy: Redirect
+```
+
+### Custom Resource Objects (CROs)
+
+Deploy additional Kubernetes resources alongside the analytics store:
+
+```yaml
+customResourceObjects:
+  # Example: SealedSecret for secure credential management
+  - apiVersion: bitnami.com/v1alpha1
+    kind: SealedSecret
+    metadata:
+      name: "my-release-apianalyticstore-sealed-secret"
+      namespace: "default"
+    spec:
+      encryptedData:
+        username: AgBh8T7...encrypted-username...
+        password: AgBh8T7...encrypted-password...
+      template:
+        metadata:
+          name: "my-release-apianalyticstore-credentials"
+          namespace: "default"
+        type: Opaque
+  
+  # Example: ExternalSecret for external secret management
+  - apiVersion: external-secrets.io/v1beta1
+    kind: ExternalSecret
+    metadata:
+      name: "my-release-apianalyticstore-external-secret"
+      namespace: "default"
+    spec:
+      refreshInterval: 1h
+      secretStoreRef:
+        name: vault-backend
+        kind: SecretStore
+      target:
+        name: "my-release-apianalyticstore-vault-credentials"
+        creationPolicy: Owner
+      data:
+        - secretKey: username
+          remoteRef:
+            key: analytics/credentials
+            property: username
+        - secretKey: password
+          remoteRef:
+            key: analytics/credentials
+            property: password
+```
+
+This feature allows you to deploy any custom Kubernetes resources such as:
+- **SealedSecrets** (Bitnami Sealed Secrets)
+- **ExternalSecrets** (External Secrets Operator)
+- **Certificates** (cert-manager)
+- **Custom CRDs** specific to your environment
+
+## Accessing the Services
+
+### Elasticsearch
+
+```bash
+# Get the Elasticsearch service
+kubectl get svc <release-name>-apianalyticstore-es-http
+
+# Port forward to access locally
+kubectl port-forward svc/<release-name>-apianalyticstore-es-http 9200:9200
+```
+
+### Kibana
+
+```bash
+# Get the Kibana service
+kubectl get svc <release-name>-apianalyticstore-kb-http
+
+# Port forward to access locally
+kubectl port-forward svc/<release-name>-apianalyticstore-kb-http 5601:5601
+```
+
+### OpenSearch
+
+```bash
+# Get the OpenSearch service
+kubectl get svc <release-name>-apianalyticstore
+
+# Port forward to access locally
+kubectl port-forward svc/<release-name>-apianalyticstore 9200:9200
+```
+
+### OpenSearch Dashboards
+
+```bash
+# Get the OpenSearch Dashboards service
+kubectl get svc <release-name>-apianalyticstore-opensearch-dashboards
+
+# Port forward to access locally
+kubectl port-forward svc/<release-name>-apianalyticstore-opensearch-dashboards 5601:5601
+```
+
+## Retrieving Credentials
+
+### Elasticsearch
+
+```bash
+# Get the IBM user password
+kubectl get secret <release-name>-apianalyticstore-ibm-user-es -o jsonpath='{.data.password}' | base64 -d
+
+# Get the Kibana user password
+kubectl get secret <release-name>-apianalyticstore-kibana-user -o jsonpath='{.data.password}' | base64 -d
+```
+
+### OpenSearch
+
+```bash
+# Get the admin password
+kubectl get secret <release-name>-apianalyticstore-opensearch-admin -o jsonpath='{.data.password}' | base64 -d
+
+# Get the OpenSearch Dashboards user password
+kubectl get secret <release-name>-apianalyticstore-opensearch-dashboards-user -o jsonpath='{.data.password}' | base64 -d
+```
+
+## Upgrading
+
+### Switching from Elasticsearch to OpenSearch
+
+**Warning:** Switching database types requires data migration. This is not handled automatically by the chart.
+
+1. Backup your Elasticsearch data
+2. Uninstall the current release
+3. Install with OpenSearch configuration
+4. Migrate data to OpenSearch
+
+## Uninstalling the Chart
+
+```bash
+helm uninstall my-analytics-store
+```
+
+This command removes all the Kubernetes components associated with the chart and deletes the release.
+
+## Troubleshooting
+
+### Elasticsearch Pod Not Starting
+
+Check if ECK operator is running:
+```bash
+kubectl get pods -n elastic-system
+```
+
+Check Elasticsearch logs:
+```bash
+kubectl logs <elasticsearch-pod-name>
+```
+
+### OpenSearch Pod Not Starting
+
+Check if Opster operator is running:
+```bash
+kubectl get pods -n <operator-namespace>
+```
+
+Check OpenSearch logs:
+```bash
+kubectl logs <opensearch-pod-name>
+```
+
+### Storage Issues
+
+Check PVC status:
+```bash
+kubectl get pvc
+```
+
+Ensure your cluster has a storage provisioner configured.
+
+## Support
+
+For issues and questions, please refer to:
+- [GitHub Issues](https://github.com/IBM/webmethods-helm-charts/issues)
+- [Documentation](https://github.com/IBM/webmethods-helm-charts)
+
+{{ template "chart.valuesSection" . }}
+
+{{ template "helm-docs.versionFooter" . }}

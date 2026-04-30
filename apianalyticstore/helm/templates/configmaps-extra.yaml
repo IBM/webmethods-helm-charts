@@ -1,0 +1,37 @@
+{{- range $cm := .Values.extraConfigMaps }}
+---
+# /*
+#  * Copyright (c) 2026 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  */
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ tpl $cm.name $ }}
+  labels:
+    {{- include "common.labels.standard" $ | nindent 4 }}
+    {{- with $.Values.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with $cm.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with $cm.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- if $cm.data }}
+data:
+  {{- range $key, $value := $cm.data }}
+  {{ $key }}: {{ tpl $value $ | quote }}
+  {{- end }}
+{{- end }}
+{{- if $cm.binaryData }}
+binaryData:
+  {{- range $key, $value := $cm.binaryData }}
+  {{ $key }}: {{ $value }}
+  {{- end }}
+{{- end }}
+{{- end }}
+

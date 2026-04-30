@@ -1,0 +1,67 @@
+{{- if .Values.routes.enabled }}
+{{- $context := . }}
+{{- $fullName := include "common.names.fullname" . }}
+---
+# /*
+#  * Copyright (c) 2026 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  */
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: {{ .Values.routes.name | default $fullName }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.extraLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.routes.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.routes.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.routes.hostName }}
+  host: {{ .Values.routes.hostName }}
+  {{- else }}
+    {{- if eq .Values.databaseType "elasticsearch" }}
+  host: {{ printf "%s-kibana.%s" $fullName .Values.ingress.defaultDomain }}
+    {{- else }}
+  host: {{ printf "%s-dashboards.%s" $fullName .Values.ingress.defaultDomain }}
+    {{- end }}
+  {{- end }}
+  to:
+    kind: Service
+    {{- if eq .Values.databaseType "elasticsearch" }}
+    name: {{ include "apianalyticstore.kibanaServiceName" . }}
+    {{- else }}
+    name: {{ include "apianalyticstore.opensearchDashboardsServiceName" . }}
+    {{- end }}
+    weight: 100
+  port:
+    targetPort: {{ .Values.routes.portName | default "http" }}
+  {{- if .Values.routes.tls.enabled }}
+  tls:
+    termination: {{ .Values.routes.tls.termination | default "edge" }}
+    {{- if .Values.routes.tls.insecureEdgeTerminationPolicy }}
+    insecureEdgeTerminationPolicy: {{ .Values.routes.tls.insecureEdgeTerminationPolicy }}
+    {{- end }}
+    {{- if .Values.routes.tls.certificate }}
+    certificate: {{ .Values.routes.tls.certificate }}
+    {{- end }}
+    {{- if .Values.routes.tls.key }}
+    key: {{ .Values.routes.tls.key }}
+    {{- end }}
+    {{- if .Values.routes.tls.caCertificate }}
+    caCertificate: {{ .Values.routes.tls.caCertificate }}
+    {{- end }}
+    {{- if .Values.routes.tls.destinationCACertificate }}
+    destinationCACertificate: {{ .Values.routes.tls.destinationCACertificate }}
+    {{- end }}
+  {{- end }}
+  wildcardPolicy: None
+{{- end }}
+
