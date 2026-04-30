@@ -16,7 +16,7 @@ Analytics Store Helm Chart for Kubernetes - Supports Elasticsearch+Kibana or Ope
 The API Analytics Store Helm chart provides a flexible deployment solution for analytics and search capabilities using either:
 
 - **Elasticsearch + Kibana** (using Elastic Cloud on Kubernetes operator)
-- **OpenSearch + OpenSearch Dashboards** (using Opster OpenSearch operator)
+- **OpenSearch + OpenSearch Dashboards** (using OpenSearch Kubernetes Operator)
 
 This chart is designed to be used as a standalone analytics store or as a dependency for other charts like API Gateway.
 
@@ -39,14 +39,33 @@ kubectl apply -f https://download.elastic.co/downloads/eck/2.9.0/operator.yaml
 
 - Kubernetes 1.19+
 - Helm 3.2.0+
-- Opster OpenSearch Kubernetes operator installed
+- OpenSearch Kubernetes Operator installed (v2.6.0+)
 - PV provisioner support in the underlying infrastructure
 
-Install Opster operator:
+**Install OpenSearch operator:**
+
 ```bash
-helm repo add opensearch-operator https://opster.github.io/opensearch-k8s-operator/
-helm install opensearch-operator opensearch-operator/opensearch-operator
+# Add the OpenSearch operator Helm repository
+helm repo add opensearch-operator https://opensearch-project.github.io/opensearch-k8s-operator/
+helm repo update
+
+# Install the operator (installs CRDs and operator)
+helm install opensearch-operator opensearch-operator/opensearch-operator \
+  --namespace opensearch-operator-system \
+  --create-namespace
+
+# Verify the operator is running
+kubectl get pods -n opensearch-operator-system
+
+# Verify CRDs are installed
+kubectl get crd | grep opensearch
 ```
+
+**Expected CRDs:**
+- `opensearchclusters.opensearch.opensearch.org`
+- `opensearchroles.opensearch.opensearch.org`
+- `opensearchusers.opensearch.opensearch.org`
+- `opensearchuserrolebindings.opensearch.opensearch.org`
 
 ## Installing the Chart
 
@@ -60,11 +79,46 @@ helm install my-analytics-store webmethods/apianalyticstore \
 
 ### Deploy OpenSearch + OpenSearch Dashboards
 
+**Important**: You must explicitly set `opensearch.deploy=true` and `opensearchDashboards.deploy=true` when using OpenSearch.
+
 ```bash
 helm install my-analytics-store webmethods/apianalyticstore \
   --set databaseType=opensearch \
   --set opensearch.deploy=true \
   --set opensearchDashboards.deploy=true
+```
+
+## Upgrading the Chart
+
+### ⚠️ Important: Elasticsearch/Kibana Upgrades
+
+When using Elasticsearch and Kibana with the ECK operator, Helm upgrades require the `--force-conflicts` flag to resolve conflicts between Helm and the operator managing the same resources.
+
+**Upgrade command for Elasticsearch/Kibana deployments:**
+
+```bash
+helm upgrade my-analytics-store webmethods/apianalyticstore \
+  --set databaseType=elasticsearch \
+  --force-conflicts
+```
+
+**Why is this needed?**
+- ECK operator manages `.spec.nodeSets` in Elasticsearch and `.spec.podTemplate.spec.containers` in Kibana
+- Helm tries to update these same fields during upgrade
+- Kubernetes detects conflicting controllers and blocks the update
+- The `--force-conflicts` flag allows Helm to take ownership of operator-managed fields
+
+This is a known limitation when using Kubernetes operators with Helm.
+
+For more details, see: https://github.com/elastic/cloud-on-k8s/issues/2314
+
+### OpenSearch Upgrades
+
+OpenSearch deployments using the OpenSearch Kubernetes Operator typically work with standard Helm upgrades:
+
+```bash
+helm upgrade my-analytics-store webmethods/apianalyticstore \
+  --set databaseType=opensearch
 ```
 
 ## Configuration
@@ -451,7 +505,7 @@ For issues and questions, please refer to:
 | elasticsearch.affinity | object | `{}` | Set Pod (anti-) affinity for ElasticSearch. |
 | elasticsearch.annotations | object | `{}` | Annotations for Elasticsearch crd |
 | elasticsearch.certificateSecretName | string | `"{{ include \"common.names.fullname\" .}}-es-tls-secret"` | The name of the secret holding the tls secret |
-| elasticsearch.defaultNodeSet | object | `{"annotations":{},"count":1,"extraCmdPluginInstaller":"","extraConfig":{},"extraInitContainers":{},"extraVolumeMounts":[],"extraVolumes":[],"installMapperSizePlugin":true,"memoryMapping":false,"setMaxMapCount":true}` | Default Node Set |
+| elasticsearch.defaultNodeSet | object | `{"annotations":{},"count":1,"extraCmdPluginInstaller":"","extraConfig":{},"extraInitContainers":{},"extraVolumeMounts":[],"extraVolumes":[],"installMapperSizePlugin":false,"memoryMapping":false,"setMaxMapCount":true}` | Default Node Set |
 | elasticsearch.deploy | bool | `true` | Deploy elastic search instance |
 | elasticsearch.disableElasticUser | bool | `false` | Decide wether to disable the default elastic user or not |
 | elasticsearch.extraSecrets | list | `[]` | Extra Secrets adding or changing built-in users of Elasticsearch. |
