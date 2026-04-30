@@ -25,6 +25,7 @@ webmethods/terracottabigmemorymax       2.1.1           4.5.0           Terracot
 webmethods/terracotta                   1.0.0           < 11.1.0.12     Terracotta Helm Chart for Kubernetes
 webmethods/terracotta                   2.0.0           >= 11.1.0.12    Terracotta Helm Chart for Kubernetes
 webmethods/universalmessaging           1.1.0           10.15           Universal Messaging (UM) Helm Chart for Kubernetes
+webmethods/apianalyticstore             1.0.0           1.0             API Analytics Store Helm Chart for Kubernetes
 ```
 
 ## Available Charts READMEs
@@ -41,6 +42,7 @@ Each chart has a README for *how to use* and lists some prerequisites.
 | [universalmessaging](https://github.com/IBM/webmethods-helm-charts/blob/main/universalmessaging/helm/README.md)         | Universal Messaging (UM) |
 | [terracottabigmemorymax](https://github.com/IBM/webmethods-helm-charts/blob/main/terracottabigmemorymax/helm/README.md) | Terracotta BigMemoryMax  |
 | [terracotta](https://github.com/IBM/webmethods-helm-charts/blob/main/terracotta/helm/README.md)                     | Terracotta               |
+| [apianalyticstore](https://github.com/IBM/webmethods-helm-charts/blob/main/apianalyticstore/helm/README.md)                     | Analytic Store (OpenSearch / Elasticsearch )               |
 
 ## Chart Versions
 
