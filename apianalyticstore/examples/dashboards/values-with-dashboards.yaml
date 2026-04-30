@@ -1,0 +1,45 @@
+# Example values.yaml for deploying analytics store with pre-configured dashboards
+# This demonstrates using extraConfigMaps to deploy dashboards directly from values
+
+databaseType: elasticsearch
+
+elasticsearch:
+  deploy: true
+  version: 8.2.3
+  storage: "10Gi"
+
+kibana:
+  count: 1
+  # Mount the dashboard ConfigMap
+  extraVolumes:
+    - name: dashboards
+      configMap:
+        name: "{{ include \"common.names.fullname\" . }}-kibana-dashboards"
+  extraVolumeMounts:
+    - name: dashboards
+      mountPath: /usr/share/kibana/data/dashboards
+      readOnly: true
+
+ingress:
+  enabled: true
+  defaultDomain: "example.com"
+
+# Create ConfigMaps with dashboard definitions
+extraConfigMaps:
+  - name: "{{ include \"common.names.fullname\" . }}-kibana-dashboards"
+    labels:
+      app: kibana
+      type: dashboards
+    data:
+      # System Metrics Dashboard
+      system-metrics.ndjson: |
+        {"attributes":{"fieldAttrs":"{}","fields":"[]","runtimeFieldMap":"{}","title":"system-metrics-*","typeMeta":"{}"},"coreMigrationVersion":"8.2.3","id":"system-metrics-*","references":[],"type":"index-pattern","updated_at":"2024-01-01T00:00:00.000Z","version":"WzEsMV0="}
+        {"attributes":{"description":"","kibanaSavedObjectMeta":{"searchSourceJSON":"{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"},"title":"CPU Usage Over Time","uiStateJSON":"{}","version":1,"visState":"{\"title\":\"CPU Usage Over Time\",\"type\":\"line\"}"},"coreMigrationVersion":"8.2.3","id":"cpu-usage-viz","references":[{"id":"system-metrics-*","name":"kibanaSavedObjectMeta.searchSourceJSON.index","type":"index-pattern"}],"type":"visualization","updated_at":"2024-01-01T00:00:00.000Z","version":"WzIsMV0="}
+        {"attributes":{"description":"System metrics monitoring dashboard","hits":0,"kibanaSavedObjectMeta":{"searchSourceJSON":"{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"},"optionsJSON":"{\"hidePanelTitles\":false,\"useMargins\":true}","panelsJSON":"[{\"version\":\"8.2.3\",\"type\":\"visualization\",\"gridData\":{\"x\":0,\"y\":0,\"w\":24,\"h\":15,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{\"enhancements\":{}},\"panelRefName\":\"panel_1\"}]","timeRestore":false,"title":"System Metrics Dashboard","version":1},"coreMigrationVersion":"8.2.3","id":"system-metrics-dashboard","references":[{"id":"cpu-usage-viz","name":"panel_1","type":"visualization"}],"type":"dashboard","updated_at":"2024-01-01T00:00:00.000Z","version":"WzQsMV0="}
+      
+      # Application Logs Dashboard
+      application-logs.ndjson: |
+        {"attributes":{"fieldAttrs":"{}","fields":"[]","runtimeFieldMap":"{}","title":"application-logs-*","typeMeta":"{}"},"coreMigrationVersion":"8.2.3","id":"application-logs-*","references":[],"type":"index-pattern","updated_at":"2024-01-01T00:00:00.000Z","version":"WzEsMV0="}
+        {"attributes":{"description":"","kibanaSavedObjectMeta":{"searchSourceJSON":"{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"},"title":"Log Levels Distribution","uiStateJSON":"{}","version":1,"visState":"{\"title\":\"Log Levels Distribution\",\"type\":\"pie\"}"},"coreMigrationVersion":"8.2.3","id":"log-levels-viz","references":[{"id":"application-logs-*","name":"kibanaSavedObjectMeta.searchSourceJSON.index","type":"index-pattern"}],"type":"visualization","updated_at":"2024-01-01T00:00:00.000Z","version":"WzIsMV0="}
+        {"attributes":{"description":"Application logs analysis dashboard","hits":0,"kibanaSavedObjectMeta":{"searchSourceJSON":"{\"query\":{\"query\":\"\",\"language\":\"kuery\"},\"filter\":[]}"},"optionsJSON":"{\"hidePanelTitles\":false,\"useMargins\":true}","panelsJSON":"[{\"version\":\"8.2.3\",\"type\":\"visualization\",\"gridData\":{\"x\":0,\"y\":0,\"w\":16,\"h\":15,\"i\":\"1\"},\"panelIndex\":\"1\",\"embeddableConfig\":{\"enhancements\":{}},\"panelRefName\":\"panel_1\"}]","timeRestore":false,"title":"Application Logs Dashboard","version":1},"coreMigrationVersion":"8.2.3","id":"application-logs-dashboard","references":[{"id":"log-levels-viz","name":"panel_1","type":"visualization"}],"type":"dashboard","updated_at":"2024-01-01T00:00:00.000Z","version":"WzUsMV0="}
+

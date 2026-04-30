@@ -1,0 +1,209 @@
+{{- $elasticsearchDeployed := eq (include "apianalyticstore.deployElasticsearch" .) "true" -}}
+{{- $opensearchDeployed := eq (include "apianalyticstore.deployOpensearch" .) "true" -}}
+{{- $kibanaDeployed := eq (include "apianalyticstore.deployKibana" .) "true" -}}
+{{- $opensearchDashboardsDeployed := eq (include "apianalyticstore.deployOpensearchDashboards" .) "true" -}}
+
+Thank you for installing {{ .Chart.Name }}!
+
+Your release is named {{ .Release.Name }}.
+
+Database Type: {{ .Values.databaseType }}
+
+{{- if or $elasticsearchDeployed $kibanaDeployed }}
+
+===========================================
+⚠️  IMPORTANT: HELM UPGRADE WITH ECK OPERATOR
+===========================================
+
+When using Elasticsearch/Kibana with ECK operator, use the --force-conflicts flag
+to resolve conflicts between Helm and the operator managing the same resources.
+
+UPGRADE COMMAND:
+  helm upgrade {{ .Release.Name }} <chart-path> -n {{ .Release.Namespace }} --force-conflicts
+
+The --force-conflicts flag allows Helm to take ownership of fields managed by the ECK operator.
+
+This is a known limitation when using Kubernetes operators with Helm.
+
+For more details, see: https://github.com/elastic/cloud-on-k8s/issues/2314
+
+===========================================
+{{- end }}
+
+{{- if $elasticsearchDeployed }}
+
+===========================================
+ELASTICSEARCH DEPLOYMENT
+===========================================
+
+Elasticsearch has been deployed with the following configuration:
+- Version: {{ .Values.elasticsearch.version }}
+- Nodes: {{ .Values.elasticsearch.defaultNodeSet.count }}
+- Storage: {{ .Values.elasticsearch.storage }}
+
+To access Elasticsearch:
+
+1. Get the Elasticsearch service:
+   kubectl get svc {{ include "apianalyticstore.elasticsearchServiceName" . }} -n {{ .Release.Namespace }}
+
+2. Port forward to access locally:
+   kubectl port-forward svc/{{ include "apianalyticstore.elasticsearchServiceName" . }} 9200:9200 -n {{ .Release.Namespace }}
+
+3. Get the IBM user credentials:
+   Username: ibm
+   Password: kubectl get secret {{ include "apianalyticstore.elasticsecret" . }} -n {{ .Release.Namespace }} -o jsonpath='{.data.password}' | base64 -d
+
+4. Test the connection:
+   curl -u ibm:<password> http://localhost:9200
+
+{{- if $kibanaDeployed }}
+
+===========================================
+KIBANA DEPLOYMENT
+===========================================
+
+Kibana has been deployed with the following configuration:
+- Version: {{ .Values.kibana.version }}
+- Instances: {{ .Values.kibana.count }}
+- Port: {{ .Values.kibana.port }}
+
+To access Kibana:
+
+1. Get the Kibana service:
+   kubectl get svc {{ include "apianalyticstore.kibanaServiceName" . }} -n {{ .Release.Namespace }}
+
+2. Port forward to access locally:
+   kubectl port-forward svc/{{ include "apianalyticstore.kibanaServiceName" . }} 5601:5601 -n {{ .Release.Namespace }}
+
+3. Get the Kibana user credentials:
+   Username: kibana
+   Password: kubectl get secret {{ include "apianalyticstore.kibanasecret" . }} -n {{ .Release.Namespace }} -o jsonpath='{.data.password}' | base64 -d
+
+4. Access Kibana in your browser:
+   http://localhost:5601
+
+{{- end }}
+{{- end }}
+
+{{- if $opensearchDeployed }}
+
+===========================================
+OPENSEARCH DEPLOYMENT
+===========================================
+
+OpenSearch has been deployed with the following configuration:
+- Version: {{ .Values.opensearch.version }}
+- Nodes: {{ .Values.opensearch.defaultNodePool.replicas }}
+- Storage: {{ .Values.opensearch.storage }}
+
+To access OpenSearch:
+
+1. Get the OpenSearch service:
+   kubectl get svc {{ include "apianalyticstore.opensearchServiceName" . }} -n {{ .Release.Namespace }}
+
+2. Port forward to access locally:
+   kubectl port-forward svc/{{ include "apianalyticstore.opensearchServiceName" . }} 9200:9200 -n {{ .Release.Namespace }}
+
+3. Get the admin credentials:
+   Username: admin
+   Password: kubectl get secret {{ include "apianalyticstore.opensearchadminsecret" . }} -n {{ .Release.Namespace }} -o jsonpath='{.data.password}' | base64 -d
+
+4. Test the connection:
+   curl -k -u admin:<password> https://localhost:9200
+
+{{- if $opensearchDashboardsDeployed }}
+
+===========================================
+OPENSEARCH DASHBOARDS DEPLOYMENT
+===========================================
+
+OpenSearch Dashboards has been deployed with the following configuration:
+- Version: {{ .Values.opensearchDashboards.version }}
+- Instances: {{ .Values.opensearchDashboards.count }}
+- Port: {{ .Values.opensearchDashboards.port }}
+
+To access OpenSearch Dashboards:
+
+1. Get the OpenSearch Dashboards service:
+   kubectl get svc {{ include "apianalyticstore.opensearchDashboardsServiceName" . }} -n {{ .Release.Namespace }}
+
+2. Port forward to access locally:
+   kubectl port-forward svc/{{ include "apianalyticstore.opensearchDashboardsServiceName" . }} 5601:5601 -n {{ .Release.Namespace }}
+
+3. Get the OpenSearch Dashboards user credentials:
+   Username: kibanaserver
+   Password: kubectl get secret {{ include "apianalyticstore.opensearchdashboardssecret" . }} -n {{ .Release.Namespace }} -o jsonpath='{.data.password}' | base64 -d
+
+4. Access OpenSearch Dashboards in your browser:
+   http://localhost:5601
+
+{{- end }}
+{{- end }}
+
+===========================================
+ACCESSING DASHBOARDS
+===========================================
+
+{{- if .Values.ingress.enabled }}
+Ingress is enabled for dashboard access.
+
+{{- if eq .Values.databaseType "elasticsearch" }}
+Kibana URL:
+{{- range .Values.ingress.hosts }}
+  {{- $host := .host }}
+  {{- if not $host }}
+    {{- $host = printf "%s-kibana.%s" (include "common.names.fullname" $) $.Values.ingress.defaultDomain }}
+  {{- end }}
+  https://{{ $host }}
+{{- end }}
+{{- else }}
+OpenSearch Dashboards URL:
+{{- range .Values.ingress.hosts }}
+  {{- $host := .host }}
+  {{- if not $host }}
+    {{- $host = printf "%s-dashboards.%s" (include "common.names.fullname" $) $.Values.ingress.defaultDomain }}
+  {{- end }}
+  https://{{ $host }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.routes.enabled }}
+OpenShift Route is enabled for dashboard access.
+
+Get the route URL:
+  kubectl get route {{ .Values.routes.name | default (include "common.names.fullname" .) }} -n {{ .Release.Namespace }} -o jsonpath='{.spec.host}'
+
+{{- if eq .Values.databaseType "elasticsearch" }}
+Access Kibana at the route URL.
+{{- else }}
+Access OpenSearch Dashboards at the route URL.
+{{- end }}
+{{- end }}
+
+===========================================
+MONITORING
+===========================================
+
+{{- if index .Values "prometheus-elasticsearch-exporter" "enabled" }}
+Prometheus Elasticsearch Exporter is enabled.
+Metrics are available at: http://<exporter-service>:9108/metrics
+{{- end }}
+
+===========================================
+NEXT STEPS
+===========================================
+
+1. Verify all pods are running:
+   kubectl get pods -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+2. Check the status of your deployment:
+   kubectl get all -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+3. View logs if needed:
+   kubectl logs -n {{ .Release.Namespace }} -l app.kubernetes.io/instance={{ .Release.Name }}
+
+For more information, visit:
+https://github.com/IBM/webmethods-helm-charts
+
+===========================================

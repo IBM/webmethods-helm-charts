@@ -1,0 +1,181 @@
+{{- if eq (include "apianalyticstore.deployKibana" .) "true" }}
+---
+# /*
+#  * Copyright (c) 2026 IBM Corporation
+#  *
+#  * SPDX-License-Identifier: Apache-2.0
+#  *
+#  *   Licensed under the Apache License, Version 2.0 (the "License");
+#  *   you may not use this file except in compliance with the License.
+#  *   You may obtain a copy of the License at
+#  *
+#  *       http://www.apache.org/licenses/LICENSE-2.0
+#  *
+#  *   Unless required by applicable law or agreed to in writing, software
+#  *   distributed under the License is distributed on an "AS IS" BASIS,
+#  *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  *   See the License for the specific language governing permissions and
+#  *   limitations under the License.
+#  *
+#  */
+{{- $context := . }}
+apiVersion: kibana.k8s.elastic.co/v1
+kind: Kibana
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels:
+    {{- include "common.labels.standard" . | nindent 4 }}
+    {{- with .Values.extraLabels -}}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.kibana.annotations -}}
+  annotations:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if .Values.kibana.image }}
+  image: {{ .Values.kibana.image }}
+  {{- end }}
+  version: {{ .Values.kibana.version }}
+  count: {{ .Values.kibana.count }}
+  {{- if .Values.revisionHistoryLimit }}
+  revisionHistoryLimit: {{ .Values.revisionHistoryLimit }}
+  {{- end }}
+  config:
+    {{- if .Values.kibana.allowAnonymousStatus }}
+    status.allowAnonymous: true
+    {{- end }}
+    {{- if .Values.kibana.allowAnonymousStatus }}
+    status.allowAnonymous: true
+    {{- else }}
+    status.allowAnonymous: false
+    {{- end }}
+    {{- if .Values.kibana.tls.enabled }}
+    elasticsearch.ssl.truststore.path: /usr/share/kibana/config/elasticsearch-certs/truststore.p12
+    elasticsearch.ssl.truststore.password: "${KIBANA_TRUSTSTORE_PASSWORD}"
+    elasticsearch.ssl.verificationMode: {{ .Values.kibana.tls.verificationMode }}
+    {{- else }}
+    elasticsearch.ssl.verificationMode: none
+    {{- end }}
+    {{- if .Values.kibana.customLogging.enabled }}
+    logging:
+      {{- if .Values.kibana.customLogging.appenders }}
+      appenders:
+        {{- toYaml .Values.kibana.customLogging.appenders | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kibana.customLogging.root }}
+      root:
+        {{- toYaml .Values.kibana.customLogging.root | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kibana.customLogging.loggers }}
+      loggers:
+        {{- toYaml .Values.kibana.customLogging.loggers | nindent 8 }}
+      {{- end }}
+    {{- end }}
+  http:
+    tls:
+      selfSignedCertificate:
+        disabled: true
+  elasticsearchRef:
+    name: {{ include "common.names.fullname" . }}
+  podTemplate:
+    metadata:
+      labels:
+        {{- include "common.labels.standard" . | nindent 8 }}
+        {{- with .Values.extraLabels -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.kibana.extraLabels -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        {{- with .Values.kibana.annotations -}}
+        {{ toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.kibana.affinity }}
+      affinity:
+        {{- tpl (toYaml .) $context  | nindent 8 }}
+      {{- end }}
+      {{- with .Values.kibana.topologySpreadConstraints }}
+      topologySpreadConstraints:
+        {{- tpl (toYaml .) $context  | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kibana.priorityClassName }}
+      priorityClassName: {{ .Values.kibana.priorityClassName }}
+      {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kibana.serviceAccount.name }}
+      serviceAccountName: {{ .Values.kibana.serviceAccount.name }}
+      {{- end }}
+      {{- if .Values.kibana.podSecurityContext }}
+      securityContext:
+        {{- toYaml .Values.kibana.podSecurityContext | nindent 8 }}
+      {{- end }}
+      {{- if .Values.kibana.extraInitContainers }}
+      initContainers:
+        {{- toYaml .Values.kibana.extraInitContainers | nindent 8 }}
+      {{- end }}
+      {{- if or ( .Values.kibana.tls.enabled ) ( .Values.kibana.extraVolumes ) }}
+      volumes:
+        {{- if .Values.kibana.tls.enabled }}
+        - name: elasticsearch-certs
+          secret:
+            secretName: {{ .Values.kibana.tls.secretName }}
+            items:
+              - key: {{ .Values.kibana.tls.trustStoreName }}
+                path: truststore.p12
+        {{- end }}
+        {{- if .Values.kibana.extraVolumes }}
+        {{- toYaml .Values.kibana.extraVolumes | nindent 8 }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: kibana
+          {{- if .Values.kibana.resources }}
+          resources:
+            {{- toYaml .Values.kibana.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.kibana.securityContext }}
+          securityContext:
+            {{- toYaml .Values.kibana.securityContext | nindent 12 }}
+          {{- end }}
+          {{- if or (.Values.kibana.tls.enabled) (.Values.kibana.extraEnvs) }}
+          env:
+            {{- if .Values.kibana.tls.enabled }}
+            - name: KIBANA_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.kibana.tls.truststorePasswordSecret }}
+                  key: password
+            {{- end }}
+            {{- if .Values.kibana.extraEnvs }}
+            {{- toYaml .Values.kibana.extraEnvs | nindent 12 }}
+            {{- end }}
+          {{- end }}
+          readinessProbe:
+            {{- toYaml .Values.kibana.readinessProbe | nindent 12 }}
+          {{- if .Values.kibana.livenessProbe }}
+          livenessProbe:
+            {{- toYaml .Values.kibana.livenessProbe | nindent 12 }}
+          {{- end }}
+          {{- if or ( .Values.kibana.tls.enabled ) ( .Values.kibana.extraVolumeMounts ) }}
+          volumeMounts:
+            {{- if .Values.kibana.tls.enabled }}
+            - name: elasticsearch-certs
+              mountPath: /usr/share/kibana/config/elasticsearch-certs/truststore.p12
+              subPath:   truststore.p12
+              readOnly: true
+            {{- end }}
+            {{- if .Values.kibana.extraVolumeMounts }}
+            {{- toYaml .Values.kibana.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+          {{- end }}
+        {{- if .Values.kibana.extraContainers }}
+        {{- toYaml .Values.kibana.extraContainers | nindent 8 }}
+        {{- end }}
+{{- end }}
+

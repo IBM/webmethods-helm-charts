@@ -1,0 +1,42 @@
+databaseType: opensearch
+
+ingress:
+  enabled: false
+
+opensearch:
+  deploy: true
+  version: "2.11.0"
+  httpPort: 9200
+  vendor: opensearch
+  tlsEnabled: false
+  storage: 5Gi
+
+  defaultNodePool:
+    replicas: 1
+    probes:
+      startup:
+        command:
+          - /bin/bash
+          - -c
+          - |
+            curl -k --silent --fail \
+              -u "$(cat /mnt/admin-credentials/username):$(cat /mnt/admin-credentials/password)" \
+              https://localhost:9200
+        initialDelaySeconds: 10
+        periodSeconds: 30
+        timeoutSeconds: 30
+        failureThreshold: 10
+        successThreshold: 1
+      readiness:
+        command:
+          - /bin/bash
+          - -c
+          - |
+            curl -k --silent --fail \
+              -u "$(cat /mnt/admin-credentials/username):$(cat /mnt/admin-credentials/password)" \
+              https://localhost:9200
+        initialDelaySeconds: 60
+        periodSeconds: 30
+        timeoutSeconds: 30
+        failureThreshold: 5
+        successThreshold: 1
