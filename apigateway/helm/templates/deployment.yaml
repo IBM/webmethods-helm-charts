@@ -144,7 +144,7 @@ spec:
           {{- end }}
           {{-  if .Values.apigw.maxJVMHeap }}
           - name: JAVA_MAX_MEM
-            value: {{ .Values.apigw.JVMHeap | quote }}
+            value: {{ .Values.apigw.maxJVMHeap | quote }}
           {{- end }}
           - name: ADMINISTRATOR_PASSWORD
             valueFrom:
