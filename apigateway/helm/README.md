@@ -273,12 +273,12 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | apigw.grpcPort | int | `4440` | gRPC port for High Availability and Fault Tolerance (HAFT) solution. This port must be manually setup after API Gateway was initizalized. |
 | apigw.initContainer | object | `{"enabled":true,"securityContext":{}}` | SecurityContext for apigw initContainer Deactivated by default. Usage example: securityContext:   runAsGroup: 1000   runAsUser: 1000   runAsNonRoot: true   allowPrivilegeEscalation: false   capabilities:     drop:       - ALL |
 | apigw.initContainer.enabled | bool | `true` | If apigw initContainer for ES should be enabled |
-| apigw.initJVMHeap | string | `nil` | Set JVM minimum heap size for 11.x images  |
-| apigw.initMemory | string | `nil` | Set JVM minimum heap size for 10.15 images  |
+| apigw.initJVMHeap | string | `nil` | Set JVM minimum heap size for 11.x images. |
+| apigw.initMemory | string | `nil` | Set JVM minimum heap size for 10.15 images. |
 | apigw.isHomeDir | string | `"/opt/softwareag/IntegrationServer/instances/default"` | IS HOME directory, for 11.x images based on Microservices Runtime use /opt/softwareag/IntegrationServer |
 | apigw.livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":10,"periodSeconds":10,"successThreshold":1,"tcpSocket":{"port":"admin-http"},"timeoutSeconds":1}` | livenessProbe configuration for API Gateway container. The liveness probe is used to determine if the container is still running. |
-| apigw.maxJVMHeap | string | `nil` | Set JVM maximum heap size for 11.x images  |
-| apigw.maxMemory | string | `nil` | Set JVM maximum heap size for 10.15 images  |
+| apigw.maxJVMHeap | string | `nil` | Set JVM maximum heap size for 11.x images. See [Resource Sizing Guidelines](https://www.ibm.com/docs/en/wam/wm-api-gateway/11.1.0?topic=configurations-resource-sizing-guidelines) |
+| apigw.maxMemory | string | `nil` | Set JVM maximum heap size for 10.15 images.  |
 | apigw.readinessProbe | object | `{"failureThreshold":3,"httpGet":{"path":"/rest/apigateway/health","port":"admin-http","scheme":"HTTP"},"initialDelaySeconds":30,"periodSeconds":30,"successThreshold":1,"timeoutSeconds":1}` | readinessProbe configuration for API Gateway container. The readiness probe is used to determine if the container is ready to accept traffic. |
 | apigw.rtExternalService | string | `"apigw-rt-ext-svc"` |  |
 | apigw.rtService | string | `"apigw-rt-svc"` |  |
