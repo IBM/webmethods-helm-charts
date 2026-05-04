@@ -360,8 +360,14 @@ apigw:
   # -- Deploy Elasticsearch. Depends on Elasic Search Helm Charts. See https://github.com/elastic/helm-charts/blob/main/elasticsearch
   elasticSearchDeployment: true
 
+  # -- Set JVM minimum heap size for 10.15 images 
   initMemory: 1024Mi
+  # -- Set JVM maximum heap size for 10.15 images 
   maxMemory: 1024Mi
+  # -- Set JVM minimum heap size for 11.x images 
+  initJVMHeap: 1024Mi
+  # -- Set JVM maximum heap size for 11.x images 
+  maxJVMHeap: 1024Mi
 
   # -- The API Gateway runtime port for API invocations. By default API Gateway images do not have this port setup.
   # You must manually set up this port or create post init job that creates this port after API Gateway was initialized.

@@ -130,10 +130,22 @@ spec:
           - name: SAG_IS_CONFIG_PROPERTIES
             value: {{ .Values.apigw.sagIsConfigProperties }}
           {{- include "common.metering.envs" . | nindent 10 }}
+          {{-  if .Values.apigw.initMemory }}
           - name: apigw_wrapper_java_initmemory
             value: {{ .Values.apigw.initMemory | quote }}
+          {{- end }}
+          {{-  if .Values.apigw.maxMemory }}
           - name: apigw_wrapper_java_maxmemory
             value: {{ .Values.apigw.maxMemory | quote }}
+          {{- end }}
+          {{-  if .Values.apigw.initJVMHeap }}
+          - name: JAVA_MIN_MEM
+            value: {{ .Values.apigw.initJVMHeap | quote }}
+          {{- end }}
+          {{-  if .Values.apigw.maxJVMHeap }}
+          - name: JAVA_MAX_MEM
+            value: {{ .Values.apigw.JVMHeap | quote }}
+          {{- end }}
           - name: ADMINISTRATOR_PASSWORD
             valueFrom:
               secretKeyRef:
