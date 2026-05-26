@@ -1,0 +1,221 @@
+
+
+# Example values file for importing custom certificates into API Gateway truststore
+# This example provides a complete init container configuration with inline certificate import script
+
+image:
+  tag: "11.1"
+  repository: ibmwebmethods.azurecr.io/apigateway-minimal
+
+appVersion: "11.1"
+
+apigw:
+  isHomeDir: /opt/softwareag/IntegrationServer
+
+# License Key is not required for 11.x
+skipLicenseKey: true
+
+# Skip Kibana Autostart Parameter for minimal 11.x container images
+skipKibanaAutostartParameter: true
+
+elasticsearch:
+  version: "8.17.3"
+
+kibana:
+  version: "8.17.3"
+
+# Define init containers
+# Note: The helper function apigateway.importCertScript is available in _helper.tpl
+# but cannot be used directly in values.yaml due to Helm's values file parsing limitations.
+# The script below is equivalent to calling the helper function with these parameters:
+#   sourceKeystore: /opt/softwareag/jvm/jvm/jre/lib/security/cacerts (from API Gateway image)
+#   targetDir: /mnt/prepared
+#   keystorePassword: changeit (default Java cacerts password)
+#   certFile: /mnt/certs/custom-ca.crt
+#   certAlias: example-custom-ca
+#   keytoolPath: /opt/softwareag/jvm/jvm/bin/keytool
+extraInitContainers:
+  - name: import-custom-certs
+    image: ibmwebmethods.azurecr.io/apigateway-minimal:11.1.0.11
+    imagePullPolicy: IfNotPresent
+    command: ["/bin/sh", "-c"]
+    args:
+      - |
+        #!/bin/sh
+        set -e
+        echo "Starting certificate import process..."
+        mkdir -p "/mnt/prepared"
+        
+        # Use cacerts from the API Gateway image as source truststore
+        SOURCE_KEYSTORE="/opt/softwareag/jvm/jvm/lib/security/cacerts"
+        TARGET_KEYSTORE="/mnt/prepared/cacerts"
+        
+        if [ ! -f "${SOURCE_KEYSTORE}" ]; then
+          echo "ERROR: Source keystore not found: ${SOURCE_KEYSTORE}"
+          exit 1
+        fi
+        
+        echo "Copying cacerts from ${SOURCE_KEYSTORE} to ${TARGET_KEYSTORE}"
+        cp "${SOURCE_KEYSTORE}" "${TARGET_KEYSTORE}"
+        
+        echo "Validating source keystore format..."
+        if ! /opt/softwareag/jvm/jvm/bin/keytool -list -storetype JKS -keystore "${TARGET_KEYSTORE}" -storepass "changeit" > /dev/null 2>&1; then
+          echo "ERROR: Source keystore is not a valid JKS keystore or password is incorrect"
+          echo "Please ensure the source truststore is a valid JKS file and the password is correct"
+          exit 1
+        fi
+        echo "Source keystore validated successfully"
+        
+        CERT_FILE="/mnt/certs/custom-ca.crt"
+        if [ ! -f "${CERT_FILE}" ]; then
+          echo "ERROR: Certificate file not found: ${CERT_FILE}"
+          exit 1
+        fi
+        
+        echo "Importing certificate from ${CERT_FILE} with alias 'example-custom-ca'"
+        /opt/softwareag/jvm/jvm/bin/keytool -import \
+          -noprompt \
+          -storetype JKS \
+          -keystore "${TARGET_KEYSTORE}" \
+          -storepass "changeit" \
+          -file "${CERT_FILE}" \
+          -alias "example-custom-ca" \
+          -trustcacerts
+        
+        echo "Verifying certificate import..."
+        if /opt/softwareag/jvm/jvm/bin/keytool -list -storetype JKS -keystore "${TARGET_KEYSTORE}" -storepass "changeit" -alias "example-custom-ca" > /dev/null 2>&1; then
+          echo "SUCCESS: Certificate 'example-custom-ca' imported successfully"
+        else
+          echo "ERROR: Failed to verify certificate import"
+          exit 1
+        fi
+        
+        echo "Certificate import process completed successfully"
+    volumeMounts:
+      - name: custom-certs
+        mountPath: /mnt/certs
+        readOnly: true
+      - name: prepared-truststore
+        mountPath: /mnt/prepared
+
+# Mount the prepared truststore in the main container
+extraVolumeMounts:
+  - name: prepared-truststore
+    mountPath: /mnt/prepared
+    readOnly: false
+
+# Configure JVM to use the custom truststore from /mnt/prepared
+extraEnvs:
+  # Set the truststore location for the JVM
+  - name: JAVA_OPTS
+    value: "-Djavax.net.ssl.trustStore=/mnt/prepared/truststore.jks -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=JKS"
+
+# Define the volumes
+extraVolumes:
+  # Custom certificates from configmap
+  - name: custom-certs
+    configMap:
+      name: apigw-custom-certs
+  # Shared emptyDir for prepared truststore
+  - name: prepared-truststore
+    emptyDir: {}
+
+# Example: Import multiple certificates
+# Uncomment and modify the following to import multiple certificates:
+#
+# extraInitContainers: |
+#   - name: import-custom-certs
+#     image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+#     imagePullPolicy: "{{ .Values.image.pullPolicy }}"
+#     command: ["/bin/sh", "-c"]
+#     args:
+#       - |
+#         # Import first certificate
+#         {{- $params1 := dict
+#             "sourceKeystore" "/mnt/source/truststore.jks"
+#             "targetDir" "/mnt/prepared"
+#             "keystorePassword" "changeit"
+#             "certFile" "/mnt/certs/custom-ca.crt"
+#             "certAlias" "custom-ca-cert"
+#             "keytoolPath" "/usr/bin/keytool"
+#         -}}
+#         {{ include "apigateway.importCertScript" $params1 | nindent 8 }}
+#
+#         # Import second certificate (use the already prepared truststore as source)
+#         {{- $params2 := dict
+#             "sourceKeystore" "/mnt/prepared/truststore.jks"
+#             "targetDir" "/mnt/prepared"
+#             "keystorePassword" "changeit"
+#             "certFile" "/mnt/certs/another-cert.crt"
+#             "certAlias" "another-ca-cert"
+#             "keytoolPath" "/usr/bin/keytool"
+#         -}}
+#         {{ include "apigateway.importCertScript" $params2 | nindent 8 }}
+#     env:
+#       - name: TRUSTSTORE_PASSWORD
+#         valueFrom:
+#           secretKeyRef:
+#             name: apigw-truststore-password
+#             key: password
+#     volumeMounts:
+#       - name: source-truststore
+#         mountPath: /mnt/source
+#         readOnly: true
+#       - name: custom-certs
+#         mountPath: /mnt/certs
+#         readOnly: true
+#       - name: prepared-truststore
+#         mountPath: /mnt/prepared
+
+# Optional: Configure Elasticsearch TLS if using custom certificates for ES connection
+# elasticsearch:
+#   tlsEnabled: true
+#   
+# apigw:
+#   elastictrustStoreSecretName: apigw-truststore-password
+#   elastictruststoreStorePassKey: password
+
+
+customResourceObjects:
+  # ConfigMap containing custom certificates to import into the truststore
+  # This example includes a real custom CA certificate for demonstration
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: apigw-custom-certs
+      namespace: apigw
+    data:
+      # Example custom CA certificate (self-signed for demonstration)
+      # This is a real certificate that can be imported
+      # To use your own: kubectl create configmap apigw-custom-certs --from-file=custom-ca.crt=/path/to/your/cert.crt -n apigw
+      custom-ca.crt: |
+        -----BEGIN CERTIFICATE-----
+        MIID1TCCAr2gAwIBAgIUHZwSgxnM2BuEeF2DbWtPqEb4r10wDQYJKoZIhvcNAQEL
+        BQAwejELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3JuaWExFjAUBgNVBAcM
+        DVNhbiBGcmFuY2lzY28xFTATBgNVBAoMDEV4YW1wbGUgQ29ycDELMAkGA1UECwwC
+        SVQxGjAYBgNVBAMMEUV4YW1wbGUgQ3VzdG9tIENBMB4XDTI2MDUyMjE3MzA1MFoX
+        DTM2MDUxOTE3MzA1MFowejELMAkGA1UEBhMCVVMxEzARBgNVBAgMCkNhbGlmb3Ju
+        aWExFjAUBgNVBAcMDVNhbiBGcmFuY2lzY28xFTATBgNVBAoMDEV4YW1wbGUgQ29y
+        cDELMAkGA1UECwwCSVQxGjAYBgNVBAMMEUV4YW1wbGUgQ3VzdG9tIENBMIIBIjAN
+        BgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsL6acpL/Kjgeli0IR+gDLX1plOWy
+        zfLQUMvgzAtgDrMJtpxXroxISKu3twTBqmqfpT4wiUxRB0I32FZ+em+cLFFL6p4R
+        0KQEQeF9dz7BEof/IWqcHNEK1ejRzqIZDxB1EyShctCICbTFHvoz1OEl1Ue/+RTD
+        lA/ofCBlRcl2PyEDlAA+3O7ZIIC9ZnYDiogyyrY5FS3Hx7SBVV5FPST7CJYKNMtN
+        E/nT+9Emq+7jvvevSyTcg7uAOL3JEXYedZMQdIO28gUOSKnAQ0TP1d+aztZKL76o
+        CNCsj2vR26GePwuo7u7iKeKVSmlNnmvq0gSHaMwpovrblvwgVF+qqUBk8QIDAQAB
+        o1MwUTAdBgNVHQ4EFgQU03g3BsbVosFCix5MHtZiwesPZUkwHwYDVR0jBBgwFoAU
+        03g3BsbVosFCix5MHtZiwesPZUkwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0B
+        AQsFAAOCAQEAd6cn/mOKkdzEZue+LiSGn+F+vKxO95ADHHN8jRGkA5JrWefhclrM
+        uGeHvsjplmKzS1mSHw0g7dyZIkaLD6PQCdtZXj2brtLpNUbNT2L/TXEySuz/L5vC
+        gaEjw60iNxkpekH/g3F3fnRZIXUkZeobnZcPAgChEKGzCoxOFkS66t7HR+H13rI6
+        rF2f6e7ANhBapvuYoLrFNtLLKni5hutWwK0yKR/XLJffNpfF5Sca/yfM3dnum+3c
+        sGJUGGbKhCHIse1JoVgplEYktj4NaXQBGX3/YBYjkBrDsU1xfe12XoiG/jz5OqGO
+        G5sHzAbunjcNmkObxlzIruabPiLt8Fr8vw==
+        -----END CERTIFICATE-----
+      
+      # You can add multiple certificates here
+      # another-cert.crt: |
+      #   -----BEGIN CERTIFICATE-----
+      #   ...
+      #   -----END CERTIFICATE-----
+
