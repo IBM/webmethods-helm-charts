@@ -181,6 +181,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | [fluentd-sidecar](../examples/fluentd-sidecar/README.md) | Running API Gateway with Fluentd Sidecar |
 | [house-keeping-job](../examples/house-keeping-job/README.md) | Example to create house keeping job: purge transaction events  |
 | [custom-resource-objects](../examples/custom-resource-objects/README.md) | Example of deploying Custom Resource objects  |
+| [unauthenticated-health-check](../unauthenticated-health-check/README.md) | Enable Enable Unauthenticated Health Check |
 
 ## Version History
 
@@ -221,6 +222,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.8.0` | Option `timeZone` for Cron Job added. `tpl` function support added on `podAnnotation` option. |
 | `3.9.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 | `3.10.0` | Set JVM heap for 11.x images with values `initJVMHeap` and `maxJVMHeap`. |
+| `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
 
 ## Chart Version `3.0.0`
 

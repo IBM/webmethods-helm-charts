@@ -128,6 +128,10 @@ spec:
             {{- end }}
             resources:
               {{- toYaml .Values.elasticsearch.resources | nindent 14 }}
+            {{- with .Values.elasticsearch.defaultNodeSet.securityContext }}
+            securityContext:
+              {{- tpl (toYaml .) $context  | nindent 14 }}
+            {{- end }}
           volumes:
             {{- if .Values.elasticsearch.defaultNodeSet.extraVolumes }}
             {{- tpl ( toYaml .Values.elasticsearch.defaultNodeSet.extraVolumes ) $ | nindent 12 }}
