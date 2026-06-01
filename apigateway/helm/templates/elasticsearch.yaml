@@ -118,6 +118,10 @@ spec:
           {{- if .Values.elasticsearch.priorityClassName }}
           priorityClassName: {{ .Values.elasticsearch.priorityClassName }}
           {{- end }}
+          {{- with .Values.elasticsearch.defaultNodeSet.securityContext }}
+          securityContext:
+            {{- tpl (toYaml .) $context  | nindent 12 }}
+          {{- end }}
           imagePullSecrets:
             {{- toYaml .Values.imagePullSecrets | nindent 12 }}
           containers:
