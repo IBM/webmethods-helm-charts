@@ -119,10 +119,28 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# -- Global service vaules
 service:
   type: ClusterIP
   port: 80
+  annotations: {}
+  # z.B.:
+  # annotations:
+  #   foo: bar
 
+# -- Runtime Service configuration
+runtimeService:
+  annotations: {}
+
+# -- Admin Service configuration
+adminService:
+  annotations: {}
+
+# -- UI Service configuration
+uiService:
+  annotations: {}
+
+# -- grpc Service configuration
 grpcService:
   enabled: false
   type: LoadBalancer
@@ -130,9 +148,10 @@ grpcService:
   dnsExternal: false
   hostname: ""
 
-# -- external service for reverse invoke setup.
+# -- External Service configuration for reverse invoke setup.
 externalService:
   enabled: false
+  annotations: {}
 
 # -- DMZ setup with external traffice and reverse-invoke setup using node port.
 # 
