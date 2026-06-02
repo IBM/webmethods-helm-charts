@@ -1,0 +1,68 @@
+# Example for offline installation of Elasticsearch plugins. 
+# This example uses the default download url from elasticsearch plugins, exchange this with your local Artifactory URL for Air-gapped installations. 
+
+image:
+  tag: "11.1"
+  repository: ibmwebmethods.azurecr.io/apigateway-minimal
+
+appVersion: "11.1"
+
+apigw:
+  isHomeDir: /opt/softwareag/IntegrationServer
+
+# License Key is not required for 11.x
+skipLicenseKey: true
+
+# Skip Kibana Autostart Parameter for minimal 11.x container images
+skipKibanaAutostartParameter: true
+
+elasticsearch:
+  version: "8.17.3"
+  defaultNodeSet:
+
+    # important: set to false in order to avoid the installation of the mapper-size plugin from the official plugin repository
+    installMapperSizePlugin: false
+    extraInitContainers:
+      install-mapper-size-plugin:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.17.3
+        command:
+          - /bin/bash
+          - -c
+          - |
+            set -euo pipefail
+
+            PLUGIN_FILE="/tmp/mapper-size.zip"
+
+            curl -fL \
+              -u "${ARTIFACTORY_USERNAME}:${ARTIFACTORY_PASSWORD}" \
+              -o "${PLUGIN_FILE}" \
+              "${MAPPER_SIZE_PLUGIN_URL}"
+
+            bin/elasticsearch-plugin install --batch "file://${PLUGIN_FILE}"
+
+        env:
+          - name: ARTIFACTORY_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: artifactory-credentials
+                key: username
+          - name: ARTIFACTORY_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: artifactory-credentials
+                key: password
+          - name: MAPPER_SIZE_PLUGIN_URL
+            value: "https://artifacts.elastic.co/downloads/elasticsearch-plugins/mapper-size/mapper-size-8.17.3.zip"
+
+        volumeMounts:
+          - name: elasticsearch-plugins
+            mountPath: /usr/share/elasticsearch/plugins
+
+    extraVolumes:
+      - name: elasticsearch-plugins
+        emptyDir: {}
+  
+
+kibana:
+  version: "8.17.3"
+

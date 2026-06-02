@@ -167,8 +167,9 @@ spec:
               memory: 100Mi
           {{- end }}
           {{- if .Values.elasticsearch.defaultNodeSet.extraInitContainers }}
-          {{- range $init := .Values.elasticsearch.defaultNodeSet.extraInitContainers }}
-          - {{- tpl (toYaml . ) $context  | nindent 12 }}
+          {{- range $name, $init := .Values.elasticsearch.defaultNodeSet.extraInitContainers }}
+          - name: {{ $name }}
+            {{- tpl (toYaml $init ) $context  | nindent 12 }}
           {{- end }}
           {{- end }}
   {{- end }}
