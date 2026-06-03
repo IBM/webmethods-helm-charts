@@ -223,6 +223,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.9.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 | `3.10.0` | Set JVM heap for 11.x images with values `initJVMHeap` and `maxJVMHeap`. |
 | `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
+| `3.12.0` | Add ability to set global an per service annotations |
 
 ## Chart Version `3.0.0`
 
@@ -257,6 +258,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| adminService | object | `{"annotations":{}}` | Admin Service configuration |
 | affinity | object | `{}` | Set Pod (anti-) affinity for APIGW. You can use templates inside because `tpl` function is called for rendering. |
 | apigw.adminPort | int | `5555` | The default administration port. Note in a default installation this port will also be used for runtime traffic. Set the port to empty value if you don't want to expose the administration port as a service. |
 | apigw.adminSecretKey | string | `""` | The key that holds the admin secret key; defauls to "password" |
@@ -333,7 +335,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | elasticsearch.topologySpreadConstraints | object | `{}` | Set Pod topology spread constraints for ElasticSearch. You can use templates inside because `tpl` function is called for rendering. |
 | elasticsearch.version | string | `"8.2.3"` | The ECK version to be used |
 | external | object | `{}` | DMZ setup with external traffice and reverse-invoke setup using node port.  nodePortService:  "apigw-nodeport-svc" k8sDomain:        ".k8s.dmz.sew" ports:   node:           30000 # node port for reverse invoke   registration:   7555  # port for registration of internal server |
-| externalService | object | `{"enabled":false}` | external service for reverse invoke setup. |
+| externalService | object | `{"annotations":{},"enabled":false}` | External Service configuration for reverse invoke setup. |
 | extraConfigMaps | list | `[]` | Extra config maps for additional configurations such as extra ports, etc. |
 | extraContainers | list | `[]` | Extra containers which should run in addition to the main container as a sidecar - name: do-something   image: busybox   command: ['do', 'something'] |
 | extraEnvs | object | `{}` | Exta environment properties to be passed on to the container |
@@ -349,11 +351,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | global.curlImage | string | `"curlimages/curl"` |  |
 | global.elasticsearch | object | `{"port":9200,"serviceName":""}` | Elasticsearch global settings Required for Prometheus Exporter Sub Chart |
 | global.elasticsearch.serviceName | string | `""` | The elasticsearch http service name that API Gateway uses. The default is compiled of the fullname (releasename + chart name) + "-http" You MUST override this if you use an external elastic search service and do not deploy the embedded elastic CRD from this chart. |
-| grpcService.azureInternalLoadBalancer | bool | `false` |  |
-| grpcService.dnsExternal | bool | `false` |  |
-| grpcService.enabled | bool | `false` |  |
-| grpcService.hostname | string | `""` |  |
-| grpcService.type | string | `"LoadBalancer"` |  |
+| grpcService | object | `{"azureInternalLoadBalancer":false,"dnsExternal":false,"enabled":false,"hostname":"","type":"LoadBalancer"}` | grpc Service configuration |
 | hostAliases | list | `[]` | Value to add extra host aliases to APIGW container. |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.repository | string | `"ibmwebmethods.azurecr.io/apigateway-minimal"` | The repository for the image. By default, this points to the IBM webMethods container repository. Change this for air-gapped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
@@ -500,10 +498,10 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | routes | object | `{"admin":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"adminport"},"ui":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"uiport"}}` | Routes for admin, ui port for openshift |
 | routes.admin | object | `{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"adminport"}` | Route for API Gateway Admin Port |
 | routes.ui | object | `{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"uiport"}` | Route for API Gateway UI Port |
+| runtimeService | object | `{"annotations":{}}` | Runtime Service configuration |
 | secrets | object | `{"generateAdminSecret":true,"generateElasticSecrets":true}` | Controls if secrets should be generated automatically. |
 | securityContext | object | `{}` |  |
-| service.port | int | `80` |  |
-| service.type | string | `"ClusterIP"` |  |
+| service | object | `{"annotations":{},"port":80,"type":"ClusterIP"}` | Global service vaules |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `true` | - apiVersion: rbac.authorization.k8s.io/v1 kind: Role metadata:   name: {{ include "common.names.roleName" . }} rules: - apiGroups:   - ""   resources:   - pods   - endpoints   verbs:   - get   - list   - watch |
 | serviceAccount.name | string | `""` | The name of the service account to use. If not set and create is true, a name is generated using the fullname template |
@@ -516,3 +514,4 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | strategy | object | `{}` | The update strategy to use |
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | object | `{}` | Set Pod topology spread constraints for APIGW. You can use templates inside because `tpl` function is called for rendering. |
+| uiService | object | `{"annotations":{}}` | UI Service configuration |
