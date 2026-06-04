@@ -223,7 +223,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.9.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 | `3.10.0` | Set JVM heap for 11.x images with values `initJVMHeap` and `maxJVMHeap`. |
 | `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
-| `3.12.0` | Add ability to set global an per service annotations |
+| `3.12.0` | Add ability to set global and per service annotations |
 
 ## Chart Version `3.0.0`
 
