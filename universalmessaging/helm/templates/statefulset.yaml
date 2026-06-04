@@ -77,9 +77,9 @@ spec:
               path: Custom_Server_Common.conf
         {{- if .Values.extraVolumes }}
         {{- if eq "string" (printf "%T" .Values.extraVolumes) }}
-          {{ tpl .Values.extraVolumes . | nindent 8 }}
+        {{- tpl .Values.extraVolumes . | nindent 8 }}
         {{- else }}
-          {{ toYaml .Values.extraVolumes | nindent 8 }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
         {{- end }}
         {{- end }}
       initContainers:
@@ -121,11 +121,11 @@ spec:
             readOnly:  true
           {{- if .Values.extraVolumeMounts }}
           {{- if eq "string" (printf "%T" .Values.extraVolumeMounts) }}
-            {{- tpl .Values.extraVolumeMounts . | nindent 12 }}              
+          {{- tpl .Values.extraVolumeMounts . | nindent 10 }}
           {{- else }}
-            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+          {{- toYaml .Values.extraVolumeMounts | nindent 10 }}
           {{- end }}
-          {{- end }}            
+          {{- end }}
           env:
           {{- if .Values.um.realmName }}
           - name: REALM_NAME
