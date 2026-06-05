@@ -27,6 +27,13 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
     service-name: {{ include "common.names.fullname" . }}-rt
+  annotations:
+    {{- with .Values.service.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.runtimeService.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -51,6 +58,13 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
     service-name: {{ include "common.names.fullname" . }}-admin
+  annotations:
+    {{- with .Values.service.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.adminService.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -75,6 +89,13 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
     service-name: {{ include "common.names.fullname" . }}-ui
+  annotations:
+    {{- with .Values.service.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.uiService.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   sessionAffinity: ClientIP
@@ -98,12 +119,18 @@ kind: Service
 metadata:
   name: {{ include "common.names.fullname" . }}-grpc
   annotations:
-  {{- if .Values.grpcService.azureInternalLoadBalancer }}
+    {{- with .Values.service.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.grpcService.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- if .Values.grpcService.azureInternalLoadBalancer }}
     service.beta.kubernetes.io/azure-load-balancer-internal: "true"
-  {{- end }}
-  {{- if .Values.grpcService.dnsExternal }}
+    {{- end }}
+    {{- if .Values.grpcService.dnsExternal }}
     external-dns.alpha.kubernetes.io/hostname: {{ .Values.grpcService.hostname }}
-  {{- end }}
+    {{- end }}
   labels:
     {{- include "common.labels.standard" . | nindent 4 }}
     {{- with .Values.extraLabels -}}
@@ -135,6 +162,13 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
     service-name: {{ include "common.names.fullname" . }}-external
+  annotations:
+    {{- with .Values.service.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
+    {{- with .Values.externalService.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: {{ .Values.service.type }}
   sessionAffinity: ClientIP
@@ -166,6 +200,10 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
     service-name: {{ include "common.names.fullname" $ }}-nodeport
+  annotations:
+    {{- with .Values.service.annotations }}
+    {{ toYaml . | nindent 4 }}
+    {{- end }}
 spec:
   type: NodePort
   ports:

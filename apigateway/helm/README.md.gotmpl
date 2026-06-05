@@ -26,12 +26,12 @@ This will install the API Gateway cluster with the following default configurati
 
 ### Version 11.x Settings
 
-The API Gateway Minimal Image does not have a default instance folder any more. Set `--set apigw.isHomeDir=/opt/softwareag/IntegrationServer` to change the default IS home directory correctly. 
+The API Gateway Minimal Image does not have a default instance folder any more. Set `--set apigw.isHomeDir=/opt/softwareag/IntegrationServer` to change the default IS home directory correctly.
 Please also check the 11.x example here: [example-11](../examples/apigw-11/README.md)
 
-### Licenses for 10.15 
+### Licenses for 10.15
 
-Up until version 10.15, API Gateway requires a valid license key. If you have a license that expires soon, please either update to fix YAI_10.15_Fix23 (Included in image tag: 10.15.0.23) 
+Up until version 10.15, API Gateway requires a valid license key. If you have a license that expires soon, please either update to fix YAI_10.15_Fix23 (Included in image tag: 10.15.0.23)
 
 OR follow the instructions at https://community.ibm.com/community/user/blogs/marianne-fuller/2024/11/20/webmethods-product-offering-details download new license keys, replace your existing license key via:
 
@@ -85,7 +85,7 @@ Optionally you can directly provide the license file at the time of running `hel
 helm install <your-release-name> webmethods/apigateway -f my-values.yaml --set-file license=licenseKey.xml
 ```
 
-Note: 
+Note:
 
 - The license key config map will not be removed when the helm release is deleted.
 - API Gateway version >= 11.x does no longer require a license key. You can skip the license config map by providing `--set skipLicenseKey=true`or provide this as part of your custom values file. See also Important Notes.
@@ -222,7 +222,8 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.8.0` | Option `timeZone` for Cron Job added. `tpl` function support added on `podAnnotation` option. |
 | `3.9.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 | `3.10.0` | Set JVM heap for 11.x images with values `initJVMHeap` and `maxJVMHeap`. |
-| `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` | 
+| `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
+| `3.12.0` | Add ability to set global and per service annotations |
 
 ## Chart Version `3.0.0`
 
