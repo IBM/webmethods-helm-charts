@@ -768,6 +768,10 @@ elasticsearch:
 
 
 kibana:
+
+  # -- Deploy 
+  deploy: true
+
   # -- The ECK version to be used
   version: 8.2.3
 
