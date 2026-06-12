@@ -224,6 +224,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.10.0` | Set JVM heap for 11.x images with values `initJVMHeap` and `maxJVMHeap`. |
 | `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
 | `3.12.0` | Add ability to set global and per service annotations |
+| `3.12.1` | Add option `kibana.deploy` to deploy api gateway without Kibana. Defaults to `true`|
 
 ## Chart Version `3.0.0`
 
@@ -423,6 +424,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | kibana.customLogging.enabled | bool | `false` | Enable custom logging configuration. |
 | kibana.customLogging.loggers | list | `[]` | Define loggers other than root logger. Example for custom server logger: - name: server   appenders: [console]   level: warn |
 | kibana.customLogging.root | object | `{}` | Define which appenders are used by root logger. Example for logging to file additionally to default/console:   appenders: [file, default]   level: warn |
+| kibana.deploy | bool | `true` | Deploy  |
 | kibana.extraContainers | list | `[]` | The definition of extra containers for kibana. |
 | kibana.extraInitContainers | list | `[]` | The definition of extra initContainers for kibana. |
 | kibana.extraLabels | object | `{}` | Additional labels to be added to kibana pod labels. |
