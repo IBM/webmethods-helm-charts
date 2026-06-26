@@ -36,6 +36,9 @@ spec:
   {{- if .Values.elasticsearch.image }}
   image: {{ .Values.elasticsearch.image }}
   {{- end }}
+  {{- if .Values.elasticsearch.volumeClaimDeletePolicy }}
+  volumeClaimDeletePolicy: { { .Values.elasticsearch.volumeClaimDeletePolicy } }
+  {{- end }}
   http:
     tls:
     {{- if .Values.elasticsearch.tlsEnabled }}
