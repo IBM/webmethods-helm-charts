@@ -61,6 +61,10 @@ spec:
   - name: {{ $key }}
     value: {{ $val }}
   {{- end }}
+  {{- range $key, $val := .Values.terracotta.extraEnvs }}
+  - name: {{ $key }}
+    value: {{ $val }}
+  {{- end }}
   {{- if (gt (int .Values.terracotta.voters) 0) }}
   voters: {{ .Values.terracotta.voters }}
   {{- end }}
