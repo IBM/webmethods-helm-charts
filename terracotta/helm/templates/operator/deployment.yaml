@@ -62,6 +62,10 @@ spec:
         - name: {{ $key }}
           value: {{ $val }}
         {{- end }}
+        {{- range $key, $val := .Values.terracottaOperator.extraEnvs }}
+        - name: {{ $key }}
+          value: {{ $val }}
+        {{- end }}
 
       serviceAccountName: {{ template "kube-terracotta.operator.serviceAccountName" . }}
       {{- with .Values.imagePullSecrets }}
