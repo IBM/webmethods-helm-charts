@@ -19,7 +19,7 @@ securityContext:
 # -- Extra Labels
 extraLabels: {}
 
-# -- Exta environment properties to be passed on to the terracotta runtime
+# -- Extra environment properties to be passed on to the terracotta runtime
 # extraEnvs:
 #   name: extraEnvironmentVariable
 #   value: "myvalue"
@@ -37,6 +37,8 @@ terracottaOperator:
        name: ""
    connectionTimeout: "30s"
    requestTimeout: "30s"
+   # -- Extra environment properties to be passed to the container
+   extraEnvs:
 
 terracotta:
    serverImage: "ibmwebmethods.azurecr.io/terracotta-server"
@@ -67,6 +69,8 @@ terracotta:
    affinity:
    # -- Configure pod topologySpreadConstraints for terracotta server
    topologySpreadConstraints:
+   # -- Extra environment properties to be passed to the container
+   extraEnvs:
 
 tms: 
  tmsImage: "ibmwebmethods.azurecr.io/terracotta-management-server"
@@ -75,6 +79,8 @@ tms:
  jsonSecurityLogging: true
  storage: 5Gi
  resources: {}
+ # -- Extra environment properties to be passed to the container
+ extraEnvs:
  #  limits:
  #   memory: 16Gi
  # requests:
@@ -90,3 +96,18 @@ trg:
   jsonLogging: false
   jsonAuditLogging: true
   jsonSecurityLogging: true
+  # -- Connection timeout before failing the server. This is currently not possible to set it to infinite using 0 (issue: TDB-21419).
+  connectionTimeout: "604800"
+  storage: 1Gi
+  resources: {}
+  # -- Extra environment properties to be passed to the container
+  extraEnvs:
+  #  limits:
+  #   memory: 2Gi
+  # requests:
+  #   memory: 512Mi
+
+  # -- Configure pod affinity for the REST gateway
+  affinity:
+  # -- Configure pod topologySpreadConstraints for the REST gateway
+  topologySpreadConstraints:

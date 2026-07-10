@@ -2,26 +2,30 @@
 
 ## Table of Contents
 
-- [Overview](#overview)
-- [Disclaimer and Warnings](#disclaimer-and-warnings)
-- [Version History](#version-history)
-- [Compatibility Matrix](#compatibility-matrix)
-- [Prerequisites](#prerequisites)
-- [Platforms](#platforms)
-- [Installation](#installation)
-  - [Add the Helm Repository](#add-the-helm-repository)
-  - [Install the Chart](#install-the-chart)
-  - [Verify Installation](#verify-installation)
 - [Configuration](#configuration)
 - [Upgrading](#upgrading)
 - [Uninstalling](#uninstalling)
 - [Setup Guide](#setup-guide)
+- [How to use the helm chart to perform various operations](#how-to-use-the-helm-chart-to-perform-various-operations)
   - [Creating a new Terracotta cluster](#creating-a-new-terracotta-cluster)
-  - [With default settings](#with-default-settings)
+    - [With default settings](#with-default-settings)
   - [Node/Stripe scaling](#nodestripe-scaling)
+    - [Adding a node in all stripes of an activated cluster](#adding-a-node-in-all-stripes-of-an-activated-cluster)
+    - [Removing a node from all stripes of an activated cluster](#removing-a-node-from-all-stripes-of-an-activated-cluster)
+    - [Adding a stripe to an activated cluster](#adding-a-stripe-to-an-activated-cluster)
+    - [Removing a stripe from an activated cluster](#removing-a-stripe-from-an-activated-cluster)
   - [Running In Consistency Mode](#running-in-consistency-mode)
   - [Running with Security](#running-with-security)
+    - [Creation procedure of myrelease-terracotta-stripe-1-security-configmap](#creation-procedure-of-myrelease-terracotta-stripe-1-security-configmap)
+    - [Creation procedure of myrelease-terracotta-stripe-2-security-configmap](#creation-procedure-of-myrelease-terracotta-stripe-2-security-configmap)
+    - [Creation procedure of myrelease-tool-security-configmap](#creation-procedure-of-myrelease-tool-security-configmap)
+    - [Creation procedure of myrelease-tms-security-configmap](#creation-procedure-of-myrelease-tms-security-configmap)
+  - [REST Gateway](#rest-gateway)
+    - [Configuring the REST Gateway](#configuring-the-rest-gateway)
+    - [Running with Security](#running-with-security-1)
+      - [Creation procedure of myrelease-trg-security-configmap](#creation-procedure-of-myrelease-trg-security-configmap)
 - [F.A.Q and Troubleshooting](#faq-and-troubleshooting)
+- [Values](#values)
 
 ## Overview
 
@@ -57,11 +61,12 @@ invalidated._
 
 ## Version History
 
-| Version | Changes and Description               |
-|---------|---------------------------------------|
-| `1.0.0' | Initial release                       |
-| `2.0.0' | Support for release name in resources |
-| `3.0.0' | Updated folder path (XPC)             |
+| Version | Changes and Description                                     |
+| ------- | ----------------------------------------------------------- |
+| `1.0.0` | Initial release                                             |
+| `2.0.0` | Support for release name in resources                       |
+| `3.0.0` | Updated folder path (XPC)                                   |
+| `3.1.0` | REST Gateway StatefulSet, Service and config volume support |
 
 ⚠️ Resources and resources names have been updated from version 1 to version to so doing a helm uninstall/install with
 new version 2 from version 1 will not re-use the previous PVC (data). You may need to perform a manual sync of the PVC
@@ -72,10 +77,10 @@ data.
 ## Compatibility Matrix
 
 | NAME                  | CHART VERSION |  APP VERSION   |
-| :-------------------- |:-------------:|:--------------:|
+| :-------------------- | :-----------: | :------------: |
 | webmethods/terracotta |     `1.x`     | `<  11.1.0.12` |
 | webmethods/terracotta |     `2.x`     | `>= 11.1.0.12` |
-| webmethods/terracotta |     `3.x`     | `12.x`         |
+| webmethods/terracotta |     `3.x`     |     `12.x`     |
 
 ## Prerequisites
 
@@ -125,19 +130,28 @@ kubectl get services
 
 The following table lists the main configurable parameters of the Terracotta chart and their default values.
 
-| Parameter               | Description                             | Default                   |
-| ----------------------- | --------------------------------------- | ------------------------- |
-| `stripes`               | Number of stripes in the cluster        | `2`                       |
-| `nodes`                 | Number of nodes per stripe              | `2`                       |
-| `offheaps`              | Off-heap memory configuration           | `"offheap-1:512MB"`       |
-| `datadirs`              | Data directory configuration            | `"dataroot-1,dataroot-2"` |
-| `failoverPriority`      | Failover priority mode                  | `"availability"`          |
-| `clusterName`           | Name of the Terracotta cluster          | `"my-cluster"`            |
-| `namespaceOverride`     | Override default namespace              | `""`                      |
-| `voters`                | Number of voter pods (consistency mode) | `0`                       |
-| `security.isConfigured` | Enable security features                | `false`                   |
-| `security.sslEnabled`   | Enable SSL/TLS                          | `"false"`                 |
-| `security.authc`        | Authentication method                   | `""`                      |
+| Parameter                       | Description                                                                              | Default                        |
+| ------------------------------- | ---------------------------------------------------------------------------------------- | ------------------------------ |
+| `stripes`                       | Number of stripes in the cluster                                                         | `2`                            |
+| `nodes`                         | Number of nodes per stripe                                                               | `2`                            |
+| `offheaps`                      | Off-heap memory configuration                                                            | `"offheap-1:512MB"`            |
+| `datadirs`                      | Data directory configuration                                                             | `"dataroot-1,dataroot-2"`      |
+| `failoverPriority`              | Failover priority mode                                                                   | `"availability"`               |
+| `clusterName`                   | Name of the Terracotta cluster                                                           | `"my-cluster"`                 |
+| `namespaceOverride`             | Override default namespace                                                               | `""`                           |
+| `voters`                        | Number of voter pods (consistency mode)                                                  | `0`                            |
+| `security.isConfigured`         | Enable security features                                                                 | `false`                        |
+| `security.sslEnabled`           | Enable SSL/TLS                                                                           | `"false"`                      |
+| `security.authc`                | Authentication method                                                                    | `""`                           |
+| `trg.trgImage`                  | REST Gateway container image                                                             | `ibmwebmethods.azurecr.io/...` |
+| `trg.storage`                   | PVC size for REST Gateway run data and audit logs                                        | `1Gi`                          |
+| `trg.resources`                 | CPU/memory resource requests and limits for the REST Gateway pod                         | `{}`                           |
+| `trg.extraEnvs`                 | Extra environment variables for the REST Gateway pod (key/value map, `TRG_*` convention) | `{}`                           |
+| `trg.jsonLogging`               | Enable JSON logging for REST Gateway                                                     | `false`                        |
+| `trg.jsonAuditLogging`          | Enable JSON audit logging for REST Gateway                                               | `true`                         |
+| `trg.jsonSecurityLogging`       | Enable JSON security logging for REST Gateway                                            | `true`                         |
+| `trg.affinity`                  | Pod affinity rules for the REST Gateway                                                  |                                |
+| `trg.topologySpreadConstraints` | Pod topology spread constraints for the REST Gateway                                     |                                |
 
 Specify each parameter using the `--set key=value[,key=value]` argument to `helm install`. For example:
 
@@ -388,142 +402,243 @@ This chart can also be used to run secure Terracotta cluster and TMS.
    terracotta.security.whitelist can be configured with values similar to terracotta server start up script. For ex - If
    only ssl is required values.yaml can be configured like following-
 
-   ```
-   security:
-     isConfigured: true
-     sslEnabled: "true"
-   ```
+    ```
+    security:
+      isConfigured: true
+      sslEnabled: "true"
+    ```
 
-   If ssl with authentication is required values.yaml can be configured like following -
+    If ssl with authentication is required values.yaml can be configured like following -
 
-   ```
-   security:
-     isConfigured: true
-     sslEnabled: "true"
-     authc: "file"
-   ```
+    ```
+    security:
+      isConfigured: true
+      sslEnabled: "true"
+      authc: "file"
+    ```
 
 3. This chart requires various configmaps to be present in the namespace in which the terracotta cluster is supposed to
    be deployed. It contains the security root directories for various nodes of the terracotta cluster. For ex - For
    running 2 stripes 2 nodes secure cluster in the default namespace following configmaps need to be created in the
    default namespace.
 
-   ```
-   myrelease-terracotta-stripe-1-security-configmap -> It should contain the security root directory for myrelease-terracotta-stripe-1.
-   myrelease-terracotta-stripe-2-security-configmap -> It should contain the security root directory for myrelease-terracotta-stripe-2.
-   myrelease-tool-security-configmap -> It should contain the client security root directory for communicating with the various terracotta server nodes.
-   myrelease-tms-security-configmap -> It should contain the security root directory for terracotta management server and the tms.properties file .
-   ```
+    ```
+    myrelease-terracotta-stripe-1-security-configmap -> It should contain the security root directory for myrelease-terracotta-stripe-1.
+    myrelease-terracotta-stripe-2-security-configmap -> It should contain the security root directory for myrelease-terracotta-stripe-2.
+    myrelease-tool-security-configmap -> It should contain the client security root directory for communicating with the various terracotta server nodes.
+    myrelease-tms-security-configmap -> It should contain the security root directory for terracotta management server and the tms.properties file.
+    myrelease-trg-security-configmap -> It should contain the security root directory and the rest-gateway.properties config file for the REST Gateway.
+    ```
 
-   kubectl create configmap can be used for the creation of the above mentioned configmaps.
+    kubectl create configmap can be used for the creation of the above mentioned configmaps.
 
-   ##### Creation procedure of myrelease-terracotta-stripe-1-security-configmap
-
-   ```
-   mdh@SAG-1HXQKG3:~/Downloads/myrelease-terracotta-stripe-1-security$ ls
-   access-control  identity  trusted-authority
-   ```
-
-   Step 1: create tar.gz file from the above directory like following -
-
-   ```
-   tar -czf security.tar.gz myrelease-terracotta-stripe-1-security
-   ```
-
-   Step 2 : create configmap from the security.tar.gz using following command -
-
-   ```
-   kubectl create configmap myrelease-terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
-   ```
-
-   ##### Creation procedure of myrelease-terracotta-stripe-2-security-configmap
-
-   ```
-   mdh@SAG-1HXQKG3:~/Downloads/myrelease-terracotta-stripe-2-security$ ls
-   access-control  identity  trusted-authority
-   ```
-
-   Step 1: create tar.gz file from the above directory like following -
-
-   ```
-   tar -czf security.tar.gz myrelease-terracotta-stripe-2-security
-   ```
-
-   Step 2 : create configmap from the security.tar.gz using following command -
-
-   ```
-   kubectl create configmap myrelease-terracotta-stripe-2-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
-   ```
-
-   ##### Creation procedure of myrelease-tool-security-configmap
-
-   ```
-   mdh@SAG-1HXQKG3:~/Downloads/myrelease-tool-security$ ls
-   identity  trusted-authority
-   ```
-
-   Step 1: create tar.gz file from the above directory like following -
-
-   ```
-   tar -czf security.tar.gz myrelease-tool-security
-   ```
-
-   Step 2 : create configmap from the security.tar.gz using following command -
-
-   ```
-   kubectl create configmap myrelease-tool-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
-   ```
-
-   ##### Creation procedure of myrelease-tms-security-configmap
-
-   An additional tms.properties must also be present in myrelease-tms-security-configmap which is necessary for configuring security in TMS. For ex -
-
-   ```
-   mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ ls
-   client  tms  tms.properties
-
-   tms.properties file must have following properties configured like following -
-
-   # tms directory should be configured like following
-   tms.security.root.directory=/opt/terracotta/config/tms
-
-   # if audit directory is required
-   tms.security.audit.directory=
-
-   # Whether HTTPS should be configured for connections between browsers and the TMS.
-   tms.security.https.enabled=true
-
-   # client directory should be configured like following
-   tms.security.root.directory.connection.default=/opt/terracotta/config/client
-   ```
-
-   Next create a tar.gz for security folder like following -
-
-   ```
-   mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ tar -czf security.tar.gz .
-   This is necessary since the docker container for tms looks for tms.properties file inside /opt/softwareag/config inside container.
-   ```
-
-   ```
-   Note- The directory names for creating security.tar.gz i.e myrelease-terracotta-stripe-1-security, myrelease-tool-security etc. must be as its shown in
-   the above example because these are the names that's used internally by terracotta operator.
-   ```
-
-4. Once, all the above mentioned configmaps are deployed in the designated namespace inside the kubernetes cluster helm
+4. Once, all the below mentioned configmaps are deployed in the designated namespace inside the kubernetes cluster helm
    install could be triggered.
 
-```
-Note - There are two ways in which node identity certificates can be configured.
-1. Identity certificate named <hostname>.jks for each node within identity folder of the security root directory could be configured.
-   This way during scaling up the number of nodes in a stripe, its security configmap needs to be updated everytime
-   before triggering helm upgrade via creation of new security.tar.gz from the updated security root directory and then finally updating the configmap
-   via ` kubectl create configmap myrelease-terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f - `.
+    ```
+    Note - There are two ways in which node identity certificates can be configured.
+    1. Identity certificate named <hostname>.jks for each node within identity folder of the security root directory could be configured.
+      This way during scaling up the number of nodes in a stripe, its security configmap needs to be updated everytime
+      before triggering helm upgrade via creation of new security.tar.gz from the updated security root directory and then finally updating the configmap
+      via ` kubectl create configmap myrelease-terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f - `.
 
-2. Single identity certificate for the whole stripe named wildcard.jks can be configured with CN as `*.myrelease-terracotta-stripe-<ind>.<namespace>.svc.cluster.local`.
-   This way the same certificate could be used for all the nodes in single stripe and hence there is no need to update the security configmap for the stripes in case of scaling up the number of nodes in stripes.
+    2. Single identity certificate for the whole stripe named wildcard.jks can be configured with CN as `*.myrelease-terracotta-stripe-<ind>.<namespace>.svc.cluster.local`.
+      This way the same certificate could be used for all the nodes in single stripe and hence there is no need to update the security configmap for the stripes in case of scaling up the number of nodes in stripes.
+    ```
+
+##### Creation procedure of myrelease-terracotta-stripe-1-security-configmap
+
+```
+mdh@SAG-1HXQKG3:~/Downloads/myrelease-terracotta-stripe-1-security$ ls
+access-control  identity  trusted-authority
+```
+
+Step 1: create tar.gz file from the above directory like following -
+
+```
+tar -czf security.tar.gz myrelease-terracotta-stripe-1-security
+```
+
+Step 2 : create configmap from the security.tar.gz using following command -
+
+```
+kubectl create configmap myrelease-terracotta-stripe-1-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+```
+
+##### Creation procedure of myrelease-terracotta-stripe-2-security-configmap
+
+```
+mdh@SAG-1HXQKG3:~/Downloads/myrelease-terracotta-stripe-2-security$ ls
+access-control  identity  trusted-authority
+```
+
+Step 1: create tar.gz file from the above directory like following -
+
+```
+tar -czf security.tar.gz myrelease-terracotta-stripe-2-security
+```
+
+Step 2 : create configmap from the security.tar.gz using following command -
+
+```
+kubectl create configmap myrelease-terracotta-stripe-2-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+```
+
+##### Creation procedure of myrelease-tool-security-configmap
+
+```
+mdh@SAG-1HXQKG3:~/Downloads/myrelease-tool-security$ ls
+identity  trusted-authority
+```
+
+Step 1: create tar.gz file from the above directory like following -
+
+```
+tar -czf security.tar.gz myrelease-tool-security
+```
+
+Step 2 : create configmap from the security.tar.gz using following command -
+
+```
+kubectl create configmap myrelease-tool-security-configmap --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+```
+
+##### Creation procedure of myrelease-tms-security-configmap
+
+An additional tms.properties must also be present in myrelease-tms-security-configmap which is necessary for configuring security in TMS. For ex -
+
+```
+mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ ls
+security  tms.properties
+
+tms.properties file must have following properties configured like following -
+
+# tms directory should be configured like following
+tms.security.root.directory=/opt/terracotta/config/security/tms
+
+# if audit directory is required
+tms.security.audit.directory=
+
+# Whether HTTPS should be configured for connections between browsers and the TMS.
+tms.security.https.enabled=true
+
+# client directory should be configured like following
+tms.security.root.directory.connection.default=/opt/terracotta/config/security/cluster
+```
+
+The `security` folder layout is as follow:
+
+```
+security/
+  tms/
+  cluster/
+    identity/
+    trusted-authority/
+```
+
+Next create a tar.gz for security folder like following -
+
+```
+mdh@SAG-1HXQKG3:~/Downloads/myrelease-tms-security$ tar -czf security.tar.gz .
+This is necessary since the docker container for tms looks for tms.properties file inside /opt/softwareag/config inside container.
+```
+
+```
+Note- The directory names for creating security.tar.gz i.e myrelease-terracotta-stripe-1-security, myrelease-tool-security etc. must be as its shown in
+the above example because these are the names that's used internally by terracotta operator.
+```
+
+### REST Gateway
+
+The Terracotta REST Gateway provides a REST API frontend for Terracotta Ehcache 3 and Terracotta Store.
+It is deployed as a StatefulSet (one replica) with a PVC for audit logs and runtime data under `/opt/terracotta/run`.
+
+After a default install the following additional resources appear:
+
+```
+kubectl get statefulsets
+NAME                   READY   AGE
+myrelease-trg          1/1     14m
+
+kubectl get pvc
+NAME                     STATUS   CAPACITY   ACCESS MODES
+trgdata-myrelease-trg-0  Bound    1Gi        RWO
+
+kubectl get svc
+NAME                   TYPE        CLUSTER-IP   PORT(S)
+myrelease-trg-service  ClusterIP   None         8080/TCP
+```
+
+#### Configuring the REST Gateway
+
+The REST Gateway is configured entirely through environment variables using the `TRG_*` convention
+(Spring Boot property `trg.connection.url` → env var `TRG_CONNECTION_URL`). A configuration file
+is not required. The connection URL to the Terracotta cluster is set automatically by the chart.
+
+Use `trg.extraEnvs` to pass any additional settings:
+
+```yaml
+trg:
+  extraEnvs:
+    TRG_HTTP_FIREWALL: "false"
+    LOGGING_LEVEL_COM_TERRACOTTATECH_API: DEBUG
+```
+
+#### Running with Security
+
+When `terracotta.security.isConfigured=true`, an init container unpacks a `security.tar.gz`
+archive into `/opt/terracotta/config` before the REST Gateway starts. The chart expects a
+ConfigMap named `<release-name>-trg-security-configmap` in the same namespace.
+
+The security archive works exactly like the TMS one: it contains the security root directory
+**and** the `rest-gateway.properties` application config file. The init container extracts
+everything into `/opt/terracotta/config`.
+
+##### Creation procedure of myrelease-trg-security-configmap
+
+Prepare the security folder together with the application config file:
+
+```
+myrelease-trg-security/
+  security/
+    trg/
+    cluster/
+      identity/              # REST Gateway node identity
+      trusted-authority/
+  rest-gateway.properties  # application config (optional, placed alongside the security folder)
+```
+
+A minimal `rest-gateway.properties` pointing at the security root:
+
+```properties
+trg.security.cluster.secure.dir=/opt/terracotta/config/security/cluster
+```
+
+Step 1 — create the archive from the directory containing both the security folder and the
+properties file:
+
+```bash
+tar -czf security.tar.gz myrelease-trg-security/*
+```
+
+Step 2 — create the ConfigMap:
+
+```bash
+kubectl create configmap myrelease-trg-security-configmap \
+  --from-file security.tar.gz -o yaml --dry-run=client | kubectl apply -f -
+```
+
+After the init container runs, the layout inside the pod is:
+
+```
+/opt/terracotta/config/security/cluster/identity/
+/opt/terracotta/config/security/cluster/trusted-authority/
+/opt/terracotta/config/rest-gateway.properties
 ```
 
 ## F.A.Q and Troubleshooting
-1. Please ensure that operator have enough permission to create all the  kubernetes resource in the cluster.
+
+1. Please ensure that operator have enough permission to create all the kubernetes resource in the cluster.
 2. User should also ensure they have enough permission to install crds in the cluster.
+
 {{ template "chart.valuesSection" . }}
