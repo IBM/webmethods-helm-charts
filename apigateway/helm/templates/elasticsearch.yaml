@@ -36,6 +36,9 @@ spec:
   {{- if .Values.elasticsearch.image }}
   image: {{ .Values.elasticsearch.image }}
   {{- end }}
+  {{- if .Values.elasticsearch.volumeClaimDeletePolicy }}
+  volumeClaimDeletePolicy: { { .Values.elasticsearch.volumeClaimDeletePolicy } }
+  {{- end }}
   http:
     tls:
     {{- if .Values.elasticsearch.tlsEnabled }}
@@ -93,6 +96,9 @@ spec:
         {{- if not .Values.elasticsearch.defaultNodeSet.memoryMapping  }}
         node.store.allow_mmap: false
         {{- end }}
+        { { - with .Values.elasticsearch.defaultNodeSet.extraConfig } }
+        { { - toYaml . | nindent 8 } }
+        { { - end } }
       podTemplate:
         metadata:
           labels:
