@@ -1,0 +1,16 @@
+service:
+  type: LoadBalancer
+
+  loadBalancerClass: service.k8s.aws/nlb
+  allocateLoadBalancerNodePorts: false
+
+  port: 9847
+  targetPort: 9000
+
+  metrics:
+    enabled: false
+
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    service.beta.kubernetes.io/aws-load-balancer-scheme: internal
+    service.beta.kubernetes.io/aws-load-balancer-type: external

@@ -17,7 +17,7 @@
 #  *
 #  */
 
-{{- $extraLabels        := .Values.extraLabels      -}}
+{{- $extraLabels := .Values.extraLabels -}}
 {{- range $replicaIndex := until (int .Values.replicaCount) }}
 ---
 apiVersion: v1
@@ -26,19 +26,37 @@ metadata:
   name: {{ include "common.names.fullname" $ }}-{{ $replicaIndex }}
   labels:
     {{- include "common.labels.standard" $ | nindent 4 }}
-    {{- with $extraLabels -}}
-    {{ toYaml . | nindent 4 }}
+    {{- with $extraLabels }}
+    {{- toYaml . | nindent 4 }}
     {{- end }}
+  {{- with $.Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
+  type: {{ $.Values.service.type | default "ClusterIP" }}
+
+  {{- with $.Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . | quote }}
+  {{- end }}
+
+  {{- if and (eq ($.Values.service.type | default "ClusterIP") "LoadBalancer") (hasKey $.Values.service "allocateLoadBalancerNodePorts") }}
+  allocateLoadBalancerNodePorts: {{ $.Values.service.allocateLoadBalancerNodePorts }}
+  {{- end }}
+
   selector:
     statefulset.kubernetes.io/pod-name: {{ include "common.names.fullname" $ }}-{{ $replicaIndex }}
+
   ports:
-    - port: {{ $.Values.service.port }}
-      targetPort: 9000
+    - name: nsp
+      port: {{ $.Values.service.port }}
+      targetPort: {{ $.Values.service.targetPort | default 9000 }}
       protocol: TCP
-      name: nsp
-    - port: {{ $.Values.service.metricPort }}
-      targetPort: 9200
+
+    {{- if $.Values.service.metrics.enabled }}
+    - name: metric
+      port: {{ $.Values.service.metricPort }}
+      targetPort: {{ $.Values.service.metricTargetPort | default 9200 }}
       protocol: TCP
-      name: metric
+    {{- end }}
 {{- end }}

@@ -71,6 +71,7 @@ helm install um webmethods/universalmessaging
 | `1.3.0` | Option `timeZone` for Cron Job added. `tpl` function support added on `podAnnotation` option. |
 | `1.4.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
 | `1.4.1` | Fix indentation with extra volumes and volume mounts |
+| `1.4.2` | Added annotations to services |
 
 ## Values
 
@@ -118,8 +119,11 @@ helm install um webmethods/universalmessaging
 | replicaCount | int | `1` | Number of replicas |
 | resources | object | `{}` | Define CPU und memory resources UM and Nginx containers. |
 | securityContext | object | `{}` |  |
-| service.metricPort | int | `9200` | Metrics port |
-| service.port | int | `9000` | Universal Messaging default port |
+| service.annotations | object | `{}` |  |
+| service.metricPort | int | `9200` |  |
+| service.metricTargetPort | int | `9200` |  |
+| service.metrics.enabled | bool | `true` |  |
+| service.port | int | `9000` |  |
 | service.type | string | `"ClusterIP"` |  |
 | serviceAccount.annotations | object | `{}` | Annotations to add to the service account |
 | serviceAccount.create | bool | `false` | Specifies whether a service account should be created |

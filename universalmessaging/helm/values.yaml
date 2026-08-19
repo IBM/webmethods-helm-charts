@@ -121,11 +121,17 @@ securityContext: {}
   # runAsNonRoot: true
 
 service:
-  type:       ClusterIP
-  # -- Universal Messaging default port
-  port:       9000
-  # -- Metrics port
+  type: ClusterIP
+
+  port: 9000
+
+  metrics:
+    enabled: true
+
   metricPort: 9200
+  metricTargetPort: 9200
+
+  annotations: {}
 
 storage:
   # -- Storage size of logs
