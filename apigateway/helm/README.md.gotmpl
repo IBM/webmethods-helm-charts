@@ -225,7 +225,28 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
 | `3.12.0` | Add ability to set global and per service annotations |
 | `3.12.1` | Add option `kibana.deploy` to deploy api gateway without Kibana. Defaults to `true`|
+| `3.12.2` | Add `noHost` option on ingress host entries to omit the `host` field from Ingress rules, enabling pure path-based routing (e.g. for AWS ALB). Fully backward compatible — existing values are unaffected. |
 
+
+## Chart Version `3.12.2`
+
+### `noHost` — path-based ingress routing without a host condition
+
+By default the ingress template renders a `host:` field for every rule, derived from `ingress.defaultDomain` or an explicit `host:` value. Some ingress controllers (e.g. AWS ALB) require a valid FQDN in the host condition, which conflicts with pure path-based routing setups.
+
+Setting `noHost: true` on a host entry omits the `host:` field entirely, producing a catch-all rule that matches any hostname:
+
+```yaml
+ingresses:
+  rt:
+    hosts:
+      - noHost: true          # no host: field rendered — matches all hostnames
+        paths:
+          - path: /gateway
+            pathType: Prefix
+```
+
+This is opt-in and fully backward compatible. Existing values files without `noHost` continue to render exactly as before.
 
 ## Chart Version `3.0.0`
 
