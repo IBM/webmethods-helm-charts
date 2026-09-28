@@ -68,7 +68,10 @@ spec:
   {{- end }}
   rules:
     {{- range $rules := $ing.hosts }}
-    - host: {{ default $defaultHost $rules.host | quote }}
+    {{- $resolvedHost := $rules.host | default $defaultHost }}
+    - {{- if not $rules.noHost }}
+      host: {{ $resolvedHost | quote }}
+      {{- end }}
       http:
         paths:
           {{- range $paths := $rules.paths }}
