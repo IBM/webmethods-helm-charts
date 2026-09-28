@@ -74,7 +74,7 @@ spec:
 {{ tpl (toYaml $job.podSecurityContext) $context | indent 12 }}
           {{- end }}
           containers:
-          - image: "{{ $job.image.repository }}:{{ $job.image.tag }}"
+          - image: "{{ tpl $job.image.repository $context }}:{{ tpl ($job.image.tag | toString) $context }}"
             imagePullPolicy: {{ $job.image.imagePullPolicy }}
             name: {{ $job.name }}
             {{- if hasKey $job "securityContext" }}
@@ -162,7 +162,7 @@ spec:
 {{ tpl (toYaml $job.podSecurityContext ) $context | indent 8 }}
       {{- end }}
       containers:
-      - image: "{{ $job.image.repository }}:{{ $job.image.tag }}"
+      - image: "{{ tpl $job.image.repository $context }}:{{ tpl ($job.image.tag | toString) $context }}"
         imagePullPolicy: {{ $job.image.imagePullPolicy }}
         name: {{ $job.name }}
         {{- if hasKey $job "securityContext" }}
