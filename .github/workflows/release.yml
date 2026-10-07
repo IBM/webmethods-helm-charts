@@ -50,11 +50,14 @@ jobs:
       - name: Push Helm Charts to this GitHub repo branch 'gh-pages'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMITTER_NAME: ${{ github.event.head_commit.committer.name  }}
+          COMMITTER_EMAIL: ${{ github.event.head_commit.committer.email }}
+          COMMITTER_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           pwd
           ls -la
-          git config --global user.name  "${{ github.event.head_commit.committer.name  }}"
-          git config --global user.email "${{ github.event.head_commit.committer.email }}"
+          git config --global user.name  "$COMMITTER_NAME"
+          git config --global user.email "$COMMITTER_EMAIL"
           git clone --depth 1 https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }} -b gh-pages
           cp    *.md                          webmethods-helm-charts/
           mkdir -p                            webmethods-helm-charts/charts
@@ -62,6 +65,6 @@ jobs:
           cd                                  webmethods-helm-charts/charts
           helm repo index . --url https://ibm.github.io/webmethods-helm-charts/charts
           git add .
-          git commit -am "${{ github.event.head_commit.message }}"
+          git commit -am "$COMMITTER_MESSAGE"
           git branch -M      gh-pages
           git push -f origin gh-pages
