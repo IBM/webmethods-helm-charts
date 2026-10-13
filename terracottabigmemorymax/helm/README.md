@@ -19,20 +19,23 @@ This Helm chart is provided as a minimal requirement to install Terracotta BigMe
 
 | NAME                              | CHART VERSION | APP VERSION |
 |:----------------------------------|:-------------:|:-----------:|
+| webmethods/terracottabigmemorymax |  `>= 3.0.0`   |   `4.5.1`   |
 | webmethods/terracottabigmemorymax |  `>= 2.1.1`   |   `4.5.0`   |
 | webmethods/terracottabigmemorymax |  `<= 1.4.0`   |   `4.4.0`   |
 
 ⚠️ Resources and resources names have been updated from version 1 to version to so doing a helm uninstall/install with new version 2 from version 1 will not re-use the previous PVC (data). You may need to perform a manual sync of the PVC data.
+
+⚠️ License requirement was removed in 3.0.0
 
 ## QuickStart
 
 From the helm directory
 
 ```bash
-helm install <release-name> --set-file terracotta.license=<license-file> --set tag=4.3.10-SNAPSHOT .
+helm install <release-name> --set tag=4.3.10-SNAPSHOT .
 ```
 
-**IMPORTANT note:** license and tag are mandatory parameter that need to be set during helm chart installation.
+**IMPORTANT note:** tag is a mandatory parameter.
 
 There are other parameters defined in values.yaml which can be overridden as well during installation which can be used
 for changing how terracotta cluster should be deployed in kubernetes environment. By default it deploys BigMemory
@@ -105,7 +108,7 @@ kubectl create secret generic certificatesecret \
 ### Step #2: Install the helm chart and use the above created secret.
 
 ````
-helm install "my-release" --set fullnameOverride="my-release" --set terracotta.stripeCount=2 --set terracotta.nodeCountPerStripe=1 --set-file terracotta.license=/home/mdh@eur.ad.sag/4.xlicense/license.key --set tag=4.3.10-SNAPSHOT --set security=true --set secretName=certificatesecret  .
+helm install "my-release" --set fullnameOverride="my-release" --set terracotta.stripeCount=2 --set terracotta.nodeCountPerStripe=1 --set tag=4.3.10-SNAPSHOT --set security=true --set secretName=certificatesecret  .
 ````
 
 ### Step #3: Verify from the browser to see if connections can be created securely to tmc.
@@ -198,11 +201,10 @@ helm delete <release-name>
 | serverImage | string | `"ibmwebmethods.azurecr.io/bigmemorymax-server"` | The repository for the image. By default, this points to the IBM webMethodscontainer repository. Change this for air-gaped installations or custom images. For the IBM webMethods container repository you need to have a valid access token stored as registry credentials |
 | serverStorage | string | `"10Gi"` | The pvc storage request for the server pods |
 | serviceMonitor | object | `{"enabled":false}` | Create and enable ServiceMonitor. The default is `false`. |
-| tag | string | `"4.5.0"` | Specific version to not accidentally change production versions with newer images. |
-| terracotta | object | `{"datastoreSize":"4G","jsonLogging":true,"license":"","nodeCountPerStripe":2,"offHeapSize":"2G","restartable":false,"secretName":"","security":false,"selfSignedCerts":true,"serverOpts":"","serviceAccountName":"","stripeCount":1,"tmcEnabled":true,"tmcManagementPort":9889,"tmcOpts":"","tmcSecurePort":9443,"tsaGroupPort":9530,"tsaManagementPort":9540,"tsaPort":9510}` | Terracotta BigMemoryMax configurations |
+| tag | string | `"4.5.1"` | Specific version to not accidentally change production versions with newer images. |
+| terracotta | object | `{"datastoreSize":"4G","jsonLogging":true,"nodeCountPerStripe":2,"offHeapSize":"2G","restartable":false,"secretName":"","security":false,"selfSignedCerts":true,"serverOpts":"","serviceAccountName":"","stripeCount":1,"tmcEnabled":true,"tmcManagementPort":9889,"tmcOpts":"","tmcSecurePort":9443,"tsaGroupPort":9530,"tsaManagementPort":9540,"tsaPort":9510}` | Terracotta BigMemoryMax configurations |
 | terracotta.datastoreSize | string | `"4G"` | The <datastoreSize> configuration for each Terracotta server. |
 | terracotta.jsonLogging | bool | `true` | The JSON_LOGGING environment variable for each Terracotta server. |
-| terracotta.license | string | `""` | The license content for the Terracotta cluster. Optional. |
 | terracotta.nodeCountPerStripe | int | `2` | The number of Terracotta servers per stripe. |
 | terracotta.offHeapSize | string | `"2G"` | The <offheap> configuration for each Terracotta server. |
 | terracotta.restartable | bool | `false` | The <restartable> configuration for each Terracotta server. |

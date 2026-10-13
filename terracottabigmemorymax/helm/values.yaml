@@ -7,7 +7,7 @@ serverImage: ibmwebmethods.azurecr.io/bigmemorymax-server
 tmcImage: ibmwebmethods.azurecr.io/bigmemorymax-management-server
 pullPolicy: IfNotPresent
 # -- Specific version to not accidentally change production versions with newer images.
-tag: "4.5.0"
+tag: "4.5.1"
 
 # -- Image pull secret reference. By default looks for `regcred`.
 imagePullSecrets:
@@ -75,8 +75,6 @@ terracotta:
   tmcManagementPort: 9889
   # -- Can be used for passing some jvm related options for tmc.
   tmcOpts: ""
-  # -- The license content for the Terracotta cluster. Optional.
-  license: ""
   # -- ServiceAccountName for the terracotta related pods
   serviceAccountName: ""
 

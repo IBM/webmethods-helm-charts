@@ -26,15 +26,8 @@ metadata:
     {{ toYaml . | nindent 4 }}
     {{- end }}
 data:
-  license.key: |
-      {{- .Values.terracotta.license | nindent 4 }}
   tc-config.xml: |
     <?xml version="1.0" encoding="UTF-8"?>
-    <!--
-    Copyright (c) 2024 IBM Corporation.
-    Use, reproduction, transfer, publication or disclosure is prohibited except as specifically provided for in your License Agreement with IBM webMethods.
-    -->
-
     <tc:tc-config xmlns:tc="http://www.terracotta.org/config">
       <servers secure="{{ $.Values.terracotta.security }}">    
     {{- $root := . }}

@@ -97,8 +97,6 @@ spec:
         - name: commonconfig-volume
           projected:
             sources:
-              - configMap:
-                  name: {{ include "common.names.fullname" . }}-license-configmap
               {{- if eq $.Values.terracotta.security true }}
               - secret:
                   name: {{ required "A valid certs is required!" $.Values.terracotta.secretName }}

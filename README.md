@@ -22,6 +22,7 @@ webmethods/developerportal              1.0.3           10.15           webMetho
 webmethods/microservicesruntime         1.4.0           10.15           Microservices Runtime (MSR) Helm Chart for Kube...
 webmethods/terracottabigmemorymax       1.4.0           4.4.0           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/terracottabigmemorymax       2.1.1           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
+webmethods/terracottabigmemorymax       3.0.0           4.5.1           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/terracotta                   1.0.0           < 11.1.0.12     Terracotta Helm Chart for Kubernetes
 webmethods/terracotta                   2.0.0           >= 11.1.0.12    Terracotta Helm Chart for Kubernetes
 webmethods/terracotta                   3.1.0           12.x            Terracotta Helm Chart for Kubernetes
