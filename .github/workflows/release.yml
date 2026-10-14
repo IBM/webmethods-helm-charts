@@ -42,8 +42,6 @@ jobs:
           helm package --dependency-update microservicesruntime/helm
           helm package --dependency-update mywebmethodsserver/helm
           helm package --dependency-update universalmessaging/helm
-          helm package --dependency-update terracottabigmemorymax/helm
-          helm package --dependency-update terracotta/helm
           helm package --dependency-update apicontrolplane/helm
           helm package --dependency-update apianalyticstore/helm
 
