@@ -30,6 +30,9 @@ webmethods/universalmessaging           1.1.0           10.15           Universa
 webmethods/apianalyticstore             1.0.0           1.0             API Analytics Store Helm Chart for Kubernetes
 ```
 
+- ⚠️ `terracottabigmemorymax` was moved to [https://containers.webmethods.io/charts](https://containers.webmethods.io/charts)
+- ⚠️ `terracotta` was moved to [https://containers.webmethods.io/charts](https://containers.webmethods.io/charts)
+
 ## Available Charts READMEs
 
 Each chart has a README for *how to use* and lists some prerequisites.
@@ -42,9 +45,9 @@ Each chart has a README for *how to use* and lists some prerequisites.
 | [microservicesruntime](https://github.com/IBM/webmethods-helm-charts/blob/main/microservicesruntime/helm/README.md)     | Microservices Runtime (MSR) |
 | [mywebmethodsserver](https://github.com/IBM/webmethods-helm-charts/blob/main/mywebmethodsserver/helm/README.md)         | My webMethods Server (MWS) |
 | [universalmessaging](https://github.com/IBM/webmethods-helm-charts/blob/main/universalmessaging/helm/README.md)         | Universal Messaging (UM) |
-| [terracottabigmemorymax](https://github.com/IBM/webmethods-helm-charts/blob/main/terracottabigmemorymax/helm/README.md) | Terracotta BigMemoryMax  |
-| [terracotta](https://github.com/IBM/webmethods-helm-charts/blob/main/terracotta/helm/README.md)                     | Terracotta               |
-| [apianalyticstore](https://github.com/IBM/webmethods-helm-charts/blob/main/apianalyticstore/helm/README.md)                     | Analytic Store (OpenSearch / Elasticsearch )               |
+| [terracottabigmemorymax](https://containers.webmethods.io/charts)                                                       | Terracotta BigMemoryMax  |
+| [terracotta](https://containers.webmethods.io/charts)                                                                   | Terracotta               |
+| [apianalyticstore](https://github.com/IBM/webmethods-helm-charts/blob/main/apianalyticstore/helm/README.md)             | Analytic Store (OpenSearch / Elasticsearch )               |
 
 ## Chart Versions
 
