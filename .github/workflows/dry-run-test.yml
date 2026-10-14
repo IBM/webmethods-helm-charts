@@ -52,16 +52,6 @@ jobs:
           helm dependency update universalmessaging/helm
           helm template um universalmessaging/helm
 
-      - name: Dry-run of terracottabigmemorymax
-        run: |
-          helm dependency update terracottabigmemorymax/helm
-          helm template bm terracottabigmemorymax/helm
-
-      - name: Dry-run of terracotta
-        run: |
-          helm dependency update terracotta/helm
-          helm template tc terracotta/helm
-
       - name: Dry-run of apicontrolplan
         run: |
           helm dependency update apicontrolplane/helm
