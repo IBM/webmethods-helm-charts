@@ -463,7 +463,7 @@ apigw:
   apigwAdminService:      "apigw-admin-svc"
 
   # -- The secret that holds the admin password
-  # Depends on secrets.genereateAdminSecret; if true the setting will be ignored.
+  # Depends on secrets.generateAdminSecret; if true the setting will be ignored.
   adminSecretName: ""
 
   # -- The key that holds the admin secret key; defauls to "password"

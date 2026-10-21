@@ -20,7 +20,7 @@ apiVersion: v2
 appVersion: "10.15"
 description: My webMethods Server (MWS) Helm Chart for Kubernetes
 name: mywebmethodsserver
-version: 1.3.0
+version: 1.3.1
 
 dependencies:
 - name: common

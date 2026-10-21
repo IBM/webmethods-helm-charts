@@ -121,6 +121,7 @@ helm install wm-msr webmethods/microservicesruntime   \
 | `1.3.0` | Option `timeZone` for Cron Job added. |
 | `1.4.0` | PodDisruptionBudget support added. |
 | `1.5.0` | Option `securityContext` and `podSecurityContext` for jobs are added. |
+| `1.5.1` | Fix leading newline in `extraConfigMaps` values: replaced `nindent` with `indent` in `configmaps-extra.yaml` to prevent XML and other strict parsers from failing on a leading blank line. |
 
 ## Values
 

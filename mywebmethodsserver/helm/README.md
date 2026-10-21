@@ -53,6 +53,7 @@ helm install wm-mws mywebmethodsserver
 | `1.1.0` | Fix and implements `extraEnvs` how other Charts. Supports 64base encoded as binary data for ConfigMaps. Implements `revisionHistoryLimit`. |
 | `1.2.0` | Custom Resource objects are supported. Enhancement in job template to add `extraSpec` options. |
 | `1.3.0` | `tpl` function support added on `podAnnotation` option. |
+| `1.3.1` | Fix leading newline in `extraConfigMaps` values: replaced `nindent` with `indent` in `configmaps-extra.yaml` to prevent XML and other strict parsers from failing on a leading blank line. |
 
 ## Values
 

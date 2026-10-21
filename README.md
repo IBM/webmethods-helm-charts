@@ -16,18 +16,22 @@ To list the content of repository, type `helm search repo webmethods`
 NAME                                    CHART VERSION   APP VERSION     DESCRIPTION                                       
 webmethods/mywebmethodsserver           1.2.0           10.15           My webMethods Server (MWS) Helm Chart for Kuber...
 webmethods/apicontrolplane              1.1.0           11.1            API Control Plane Helm Chart for Kubernetes       
-webmethods/apigateway                   3.6.3           10.15           API Gateway Helm Chart for Kubernetes             
+webmethods/apigateway                   3.12.2           10.15           API Gateway Helm Chart for Kubernetes             
 webmethods/common                       2.0.0           1.0.0           A Library Helm Chart for grouping common logic ...
 webmethods/developerportal              1.0.3           10.15           webMethods Developer Portal Helm Chart for Kube...
 webmethods/microservicesruntime         1.4.0           10.15           Microservices Runtime (MSR) Helm Chart for Kube...
 webmethods/terracottabigmemorymax       1.4.0           4.4.0           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/terracottabigmemorymax       2.1.1           4.5.0           Terracotta BigMemory Max Helm Chart for Kubernetes
+webmethods/terracottabigmemorymax       3.0.0           4.5.1           Terracotta BigMemory Max Helm Chart for Kubernetes
 webmethods/terracotta                   1.0.0           < 11.1.0.12     Terracotta Helm Chart for Kubernetes
 webmethods/terracotta                   2.0.0           >= 11.1.0.12    Terracotta Helm Chart for Kubernetes
 webmethods/terracotta                   3.1.0           12.x            Terracotta Helm Chart for Kubernetes
 webmethods/universalmessaging           1.1.0           10.15           Universal Messaging (UM) Helm Chart for Kubernetes
 webmethods/apianalyticstore             1.0.0           1.0             API Analytics Store Helm Chart for Kubernetes
 ```
+
+- ⚠️ `terracottabigmemorymax` was moved to [https://containers.webmethods.io/charts](https://containers.webmethods.io/charts)
+- ⚠️ `terracotta` was moved to [https://containers.webmethods.io/charts](https://containers.webmethods.io/charts)
 
 ## Available Charts READMEs
 
@@ -41,9 +45,9 @@ Each chart has a README for *how to use* and lists some prerequisites.
 | [microservicesruntime](https://github.com/IBM/webmethods-helm-charts/blob/main/microservicesruntime/helm/README.md)     | Microservices Runtime (MSR) |
 | [mywebmethodsserver](https://github.com/IBM/webmethods-helm-charts/blob/main/mywebmethodsserver/helm/README.md)         | My webMethods Server (MWS) |
 | [universalmessaging](https://github.com/IBM/webmethods-helm-charts/blob/main/universalmessaging/helm/README.md)         | Universal Messaging (UM) |
-| [terracottabigmemorymax](https://github.com/IBM/webmethods-helm-charts/blob/main/terracottabigmemorymax/helm/README.md) | Terracotta BigMemoryMax  |
-| [terracotta](https://github.com/IBM/webmethods-helm-charts/blob/main/terracotta/helm/README.md)                     | Terracotta               |
-| [apianalyticstore](https://github.com/IBM/webmethods-helm-charts/blob/main/apianalyticstore/helm/README.md)                     | Analytic Store (OpenSearch / Elasticsearch )               |
+| [terracottabigmemorymax](https://containers.webmethods.io/charts)                                                       | Terracotta BigMemoryMax  |
+| [terracotta](https://containers.webmethods.io/charts)                                                                   | Terracotta               |
+| [apianalyticstore](https://github.com/IBM/webmethods-helm-charts/blob/main/apianalyticstore/helm/README.md)             | Analytic Store (OpenSearch / Elasticsearch )               |
 
 ## Chart Versions
 

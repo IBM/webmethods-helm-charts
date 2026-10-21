@@ -57,5 +57,6 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `1.0.1` | Supports wM version 11.0. Validate `devportal.port` value in `values.yaml` if you want to use wM image version 11.0. |
 | `1.0.2` | `tpl` function support in `affinity` value added. `topologySpreadConstraints` support added. |
 | `1.0.3` | `priorityClassName` support added. Error is corrected on using value `useDefaultAffinityRule == true`. Now, the release name is used in condition with `app.kubernetes.io/instance`. `affinity` and `topologySpreadConstraints` support added for Elasticsearch. Implementation of `extraConfigMaps` added. |
+| `1.0.4` | Fix leading newline in `extraConfigMaps` values: replaced `nindent` with `indent` in `configmaps-extra.yaml` to prevent XML and other strict parsers from failing on a leading blank line. |
 
 {{ template "chart.valuesSection" . }}
