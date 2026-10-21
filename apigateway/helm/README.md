@@ -356,6 +356,7 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | elasticsearch.tlsSecretName | string | `""` | The name of the elasticsearch secret. By default it will created by the fullname + "-es-tls-secret" if tlsEnabled is set to true. |
 | elasticsearch.topologySpreadConstraints | object | `{}` | Set Pod topology spread constraints for ElasticSearch. You can use templates inside because `tpl` function is called for rendering. |
 | elasticsearch.version | string | `"8.2.3"` | The ECK version to be used |
+| elasticsearch.volumeClaimDeletePolicy | string | `""` | Volume claim delete policy. Controls when ECK deletes PVCs. By default the value is DeleteOnScaledownAndClusterDeletion |
 | external | object | `{}` | DMZ setup with external traffice and reverse-invoke setup using node port.  nodePortService:  "apigw-nodeport-svc" k8sDomain:        ".k8s.dmz.sew" ports:   node:           30000 # node port for reverse invoke   registration:   7555  # port for registration of internal server |
 | externalService | object | `{"annotations":{},"enabled":false}` | External Service configuration for reverse invoke setup. |
 | extraConfigMaps | list | `[]` | Extra config maps for additional configurations such as extra ports, etc. |
