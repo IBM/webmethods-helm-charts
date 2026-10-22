@@ -226,6 +226,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.12.0` | Add ability to set global and per service annotations |
 | `3.12.1` | Add option `kibana.deploy` to deploy api gateway without Kibana. Defaults to `true`|
 | `3.12.2` | Add `noHost` option on ingress host entries to omit the `host` field from Ingress rules, enabling pure path-based routing (e.g. for AWS ALB). Fully backward compatible — existing values are unaffected. |
+| `3.13.0` | Add `elasticsearch.volumeClaimDeletePolicy` option to control PVCs on ES uninstalling. |
 
 ## Chart Version `3.12.2`
 
