@@ -106,7 +106,7 @@ The Ingress refers to services which in turn refer to the API Gateway pods. Due 
 is configured accordingly. However this default setup works only if the Kubernetes cluster runs with the wide-spread nginx-ingress controller which
 can handle sticky sessions.
 
-If the nginx-ingress controller is not present, or another ingress controller is preferred, an accordingly configured external load balancer can be used to
+If the nginx-ingress controller is not present, or another Ingress controller is preferred, an accordingly configured external load balancer can be used to
 achieve sticky sessions. The chart can easily be switched to use a load balancer, for details see the [chart readme](apigateway/README.md).
 When doing so, the chart will still establish an Ingress which then refers to the load balancer service, and the load balancer in turn is
 configured as a proxy for the API Gateway services.
@@ -140,7 +140,7 @@ metadata:
     nginx.ingress.kubernetes.io/affinity: "cookie"
 ```
 
-Note, if you are using the default configuration and nginx as your ingress controller, sticky sessions will be enabled by default for the UI port and ingress. Change the ingress annotations accordingly for other ingress controllers like Traefik.
+Note, if you are using the default configuration and nginx as your Ingress controller, sticky sessions will be enabled by default for the UI port and Ingress. Change the Ingress annotations accordingly for other Ingress controllers like Traefik.
 
 ## Using an external load balancer
 
@@ -204,7 +204,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `2.1.0` | Added ability to use PodDisruptionBudget for API Gateway and updated Prometheus Elasticsearch Exporter to `6.6.0` |
 | `2.1.1` | Fixed metadata of PodDisruptionBudget for API Gateway |
 | `2.1.2` | Fixed metadata.name of PodDisruptionBudget for API Gateway |
-| `2.1.3` | Fixed proxy connect timeout annotation on all ingresses for API Gateway |
+| `2.1.3` | Fixed proxy connect timeout annotation on all Ingresses for API Gateway |
 | `3.0.0` | Added functionality to define startup, liveness and readiness probes for API Gateway in the values file. |
 | `3.1.0` | Added functionality to define annotations for Elasticsearch and Kibana custom resource definition in the values file. |
 | `3.2.0` | Added minor changes and example values for API Gateway 11.1 |
@@ -225,14 +225,14 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.11.0` | Example [unauthenticated-health-check](../unauthenticated-health-check/README.md) added. Support of `securityContext` added in `elasticsearch.defaultNodeSet` |
 | `3.12.0` | Add ability to set global and per service annotations |
 | `3.12.1` | Add option `kibana.deploy` to deploy api gateway without Kibana. Defaults to `true`|
-| `3.12.2` | Add `noHost` option on ingress host entries to omit the `host` field from Ingress rules, enabling pure path-based routing (e.g. for AWS ALB). Fully backward compatible — existing values are unaffected. |
+| `3.12.2` | Add `noHost` option on Ingress host entries to omit the `host` field from Ingress rules, enabling pure path-based routing (e.g. for AWS ALB). Fully backward compatible — existing values are unaffected. |
 | `3.13.0` | Add `elasticsearch.volumeClaimDeletePolicy` option to control PVCs on ES uninstalling. |
 
 ## Chart Version `3.12.2`
 
-### `noHost` — path-based ingress routing without a host condition
+### `noHost` — path-based Ingress routing without a host condition
 
-By default the ingress template renders a `host:` field for every rule, derived from `ingress.defaultDomain` or an explicit `host:` value. Some ingress controllers (e.g. AWS ALB) require a valid FQDN in the host condition, which conflicts with pure path-based routing setups.
+By default the Ingress template renders a `host:` field for every rule, derived from `ingress.defaultDomain` or an explicit `host:` value. Some Ingress controllers (e.g. AWS ALB) require a valid FQDN in the host condition, which conflicts with pure path-based routing setups.
 
 Setting `noHost: true` on a host entry omits the `host:` field entirely, producing a catch-all rule that matches any hostname:
 
