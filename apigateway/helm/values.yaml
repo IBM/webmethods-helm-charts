@@ -729,6 +729,10 @@ elasticsearch:
   # -- Set Pods' Priority Class Name
   priorityClassName: ""
 
+  # -- Volume claim delete policy. Controls when ECK deletes PVCs.
+  # By default the value is DeleteOnScaledownAndClusterDeletion
+  volumeClaimDeletePolicy: ""
+
   # -- Node sets. See official ElasticSearch documentation at:
   # https://www.elastic.co/guide/en/cloud-on-k8s/current/k8s-orchestration.html
   # if you specify node sets here the defaultNodeSet will not be used.
