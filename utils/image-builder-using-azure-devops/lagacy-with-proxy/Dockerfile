@@ -51,6 +51,7 @@ RUN \
     echo "Password=${EMPOWER_PASSWORD}"                                                                                  >> installer.script && \
     echo "ProxyHttpHost=`echo "${PROXY}" | awk -F'[[:space:]="/:]+' '{print $2}'`"                                       >> installer.script && \
     echo "ProxyHttpPort=`echo "${PROXY}" | awk -F'[[:space:]="/:]+' '{print $3}'`"                                       >> installer.script && \
+    echo "LicenseAgree=Accept"                                                                                           >> installer.script && \
     echo 'Debug Installer script: ' && echo && cat installer.script
 
 # Install software ...
