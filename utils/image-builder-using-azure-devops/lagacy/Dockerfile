@@ -48,6 +48,7 @@ RUN \
     echo "adminPassword=${ADMIN_PASSWORD}"                                                                               >> installer.script && \
     echo "Username=${EMPOWER_USERNAME}"                                                                                  >> installer.script && \
     echo "Password=${EMPOWER_PASSWORD}"                                                                                  >> installer.script && \
+    echo "LicenseAgree=Accept"                                                                                           >> installer.script && \
     echo 'Debug Installer script: ' && echo && cat installer.script
 
 # Install software ...
