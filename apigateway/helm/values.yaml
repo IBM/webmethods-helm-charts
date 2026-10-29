@@ -1002,7 +1002,7 @@ routes:
     #   wildcardPolicy: None
     extras: {}
   # -- Route for API Gateway Runtime Port
-  admin:
+  runtime:
     # -- Enable Runtime route
     enabled: false
     # -- Enter route name; if is not set, the references service as route name is used
