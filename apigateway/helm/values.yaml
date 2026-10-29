@@ -957,30 +957,71 @@ prometheus-elasticsearch-exporter:
 # -- Import the content as license key and create a ConfigMap named by `licenseConfigMap` value. You can copy/past the content of your provided license key file here.
 license: |
 
-# -- Routes for admin, ui port for openshift
+# -- Routes for admin, ui and runtime port for openshift
 routes:
   # -- Route for API Gateway UI Port
   ui:
+    # -- Enable UI route
     enabled: false
-    # Enter route name
+    # -- Enter route name; if is not set, the references service as route name is used
     name: ""
-    # Do not change below value
+    # -- Do not change below value
     portName: uiport
+    # -- Route Labels
     labels:
+    # -- Route Annotations
     annotations:
-    # Enter hostname
+    # -- Enter hostname
     hostName: ""
+    # -- Extras configuration settings for the route. Copy the content one to one to the route.
+    # extras:
+    #   tls:
+    #     termination: edge
+    #     insecureEdgeTerminationPolicy: Redirect
+    #   wildcardPolicy: None
+    extras: {}
   # -- Route for API Gateway Admin Port
   admin:
+    # -- Enable Admin route
     enabled: false
-    # Enter route name
+    # -- Enter route name; if is not set, the references service as route name is used
     name: ""
-    # Do not change below value
+    # -- Do not change below value
     portName: adminport
+    # -- Route Labels
     labels:
+    # -- Route Annotations
     annotations:
-    # Enter hostname
+    # -- Enter hostname
     hostName: ""
+    # -- Extras configuration settings for the route. Copy the content one to one to the route.
+    # extras:
+    #   tls:
+    #     termination: edge
+    #     insecureEdgeTerminationPolicy: Redirect
+    #   wildcardPolicy: None
+    extras: {}
+  # -- Route for API Gateway Runtime Port
+  runtime:
+    # -- Enable Runtime route
+    enabled: false
+    # -- Enter route name; if is not set, the references service as route name is used
+    name: ""
+    # -- Do not change below value
+    portName: rtport
+    # -- Route Labels
+    labels:
+    # -- Route Annotations
+    annotations:
+    # -- Enter hostname
+    hostName: ""
+    # -- Extras configuration settings for the route. Copy the content one to one to the route.
+    # extras:
+    #   tls:
+    #     termination: edge
+    #     insecureEdgeTerminationPolicy: Redirect
+    #   wildcardPolicy: None
+    extras: {}
 
 # -- Job metadata label suffix and prefix, to avoid being selected by service selectors from main gateway service selectors.
 jobsMetaData:

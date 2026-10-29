@@ -21,7 +21,7 @@
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: {{ .Values.routes.ui.name }}
+  name: {{- if .Values.routes.ui.name }} {{ .Values.routes.ui.name }} {{ else }} {{ include "common.names.fullname" . }}-ui{{- end }}
   labels: {{ .Values.routes.ui.labels }}
   annotations:
     {{- range $key, $value := .Values.routes.ui.annotations }}
@@ -34,6 +34,16 @@ spec:
   to:
     kind: Service
     name: {{ include "common.names.fullname" . }}-ui
+  {{- range $key, $value := .Values.routes.ui.extras }}
+  {{- if kindIs "map" $value -}}
+    {{ printf "\n" }}{{ $key | indent 4 }}:
+    {{- range $key, $value := $value -}}
+      {{ printf "\n" }}{{ $key | indent 6 }}: {{ $value}}
+    {{- end }}
+  {{- else -}}
+    {{ printf "\n" }}{{ $key | indent 4 }}: {{ $value }}
+  {{- end -}}
+  {{- end }}
 {{- end }}
 
 
@@ -43,7 +53,7 @@ spec:
 kind: Route
 apiVersion: route.openshift.io/v1
 metadata:
-  name: {{ .Values.routes.admin.name }}
+  name: {{- if .Values.routes.admin.name }} {{ .Values.routes.admin.name }} {{ else }} {{ include "common.names.fullname" . }}-admin{{- end }}
   labels: {{ .Values.routes.admin.labels }}
   annotations:
     {{- range $key, $value := .Values.routes.admin.annotations }}
@@ -56,4 +66,45 @@ spec:
   to:
     kind: Service
     name: {{ include "common.names.fullname" . }}-admin
+  {{- range $key, $value := .Values.routes.admin.extras }}
+  {{- if kindIs "map" $value -}}
+    {{ printf "\n" }}{{ $key | indent 4 }}:
+    {{- range $key, $value := $value -}}
+      {{ printf "\n" }}{{ $key | indent 6 }}: {{ $value}}
+    {{- end }}
+  {{- else -}}
+    {{ printf "\n" }}{{ $key | indent 4 }}: {{ $value }}
+  {{- end -}}
+  {{- end }}
+{{- end }}
+
+---
+
+{{- if .Values.routes.runtime.enabled }}
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: {{- if .Values.routes.runtime.name }} {{ .Values.routes.runtime.name }} {{ else }} {{ include "common.names.fullname" . }}-rt{{- end }}
+  labels: {{ .Values.routes.runtime.labels }}
+  annotations:
+    {{- range $key, $value := .Values.routes.runtime.annotations }}
+    {{ $key }}: {{ $value | quote }}
+    {{- end }}
+spec:
+  host: {{ .Values.routes.runtime.hostName }}
+  port:
+    targetPort: {{ .Values.routes.runtime.portName }} 
+  to:
+    kind: Service
+    name: {{ include "common.names.fullname" . }}-rt
+  {{- range $key, $value := .Values.routes.runtime.extras }}
+  {{- if kindIs "map" $value -}}
+    {{ printf "\n" }}{{ $key | indent 4 }}:
+    {{- range $key, $value := $value -}}
+      {{ printf "\n" }}{{ $key | indent 6 }}: {{ $value}}
+    {{- end }}
+  {{- else -}}
+    {{ printf "\n" }}{{ $key | indent 4 }}: {{ $value }}
+  {{- end -}}
+  {{- end }}
 {{- end }}
