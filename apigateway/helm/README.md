@@ -521,23 +521,23 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | resources.apigwInitContainer.requests.cpu | string | `"100m"` |  |
 | resources.apigwInitContainer.requests.memory | string | `"50Mi"` |  |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
-| routes | object | `{"admin":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"rtport"},"ui":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"uiport"}}` | Routes for admin, ui and runtime port for openshift |
-| routes.admin | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"rtport"}` | Route for API Gateway Runtime Port |
+| routes | object | `{"admin":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"adminport"},"runtime":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"rtport"},"ui":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"uiport"}}` | Routes for admin, ui and runtime port for openshift |
 | routes.admin | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"adminport"}` | Route for API Gateway Admin Port |
 | routes.admin.annotations | string | `nil` | Route Annotations |
-| routes.admin.annotations | string | `nil` | Route Annotations |
-| routes.admin.enabled | bool | `false` | Enable Runtime route |
 | routes.admin.enabled | bool | `false` | Enable Admin route |
 | routes.admin.extras | object | `{}` | Extras configuration settings for the route. Copy the content one to one to the route. extras:   tls:     termination: edge     insecureEdgeTerminationPolicy: Redirect   wildcardPolicy: None |
-| routes.admin.extras | object | `{}` | Extras configuration settings for the route. Copy the content one to one to the route. extras:   tls:     termination: edge     insecureEdgeTerminationPolicy: Redirect   wildcardPolicy: None |
-| routes.admin.hostName | string | `""` | Enter hostname |
 | routes.admin.hostName | string | `""` | Enter hostname |
 | routes.admin.labels | string | `nil` | Route Labels |
-| routes.admin.labels | string | `nil` | Route Labels |
-| routes.admin.name | string | `""` | Enter route name; if is not set, the references service as route name is used |
 | routes.admin.name | string | `""` | Enter route name; if is not set, the references service as route name is used |
 | routes.admin.portName | string | `"adminport"` | Do not change below value |
-| routes.admin.portName | string | `"rtport"` | Do not change below value |
+| routes.runtime | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"rtport"}` | Route for API Gateway Runtime Port |
+| routes.runtime.annotations | string | `nil` | Route Annotations |
+| routes.runtime.enabled | bool | `false` | Enable Runtime route |
+| routes.runtime.extras | object | `{}` | Extras configuration settings for the route. Copy the content one to one to the route. extras:   tls:     termination: edge     insecureEdgeTerminationPolicy: Redirect   wildcardPolicy: None |
+| routes.runtime.hostName | string | `""` | Enter hostname |
+| routes.runtime.labels | string | `nil` | Route Labels |
+| routes.runtime.name | string | `""` | Enter route name; if is not set, the references service as route name is used |
+| routes.runtime.portName | string | `"rtport"` | Do not change below value |
 | routes.ui | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"uiport"}` | Route for API Gateway UI Port |
 | routes.ui.annotations | string | `nil` | Route Annotations |
 | routes.ui.enabled | bool | `false` | Enable UI route |
