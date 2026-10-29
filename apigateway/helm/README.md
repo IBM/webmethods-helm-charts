@@ -227,6 +227,7 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 | `3.12.1` | Add option `kibana.deploy` to deploy api gateway without Kibana. Defaults to `true`|
 | `3.12.2` | Add `noHost` option on Ingress host entries to omit the `host` field from Ingress rules, enabling pure path-based routing (e.g. for AWS ALB). Fully backward compatible — existing values are unaffected. |
 | `3.13.0` | Add `elasticsearch.volumeClaimDeletePolicy` option to control PVCs on ES uninstalling. |
+| `3.14.0` | OpenShift route for Runtime service/port added. An OpenShift route allows optional `extras` options to be set. |
 
 ## Chart Version `3.12.2`
 
@@ -520,9 +521,31 @@ kubectl delete deployment <Helm-release-name>-prometheus-elasticsearch-exporter 
 | resources.apigwInitContainer.requests.cpu | string | `"100m"` |  |
 | resources.apigwInitContainer.requests.memory | string | `"50Mi"` |  |
 | revisionHistoryLimit | int | `10` | The number of old ReplicaSets to retain to allow rollback. |
-| routes | object | `{"admin":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"adminport"},"ui":{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"uiport"}}` | Routes for admin, ui port for openshift |
-| routes.admin | object | `{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"adminport"}` | Route for API Gateway Admin Port |
-| routes.ui | object | `{"annotations":null,"enabled":false,"hostName":"","labels":null,"name":"","portName":"uiport"}` | Route for API Gateway UI Port |
+| routes | object | `{"admin":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"rtport"},"ui":{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"uiport"}}` | Routes for admin, ui and runtime port for openshift |
+| routes.admin | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"rtport"}` | Route for API Gateway Runtime Port |
+| routes.admin | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"adminport"}` | Route for API Gateway Admin Port |
+| routes.admin.annotations | string | `nil` | Route Annotations |
+| routes.admin.annotations | string | `nil` | Route Annotations |
+| routes.admin.enabled | bool | `false` | Enable Runtime route |
+| routes.admin.enabled | bool | `false` | Enable Admin route |
+| routes.admin.extras | object | `{}` | Extras configuration settings for the route. Copy the content one to one to the route. extras:   tls:     termination: edge     insecureEdgeTerminationPolicy: Redirect   wildcardPolicy: None |
+| routes.admin.extras | object | `{}` | Extras configuration settings for the route. Copy the content one to one to the route. extras:   tls:     termination: edge     insecureEdgeTerminationPolicy: Redirect   wildcardPolicy: None |
+| routes.admin.hostName | string | `""` | Enter hostname |
+| routes.admin.hostName | string | `""` | Enter hostname |
+| routes.admin.labels | string | `nil` | Route Labels |
+| routes.admin.labels | string | `nil` | Route Labels |
+| routes.admin.name | string | `""` | Enter route name; if is not set, the references service as route name is used |
+| routes.admin.name | string | `""` | Enter route name; if is not set, the references service as route name is used |
+| routes.admin.portName | string | `"adminport"` | Do not change below value |
+| routes.admin.portName | string | `"rtport"` | Do not change below value |
+| routes.ui | object | `{"annotations":null,"enabled":false,"extras":{},"hostName":"","labels":null,"name":"","portName":"uiport"}` | Route for API Gateway UI Port |
+| routes.ui.annotations | string | `nil` | Route Annotations |
+| routes.ui.enabled | bool | `false` | Enable UI route |
+| routes.ui.extras | object | `{}` | Extras configuration settings for the route. Copy the content one to one to the route. extras:   tls:     termination: edge     insecureEdgeTerminationPolicy: Redirect   wildcardPolicy: None |
+| routes.ui.hostName | string | `""` | Enter hostname |
+| routes.ui.labels | string | `nil` | Route Labels |
+| routes.ui.name | string | `""` | Enter route name; if is not set, the references service as route name is used |
+| routes.ui.portName | string | `"uiport"` | Do not change below value |
 | runtimeService | object | `{"annotations":{}}` | Runtime Service configuration |
 | secrets | object | `{"generateAdminSecret":true,"generateElasticSecrets":true}` | Controls if secrets should be generated automatically. |
 | securityContext | object | `{}` |  |
