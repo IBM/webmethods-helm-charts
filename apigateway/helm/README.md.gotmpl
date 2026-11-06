@@ -178,9 +178,12 @@ Sub-folder `examples` contains some *values* examples for more use-cases. To use
 
 | Use-case | Description |
 |-----|------|
+| [apigw-11](../examples/apigw-11/README.md) | Hints to deploy version 11  |
+| [custom-certs](../examples/customcerts/README.md) | Importing und using of custom certificates   |
+| [custom-resource-objects](../examples/custom-resource-objects/README.md) | Example of deploying Custom Resource objects  |
+| [es-plugin-offline](../examples/es-plugin-offline/README.md) | Offline installation of Elasticsearch plugins  |
 | [fluentd-sidecar](../examples/fluentd-sidecar/README.md) | Running API Gateway with Fluentd Sidecar |
 | [house-keeping-job](../examples/house-keeping-job/README.md) | Example to create house keeping job: purge transaction events  |
-| [custom-resource-objects](../examples/custom-resource-objects/README.md) | Example of deploying Custom Resource objects  |
 | [unauthenticated-health-check](../unauthenticated-health-check/README.md) | Enable Enable Unauthenticated Health Check |
 
 ## Version History
