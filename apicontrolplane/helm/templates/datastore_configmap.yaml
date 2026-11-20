@@ -21,7 +21,7 @@ kind: ConfigMap
 metadata:
   name:  {{ .Values.applications.datastore.name }}-config
 data:
-  OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g"
+  OPENSEARCH_JAVA_OPTS: "-Xms1g -Xmx1g -XX:-UseBASE64Intrinsics"
   cluster.initial_cluster_manager_nodes: "{{ .Values.applications.datastore.cluster.initial_cluster_manager_nodes }}"
   discovery.seed_hosts: "{{ .Values.applications.datastore.name }}-headless"
   cluster.name: {{ .Values.applications.datastore.name }}-cluster

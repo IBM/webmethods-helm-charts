@@ -19,6 +19,7 @@ services:
       - node.name=webmethods
       - cluster.name=webmethods
       - bootstrap.memory_lock=true
+      - OPENSEARCH_JAVA_OPTS=-XX:-UseBASE64Intrinsics
       - OPENSEARCH_INITIAL_ADMIN_PASSWORD=${DATASTORE_PASSWORD}
       - plugins.security.ssl.http.enabled=true
       - plugins.security.ssl.http.keystore_type=JKS
