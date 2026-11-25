@@ -30,13 +30,14 @@
 {{- $context := . }}
 
 {{- range $job := .Values.jobs }}
+{{- $jobName := tpl $job.name $context }}
 {{- range $replicaIndex := until (int $replicaCount) }}
 
 ---
 apiVersion: batch/v1
 kind: {{ if $job.schedule }}CronJob{{ else }}Job{{ end }}
 metadata:
-  name: {{ $fullName }}-{{ $job.name }}
+  name: {{ $fullName }}-{{ $jobName }}
   labels:
     {{- $labels | nindent 4 }}
     {{- with $extraLabels }}
@@ -55,7 +56,7 @@ spec:
       {{- end }}
       template:
         metadata:
-          name: {{ $fullName }}-{{ $job.name }}
+          name: {{ $fullName }}-{{ $jobName }}
           labels:
             {{- $labels | nindent 12 }}
             {{- with $extraLabels }}
@@ -66,7 +67,7 @@ spec:
           {{- if hasKey $job.serviceAccount "name" }}
           serviceAccountName: {{ tpl ($job.serviceAccount.name) $context }}
           {{- else }}
-          serviceAccountName: {{ $job.name }}
+          serviceAccountName: {{ $jobName }}
           {{- end }}
           {{- end }}
           {{- if hasKey $job "podSecurityContext" }}
@@ -76,7 +77,7 @@ spec:
           containers:
           - image: "{{ tpl $job.image.repository $context }}:{{ tpl ($job.image.tag | toString) $context }}"
             imagePullPolicy: {{ $job.image.imagePullPolicy }}
-            name: {{ $job.name }}
+            name: {{ $jobName }}
             {{- if hasKey $job "securityContext" }}
             securityContext:
 {{ tpl (toYaml $job.securityContext) $context | indent 14 }}
@@ -143,7 +144,7 @@ spec:
   {{- end }}
   template:
     metadata:
-      name: {{ $fullName }}-{{ $job.name }}
+      name: {{ $fullName }}-{{ $jobName }}
       labels:
         {{- $labels | nindent 8 }}
         {{- with $extraLabels }}
@@ -154,7 +155,7 @@ spec:
       {{- if hasKey $job.serviceAccount "name" }}
       serviceAccountName: {{ tpl ($job.serviceAccount.name) $context }}
       {{- else }}
-      serviceAccountName: {{ $job.name }}
+      serviceAccountName: {{ $jobName }}
       {{- end }}
       {{- end }}
       {{- if hasKey $job "podSecurityContext" }}
@@ -164,7 +165,7 @@ spec:
       containers:
       - image: "{{ tpl $job.image.repository $context }}:{{ tpl ($job.image.tag | toString) $context }}"
         imagePullPolicy: {{ $job.image.imagePullPolicy }}
-        name: {{ $job.name }}
+        name: {{ $jobName }}
         {{- if hasKey $job "securityContext" }}
         securityContext:
 {{ tpl (toYaml $job.securityContext ) $context | indent 10 }}

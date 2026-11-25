@@ -1,0 +1,41 @@
+# ConfigMap holding the UM assets to be created by the init job.
+# Whenever the content of this list changes, the hash in the job name below changes as well,
+# so Helm creates a new Job (Jobs are immutable) and the init script is executed again.
+extraConfigMaps:
+- metadata:
+    name: um-init-script
+  data:
+    init.sh: |
+      #!/bin/bash
+      echo "Deploying assets in UM [$DEPLOYMENT] ..."
+      until [ "$response" = "0" ] || [ "$response" = "48" ] ; do
+        runUMTool.sh CreateConnectionFactory -rname=nsp://$DEPLOYMENT:9000 -factoryname=local_um -factorytype=default -connectionurl=nsp://$DEPLOYMENT:9000 -durabletype=S
+        response=$?
+        sleep 10
+      done
+
+jobs:
+# The job name is a template (tpl). It results in e.g. `universalmessaging-um-init-3f2a9c1b`.
+# `trunc 8` keeps the name short, as Job and container names must not exceed 63 characters.
+- name: um-init-{{ .Values.extraConfigMaps | toYaml | sha256sum | trunc 8 }}
+  image:
+    repository: ibmwebmethods.azurecr.io/universalmessaging-server
+    tag: 10.15
+    imagePullPolicy: IfNotPresent
+  restartPolicy: Never
+  extraSpec:
+    backoffLimit: 3
+  env:
+    - name: TOOLS_ONLY
+      value: "true"
+  command: ["/bin/bash"]
+  args:
+    - /scripts/init.sh
+  volumeMounts:
+    - name: init-script
+      mountPath: /scripts
+  volumes:
+    - name: init-script
+      configMap:
+        name: um-init-script
+        defaultMode: 0755
